@@ -7,32 +7,36 @@ using namespace std;
 
 void init()
 {
-    std::cout << "Vous avez lancé un init" << std::endl;
+    cout << "Vous avez lancé un init" << endl;
 }
 
 void add()
 {
-    std::cout << "Vous avez lancé un add" << std::endl;
+    cout << "Vous avez lancé un add" << endl;
 }
 
 void commit()
 {
-    std::cout << "Vous avez lancé un commit" << std::endl;
+    cout << "Vous avez lancé un commit" << endl;
 }
 
 void help()
 {
-    std::cout << "usage: gitus <command> [<args>]" << std::endl << std::endl;
+    cout << "usage: gitus <command> [<args>]" << endl << endl;
     
-    std::cout << "These are common gitus commands used in various situations:" << std::endl;
-    std::cout << "init" << "\t" << "Create an empty Git repository or reinitialize an existing one" << std::endl;
-    std::cout << "add" << "\t" << "Add file contents to the index" << std::endl;
-    std::cout << "commit" << "\t" << "Record changes to the repository" << std::endl;
+    cout << "These are common gitus commands used in various situations:" << endl;
+    cout << "init" << "\t" << "Create an empty Git repository or reinitialize an existing one" << endl;
+    cout << "add" << "\t" << "Add file contents to the index" << endl;
+    cout << "commit" << "\t" << "Record changes to the repository" << endl;
 }
 
 int main(int argc, char *argv[])
 {
-    string commande(argv[1]);
+    string commande;
+    if (argv[1] != NULL)
+        string commande(argv[1]);
+    else
+        string commande("");
 
 	if (commande.compare("init") == 0)
         init();
