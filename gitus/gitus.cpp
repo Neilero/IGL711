@@ -2,6 +2,7 @@
 
 #include <boost/filesystem.hpp>
 #include <string>
+#include "git/add.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -9,21 +10,12 @@ namespace fs = boost::filesystem;
 void init()
 {
     cout << "Vous avez lancé un init" << endl;
-
-    fs::path dir("./.git");
-
-	if(fs::create_directories(dir)) {
-		cout << "Success" << "\n";
-	}
-    else
-    {
-        cout << "Failure" << endl;
-    }
 }
 
 void add()
 {
     cout << "Vous avez lancé un add" << endl;
+    showAddHelp();
 }
 
 void commit()
@@ -44,11 +36,12 @@ void help()
 int main(int argc, char *argv[])
 {
     string commande;
-
-    if (argv[1] != NULL)
-        string commande(argv[1]);
+    if (argv[1] != nullptr)
+    {
+        commande = string(argv[1]);
+    }
     else
-        string commande("");
+        commande = string("");
 
 	if (commande.compare("init") == 0)
         init();

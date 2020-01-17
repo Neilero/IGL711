@@ -1,6 +1,16 @@
-add_library(git
+add_library(
+    git
     dummy.h 
-    dummy.cpp)
+    dummy.cpp
+    add.h
+    add.cpp
+    commit.h
+    commit.cpp
+    init.h
+    init.cpp
+    gitUtils.h
+    gitUtils.cpp
+    )
 if (UNIX)
 target_link_libraries(git 
     PUBLIC 
