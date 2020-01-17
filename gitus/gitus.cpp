@@ -1,13 +1,24 @@
 #include <iostream>
 
-#include <dummy.h>
+#include <boost/filesystem.hpp>
 #include <string>
 
 using namespace std;
+namespace fs = boost::filesystem;
 
 void init()
 {
     cout << "Vous avez lancé un init" << endl;
+
+    fs::path dir("./.git");
+
+	if(fs::create_directories(dir)) {
+		cout << "Success" << "\n";
+	}
+    else
+    {
+        cout << "Failure" << endl;
+    }
 }
 
 void add()
@@ -33,6 +44,7 @@ void help()
 int main(int argc, char *argv[])
 {
     string commande;
+
     if (argv[1] != NULL)
         string commande(argv[1]);
     else
