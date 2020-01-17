@@ -10,7 +10,7 @@ using namespace std;
     Afin d'avoir une certaine simplicité dans ce travail, il n'y a seulement que le répertoire .git, le
     répertoire .git/objects et le fichier .git/index qui seront utilisés. */
 
-void init(//arg)
+void init()
 {
     cout << "Vous avez lancé un init" << endl;
 }
