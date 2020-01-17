@@ -1,3 +1,4 @@
+#include <iostream>
 /**
  * Function which print the help of the Add command
  */

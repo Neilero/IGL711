@@ -2,26 +2,12 @@
 
 #include <boost/filesystem.hpp>
 #include <string>
+#include "git/init.h"
 #include "git/add.h"
+#include "git/commit.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
-
-void init()
-{
-    cout << "Vous avez lancé un init" << endl;
-}
-
-void add()
-{
-    cout << "Vous avez lancé un add" << endl;
-    showAddHelp();
-}
-
-void commit()
-{
-    cout << "Vous avez lancé un commit" << endl;
-}
 
 void help()
 {
