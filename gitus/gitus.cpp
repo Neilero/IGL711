@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	if (commande.compare("init") == 0)
         init();
     else if (commande.compare("add") == 0)
-        add();
+        add(argv);
     else if (commande.compare("commit") == 0)
         commit();
     else
