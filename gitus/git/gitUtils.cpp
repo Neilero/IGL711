@@ -12,6 +12,10 @@ namespace gitUtils {
         return string_hash(fileContent);
     }
 
+    /**
+     * Return true if the current working directory contains a ".git" folder
+     * @return true if the current working directory contains a ".git" folder, false otherwise
+     */
     bool isValidGitFolder() {
         fs::path potentialGitDirectory = fs::current_path() / ".git";
 
