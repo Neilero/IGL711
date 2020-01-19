@@ -21,19 +21,17 @@ void help()
 
 int main(int argc, char *argv[])
 {
-    string commande;
+    string command;
     if (argv[1] != nullptr)
-    {
-        commande = string(argv[1]);
-    }
+        command = string(argv[1]);
     else
-        commande = string("");
+        command = string("");
 
-	if (commande.compare("init") == 0)
+    if (command == "init")
         init();
-    else if (commande.compare("add") == 0)
+    else if (command == "add")
         add(argv);
-    else if (commande.compare("commit") == 0)
+    else if (command == "commit")
         commit();
     else
         help();
