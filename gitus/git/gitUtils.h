@@ -6,5 +6,8 @@
 
 namespace fs = boost::filesystem;
 
+namespace gitUtils {
+    int hashFile(const fs::path& path);
 
-int hashFile(fs::path path);
+    bool isValidGitFolder();
+}

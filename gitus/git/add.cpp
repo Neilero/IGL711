@@ -28,7 +28,7 @@ void add(char * argv[])
     {
         fs::path pathToFile(argument);
 
-        std::cout << hashFile(pathToFile) << std::endl;
+        std::cout << gitUtils::hashFile(pathToFile) << std::endl;
     }
     // If the file doesn't exist, print tips and help
     else
