@@ -11,3 +11,8 @@ void showAddHelp();
  * Function which take care of the command add
  */
 void add(char * argv[]);
+
+/**
+ * Function which add a file to the staging
+ */
+bool addFileToGit(fs::path pathToFile);
