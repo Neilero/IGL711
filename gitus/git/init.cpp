@@ -12,7 +12,16 @@ namespace fs = boost::filesystem;
 
 void init(char * argv[])
 {
-//    TODO : create getArguments helper and test "-h" / "--help" arguments
+    if (argv[2] != nullptr) {   // test argument presence
+        auto argument = std::string(argv[2]);
+
+        if (argument == "-h" || argument == "--help")
+            showInitHelp();
+        else    // unknown argument
+            showInitHelp(argument);
+
+        return; //stop initialisation
+    }
 
     const auto rootFolder = fs::current_path() / ".git";
     const auto dataFolder = rootFolder / "objects";
@@ -30,4 +39,11 @@ void init(char * argv[])
     }
 
     std::cout << "Initialized Git repository in " << fs::current_path() << std::endl;
+}
+
+void showInitHelp(const std::string& unknownArg) {
+    if (!unknownArg.empty())
+        std::cout << "Unknown argument: " << unknownArg << std::endl;
+
+    std::cout << "usage: gitus init" << std::endl;
 }
