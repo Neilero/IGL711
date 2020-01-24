@@ -1,6 +1,6 @@
 #include "init.h"
 
-using namespace std;
+namespace fs = boost::filesystem;
 
 // fct init
     /* La commande init devra initialiser un dépôt git dans le dossier courant c.-à-d. le dossier à partir
@@ -10,7 +10,40 @@ using namespace std;
     Afin d'avoir une certaine simplicité dans ce travail, il n'y a seulement que le répertoire .git, le
     répertoire .git/objects et le fichier .git/index qui seront utilisés. */
 
-void init()
+void init(char * argv[])
 {
-    cout << "Vous avez lancé un init" << endl;
+    if (argv[2] != nullptr) {   // test argument presence
+        auto argument = std::string(argv[2]);
+
+        if (argument == "-h" || argument == "--help")
+            showInitHelp();
+        else    // unknown argument
+            showInitHelp(argument);
+
+        return; //stop initialisation
+    }
+
+    const auto rootFolder = fs::current_path() / ".git";
+    const auto dataFolder = rootFolder / "objects";
+    const auto indexFile = rootFolder / "index";
+    const auto headFile = rootFolder / "HEAD";
+
+    fs::create_directories(dataFolder); // create all directories, if they already exist, then do nothing
+
+    if (!fs::exists(indexFile)) {
+        std::ofstream file(indexFile.string());
+    }
+
+    if (!fs::exists(headFile)) {
+        std::ofstream file(headFile.string());
+    }
+
+    std::cout << "Initialized Git repository in " << fs::current_path() << std::endl;
+}
+
+void showInitHelp(const std::string& unknownArg) {
+    if (!unknownArg.empty())
+        std::cout << "Unknown argument: " << unknownArg << std::endl;
+
+    std::cout << "usage: gitus init" << std::endl;
 }

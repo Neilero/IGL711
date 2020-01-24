@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
         command = string("");
 
     if (command == "init")
-        init();
+        init(argv);
     else if (command == "add")
         add(argv);
     else if (command == "commit")
