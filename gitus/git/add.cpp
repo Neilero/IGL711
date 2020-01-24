@@ -15,11 +15,11 @@ void add(char * argv[])
             argument = std::string("-h");
 
         // If an argument is given
-        if (argument.rfind("-", 0) == 0)
+        if (argument.rfind('-', 0) == 0)
         {
             std::string argumentOption = argument.substr(1);
 
-            if ((argumentOption.compare("-help") == 0) || (argumentOption.compare("h") == 0))
+            if ((argumentOption == "-help") || (argumentOption == "h"))
                 showAddHelp();
             else
                 std::cout << "Invalid argument " << argumentOption << std::endl;
@@ -53,6 +53,14 @@ bool addFileToGit(fs::path pathToFile)
         std::string fileContent((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
         if (gitUtils::createObjectFile(fileContent))
-            std::cout << "The file " << pathToFile << " has been added to the Gitus repository" << std::endl;
+        {
+            if (gitUtils::addFileToIndex(pathToFile))
+            {
+                std::cout << "The file " << pathToFile << " has been added to the Gitus repository" << std::endl;
+                return true;
+            }
+        }
     }
+    
+    return false;
 }

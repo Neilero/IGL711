@@ -11,10 +11,26 @@ namespace fs = boost::filesystem;
 
 namespace gitUtils 
 {
-    std::string hashFile(std::string fileContent);
+
+    /**
+     * Functions which hash a file or a string and return a SHA1 string
+     */
+    std::string hashFile(std::string stringToHash);
     std::string hashFile(const fs::path& path);
 
+    /**
+     * Return true if the current working directory contains a ".git" folder
+     * @return true if the current working directory contains a ".git" folder, false otherwise
+     */
     bool isValidGitFolder();
 
+    /**
+     * Function which create a file object given its string content
+     */
     bool createObjectFile(std::string fileContent);
+
+    /**
+     * Function which add a file to the index file
+     */
+    bool addFileToIndex(fs::path chemin);
 }

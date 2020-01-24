@@ -11,10 +11,10 @@ namespace gitUtils
         return gitUtils::hashFile(fileContent);
     }
 
-    std::string hashFile(std::string fileContent) {
+    std::string hashFile(std::string stringToHash) {
         boost::uuids::detail::sha1 s;
         char hash[20];
-        s.process_bytes(fileContent.c_str(), fileContent.size());
+        s.process_bytes(stringToHash.c_str(), stringToHash.size());
         unsigned int digest[5];
         s.get_digest(digest);
         for(int i = 0; i < 5; ++i)
@@ -35,19 +35,12 @@ namespace gitUtils
         return out.str();
     }
 
-    /**
-     * Return true if the current working directory contains a ".git" folder
-     * @return true if the current working directory contains a ".git" folder, false otherwise
-     */
     bool isValidGitFolder() {
         fs::path potentialGitDirectory = fs::current_path() / ".git";
 
         return fs::exists(potentialGitDirectory);
     }
 
-    /**
-     * Function which create a file object given its string content
-     */
     bool createObjectFile(std::string fileContent)
     {
         const char* pathObjects = ".git/objects/";
@@ -77,4 +70,44 @@ namespace gitUtils
         
         return false;
     }
+
+    /**
+     * Function which add a file to the index folder
+     */
+    bool addFileToIndex(fs::path pathToFile)
+    {
+        std::string stringPathToFile = pathToFile.string();
+        if (isValidGitFolder())
+        {
+            std::string hash = hashFile(pathToFile);
+
+            bool found = false;
+            std::vector<std::string> lines;
+            std::ifstream inFile(".git/index");
+            std::string line;
+            while (getline(inFile, line))
+            {
+                if (line.rfind(stringPathToFile, 0) == 0)
+                {
+                    lines.push_back(stringPathToFile+'\t'+hash);
+                    found = true;
+                }
+                else 
+                    lines.push_back(line);
+            }
+
+            if (!found)
+                lines.push_back(stringPathToFile+'\t'+hash);
+
+            std::ofstream outFile(".git/index");
+            for(int i =0; i<lines.size() ;i++)
+            {
+                outFile << lines[i] << std::endl;
+            }
+
+            return true;
+        }
+
+        return false;
+}
 }

@@ -13,6 +13,6 @@ void showAddHelp();
 void add(char * argv[]);
 
 /**
- * Function which add a file to the staging
+ * Function which add a file to the staging state
  */
 bool addFileToGit(fs::path pathToFile);
