@@ -1,7 +1,5 @@
 #include "commit.h"
 
-using namespace std;
-
 void commit(std::vector<std::string> arguments)
 {
     // If a git repo is created
@@ -50,6 +48,15 @@ void showCommitHelp()
 
 bool makeCommit(std::string message, std::string author, std::string email)
 {
-    std::cout << "We can make the commit" << std::endl;
+    std::stringstream commitContent;
+    boost::uuids::random_generator gen;
+    boost::uuids::uuid id = gen();
+
+    commitContent << id << id << std::endl;
+    commitContent << message << std::endl;
+    commitContent << author << std::endl;
+    commitContent << email << std::endl;
+
+    gitUtils::createObjectFile(commitContent.str());
 }
 
