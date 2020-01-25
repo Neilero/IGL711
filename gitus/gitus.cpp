@@ -19,7 +19,7 @@ void help()
     cout << "commit" << "\t" << "Record changes to the repository" << endl;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
     string command;
     if (argv[1] != nullptr)
@@ -30,9 +30,21 @@ int main(int argc, char *argv[])
     if (command == "init")
         init(argv);
     else if (command == "add")
-        add(argv);
+    {
+        std::vector<string> args;
+        for (int i = 2; i<argc; i++)
+            args.push_back(argv[i]);
+            
+        add(args);
+    }
     else if (command == "commit")
-        commit();
+    {
+        std::vector<string> args;
+        for (int i = 2; i<argc; i++)
+            args.push_back(argv[i]);
+
+        commit(args);
+    }
     else
         help();
 

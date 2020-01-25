@@ -2,40 +2,54 @@
 
 namespace fs = boost::filesystem;
 
-void add(char * argv[])
+void add(std::vector<std::string> arguments)
 {
-    //TODO Test if a git repo is created
+    // FI a git repo is created
     if (gitUtils::isValidGitFolder())
     {
-        // Check if an argument has been given, otherwise initialize as "-h" to print help
-        std::string argument;
-        if (argv[2] != nullptr)
-            argument = std::string(argv[2]);
-        else
-            argument = std::string("-h");
-
-        // If an argument is given
-        if (argument.rfind('-', 0) == 0)
+        // Check if optional parameter --help was given
+        bool help = false;
+        for (auto it = arguments.begin(); it != arguments.end();)
         {
-            std::string argumentOption = argument.substr(1);
-
-            if ((argumentOption == "-help") || (argumentOption == "h"))
-                showAddHelp();
+            // if the optional parameter is found, make the help flag to true
+            // and remove the optional parameter from the list
+            if (*it == "--help" || *it =="-h")
+            {
+                arguments.erase(it);
+                help = true;
+            }
             else
-                std::cout << "Invalid argument " << argumentOption << std::endl;
+                it++;
         }
-        // If the file exists, we call the function which make the changes in .git/index and .git/objects
-        else if (fs::exists(argument))
-        {
-            fs::path pathToFile(argument);
-            addFileToGit(pathToFile);
-        }
-        // If the file doesn't exist, print tips and help
+
+        // If user asked for help, just print the help
+        if (help)
+            showAddHelp();
         else
         {
-            std::cout << "File doesn't exist" << std::endl;
-            std::cout << "Make sure you wrote the correct path to the file" << std::endl;
-            showAddHelp();
+            // If there is no argument given, we cannot proceed -> so print help
+            if (arguments.size() < 1)
+            {
+                std::cout << "Invalid number of arguments" << std::endl;
+                showAddHelp();
+            }
+            // if everything is okay, add each given file to the repo
+            else
+            {
+                for (auto file : arguments)
+                {
+                    if (fs::exists(file))
+                    {
+                        fs::path pathToFile(file);
+                        addFileToGit(pathToFile);
+                    }
+                    // If the file doesn't exist, print tips and help
+                    else
+                    {
+                        std::cout << "File " << file << " doesn't exist" << std::endl;
+                    }
+                }
+            }
         }
     }
 }

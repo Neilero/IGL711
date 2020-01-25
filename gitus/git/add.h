@@ -10,7 +10,7 @@ void showAddHelp();
 /**
  * Function which take care of the command add
  */
-void add(char * argv[]);
+void add(std::vector<std::string> arguments);
 
 /**
  * Function which add a file to the staging state
