@@ -12,27 +12,8 @@ namespace gitUtils
     }
 
     std::string hashFile(std::string stringToHash) {
-        boost::uuids::detail::sha1 s;
-        char hash[20];
-        s.process_bytes(stringToHash.c_str(), stringToHash.size());
-        unsigned int digest[5];
-        s.get_digest(digest);
-        for(int i = 0; i < 5; ++i)
-        {
-            const char* tmp = reinterpret_cast<char*>(digest);
-            hash[i*4] = tmp[i*4+3];
-            hash[i*4+1] = tmp[i*4+2];
-            hash[i*4+2] = tmp[i*4+1];
-            hash[i*4+3] = tmp[i*4];
-        }
-
-        std::stringstream out;
-        for(int i = 0; i < 20; ++i)
-        {
-            out << ((hash[i] & 0x000000F0) >> 4) <<  (hash[i] & 0x0000000F);
-        } 
-
-        return out.str();
+        boost::compute::detail::sha1 s(stringToHash);
+        return s;
     }
 
     bool isValidGitFolder() {

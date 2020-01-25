@@ -1,9 +1,11 @@
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/functional/hash.hpp>
-#include <boost/uuid/detail/sha1.hpp>
+#include <boost/compute/detail/sha1.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <sstream>
 

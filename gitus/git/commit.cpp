@@ -48,7 +48,7 @@ void showCommitHelp()
 
 bool makeCommit(std::string message, std::string author, std::string email)
 {
-    std::stringstream commitContent;
+    std::ostringstream commitContent;
     boost::uuids::random_generator gen;
     boost::uuids::uuid id = gen();
 
