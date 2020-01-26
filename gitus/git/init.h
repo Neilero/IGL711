@@ -2,6 +2,12 @@
 
 #include "gitUtils.h"
 
-void init(char * argv[]);
+/**
+ * Function which take care of the Init command
+ */
+bool init(char * arg = nullptr);
 
-void showInitHelp(const std::string& unknownArg="");
+/**
+ * Function which print the help of the Init command
+ */
+void showInitHelp(const std::string& unknownArg = "");
