@@ -10,17 +10,21 @@ namespace fs = boost::filesystem;
     Afin d'avoir une certaine simplicité dans ce travail, il n'y a seulement que le répertoire .git, le
     répertoire .git/objects et le fichier .git/index qui seront utilisés. */
 
-void init(char * argv[])
+bool init(char * arg)
 {
-    if (argv[2] != nullptr) {   // test argument presence
-        auto argument = std::string(argv[2]);
+    if (arg != nullptr) // test argument presence
+    {   
+        auto argument = std::string(arg);
 
         if (argument == "-h" || argument == "--help")
             showInitHelp();
         else    // unknown argument
+        {   
             showInitHelp(argument);
+            return false;
+        }
 
-        return; //stop initialisation
+        return true; //stop initialisation
     }
 
     const auto rootFolder = fs::current_path() / ".git";
@@ -39,6 +43,7 @@ void init(char * argv[])
     }
 
     std::cout << "Initialized Git repository in " << fs::current_path() << std::endl;
+    return true;
 }
 
 void showInitHelp(const std::string& unknownArg) {

@@ -13,11 +13,14 @@ namespace fs = boost::filesystem;
 
 namespace gitUtils 
 {
-
     /**
-     * Functions which hash a file or a string and return a SHA1 string
+     * Function which hash a string and return a SHA1 string
      */
     std::string hashFile(std::string stringToHash);
+
+    /**
+     * Function which hash the content file and return a SHA1 string
+     */
     std::string hashFile(const fs::path& path);
 
     /**

@@ -5,8 +5,17 @@
 
 #include "gitUtils.h"
 
-void commit(std::vector<std::string> arguments);
+/**
+ * Function which take care of the command init
+ */
+bool commit(std::vector<std::string> arguments);
 
-void showCommitHelp();
-
+/**
+ * Function which create a new commit file in the objects folder
+ */
 bool makeCommit(std::string message, std::string author, std::string email);
+
+/**
+ * Function which print the help of the Commit command
+ */
+void showCommitHelp();
