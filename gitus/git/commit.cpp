@@ -56,6 +56,7 @@ bool makeCommit(std::string message, std::string author, std::string email)
     if (!gitUtils::createObjectFile(commitContent.str(), false))
         return false;
 
+    std::cout << "Commit " << id << " created" << std::endl;
     return true;
 }
 
