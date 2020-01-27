@@ -123,4 +123,13 @@ TEST_CASE("commit command: everything is fine")
 	args.push_back(mail);
 	REQUIRE(commit(args));
 
+	// Pour tester les trees
+
+	
+
+	// On ajoute 3 fichiers dans différents directories
+	// On teste qu'il y a les bonnes lignes dans le fichier de tree
+	// On teste que les codes en début lignes sont okay
+	// On teste que ça pointe vers des fichiers de objects qui existent
+
 }

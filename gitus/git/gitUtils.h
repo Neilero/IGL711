@@ -36,7 +36,7 @@ namespace gitUtils
     /**
      * Function which create a file object given its string content
      */
-    bool createObjectFile(std::string fileContent, bool blob);
+    bool createObjectFile(std::string fileContent, std::string prefix);
 
     /**
      * Function which add a file to the index file
