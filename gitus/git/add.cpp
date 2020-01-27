@@ -61,7 +61,7 @@ bool addFileToGit(fs::path pathToFile)
     std::ifstream ifs(pathToFile.string());
     std::string fileContent((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
-    if (!gitUtils::createObjectFile(fileContent))
+    if (!gitUtils::createObjectFile(fileContent, true))
         return false;
 
     if (!gitUtils::addFileToIndex(pathToFile))

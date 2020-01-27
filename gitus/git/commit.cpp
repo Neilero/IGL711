@@ -53,7 +53,7 @@ bool makeCommit(std::string message, std::string author, std::string email)
     commitContent << email << std::endl;
 
     // If an error occured, return false
-    if (!gitUtils::createObjectFile(commitContent.str()))
+    if (!gitUtils::createObjectFile(commitContent.str(), false))
         return false;
 
     return true;

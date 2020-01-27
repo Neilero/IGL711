@@ -7,16 +7,9 @@
 #include "init.h"
 #include "add.h"
 #include "commit.h"
+#include <filesystem>
 
 namespace fs = boost::filesystem;
-/*#include <dummy.h>
-
-TEST_CASE("is the world ok") 
-{
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() == 42);
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() != 41);
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() != 43);
-}*/
 
 TEST_CASE("init command: everything is fine") 
 {
@@ -89,5 +82,45 @@ TEST_CASE("add command: everything is fine")
 
 TEST_CASE("commit command: everything is fine") 
 {
-	
+	fs::path currentPath = fs::current_path();
+
+	REQUIRE(init());
+
+	std::string message("Commit message");
+	std::string user("Commit user");
+	std::string mail("Commit email");
+	std::vector<std::string> args;
+
+	// Error with only 1 argument
+	args.push_back(message);
+	REQUIRE(!commit(args));
+
+	// Error with only 2 arguments
+	args.push_back(user);
+	REQUIRE(!commit(args));
+
+	// Error with more than 3 arguments
+	args.push_back(mail);
+	args.push_back(mail);
+	REQUIRE(!commit(args));
+
+	// No error with the -h option
+	args.push_back("-h");
+	REQUIRE(commit(args));
+
+	// No error with the --help option
+	args.clear();
+	args.push_back(message);
+	args.push_back(user);
+	args.push_back(mail);
+	args.push_back("--help");
+	REQUIRE(commit(args));
+
+	// No error with the correct number of arguments
+	args.clear();
+	args.push_back(message);
+	args.push_back(user);
+	args.push_back(mail);
+	REQUIRE(commit(args));
+
 }

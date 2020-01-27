@@ -7,6 +7,10 @@
 #include <boost/functional/hash.hpp>
 #include <boost/compute/detail/sha1.hpp>
 #include <boost/uuid/uuid.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
 #include <sstream>
 
 namespace fs = boost::filesystem;
@@ -32,7 +36,7 @@ namespace gitUtils
     /**
      * Function which create a file object given its string content
      */
-    bool createObjectFile(std::string fileContent);
+    bool createObjectFile(std::string fileContent, bool compression);
 
     /**
      * Function which add a file to the index file

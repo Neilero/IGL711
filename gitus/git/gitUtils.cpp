@@ -22,14 +22,14 @@ namespace gitUtils
         return fs::exists(potentialGitDirectory);
     }
 
-    bool createObjectFile(std::string fileContent)
+    bool createObjectFile(std::string content, bool compression)
     {
         if (!isValidGitFolder())
             return false;
             
         const char* pathObjects = ".git/objects/";
         
-        std::string hashFile = gitUtils::hashFile(std::string(fileContent));
+        std::string hashFile = gitUtils::hashFile(std::string(content));
         std::string folderStringHash = hashFile.substr(0, 2);
 
         boost::filesystem::path dir(fs::current_path() / (pathObjects+folderStringHash));
@@ -40,7 +40,19 @@ namespace gitUtils
         if (!fs::exists(dir / hashFile.substr(2)))
         {
             std::ofstream outfile ((dir / hashFile.substr(2)).string());
-            outfile << fileContent << std::endl;
+
+            if (compression)
+            {
+                boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+                in.push(boost::iostreams::zlib_compressor());
+                in.push(boost::make_iterator_range(content));
+                std::string compressed;
+                boost::iostreams::copy(in, boost::iostreams::back_inserter(compressed));
+
+                content = compressed;
+            }
+
+            outfile << content << std::endl;
             outfile.close();
         }
 
