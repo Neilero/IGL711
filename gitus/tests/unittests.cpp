@@ -63,14 +63,22 @@ TEST_CASE("add command: everything is fine")
 	REQUIRE(add(args));
 	add(args);
 
+	// Clears the objects directory
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		fs::remove_all(it->path());
+	}
 	args.push_back("test.txt");
 	args.push_back("-h");
 	REQUIRE(add(args) == true);
 
+	// Clears the objects directory
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		fs::remove_all(it->path());
+	}
 	args.clear();
 	args.push_back("test.txt");
 	args.push_back("--help");
-	REQUIRE(add(args) == false);
+	REQUIRE(add(args) == true);
 
 		// - Checks whether the file is added to the staged area or not,
 		// 	that the index file is modified with the right information
