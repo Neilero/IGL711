@@ -16,22 +16,21 @@ TEST_CASE("init command: everything is fine")
 {
 	fs::path currentPath = fs::current_path();
 
-	for (fs::directory_iterator endDirIt, it(currentPath/".git"); it != endDirIt; ++it) {	// Clears the .git directory
-		fs::remove_all(it->path());
-	}
+	// Clears the .git directory
+	fs::remove_all(currentPath/".git");
 
 	// If arguments: 
 		// - Checks if -h and --help parameters are ok
 	REQUIRE(init("-h"));
 	REQUIRE(init("--help"));
 		// - Checks if wrong parameters
-	REQUIRE(init("") == false);
-	REQUIRE(init("1") == false);
+	REQUIRE_FALSE(init(""));
+	REQUIRE_FALSE(init("1"));
 
 	// If no argument:
 		// - Checks if everything is ok and runs the init() method
 	REQUIRE(init());
-	init();
+
 		// - Checks whether the .git and objects directories and the index file are created or not
 	REQUIRE(fs::is_directory(currentPath / ".git"));
 	REQUIRE(fs::is_directory(currentPath / ".git/objects"));
@@ -47,7 +46,6 @@ TEST_CASE("init command: everything is fine")
     }
 
 	indexFile.close();
-
 }
 
 TEST_CASE("add command: everything is fine") 
@@ -66,6 +64,8 @@ TEST_CASE("add command: everything is fine")
 
     file.close();
 	file2.close();
+
+	REQUIRE(init());
 
 	// If wrong parameter:
 	args.push_back("1");
@@ -194,9 +194,7 @@ TEST_CASE("add command: everything is fine")
 
 	while (std::getline(indexFile, content1))
     {
-	  	std::cout<<"content1: "<<content1<<std::endl;
 		tmp1 += content1 + "\n";
-		std::cout<<"tmp1: "<<tmp1<<std::endl;
     }
 
 
@@ -214,18 +212,10 @@ TEST_CASE("add command: everything is fine")
 
 	while (std::getline(indexFile, content2))
     {
-	  	std::cout<<"content2: "<<content2<<std::endl;
 		tmp2 += content2 + "\n";
-		std::cout<<"tmp2: "<<tmp2<<std::endl;
     }
 
-	//indexFile.close();
-
-	std::cout<<"testing: \n"<<tmp1<<" != "<<tmp2<<std::endl;
 	REQUIRE_FALSE(tmp1 == tmp2);
-
-	indexFile.close();
-
 }
 
 TEST_CASE("commit command: everything is fine") 
