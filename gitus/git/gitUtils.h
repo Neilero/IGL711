@@ -1,3 +1,6 @@
+#ifndef GITUS_GITUTILS_H
+#define GITUS_GITUTILS_H
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -49,3 +52,5 @@ namespace gitUtils
      */
     bool addFileToIndex(fs::path chemin);
 }
+
+#endif //GITUS_GITUTILS_H
