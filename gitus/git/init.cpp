@@ -10,7 +10,7 @@ namespace fs = boost::filesystem;
     Afin d'avoir une certaine simplicité dans ce travail, il n'y a seulement que le répertoire .git, le
     répertoire .git/objects et le fichier .git/index qui seront utilisés. */
 
-bool init(char * arg)
+bool init(const char * arg)
 {
     if (arg != nullptr) // test argument presence
     {   

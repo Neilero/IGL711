@@ -22,20 +22,20 @@ TEST_CASE("init command: everything is fine")
 
 	// If arguments: 
 		// - Checks if -h and --help parameters are ok
-	REQUIRE(init("-h") == true);
-	REQUIRE(init("--help") == true);
+	REQUIRE(init("-h"));
+	REQUIRE(init("--help"));
 		// - Checks if wrong parameters
-	REQUIRE(init("") == false);
-	REQUIRE(init("1") == false);
+	REQUIRE(!init(""));
+	REQUIRE(!init("1"));
 
 	// If no argument:
 		// - Checks if everything is ok and runs the init() method
-	REQUIRE(init() == true);
+	REQUIRE(init());
 	init();
 		// - Checks whether the .git and objects directories and the index file are created or not
-	REQUIRE(fs::is_directory(currentPath/".git") == true);
-	REQUIRE(fs::is_directory(currentPath/".git/objects") == true);
-	REQUIRE(fs::exists(currentPath/".git/index") == true);
+	REQUIRE(fs::is_directory(currentPath / ".git"));
+	REQUIRE(fs::is_directory(currentPath / ".git/objects"));
+	REQUIRE(fs::exists(currentPath / ".git/index"));
 
 	// Checks if the index file contains "0"
 	std::ifstream indexFile = std::ifstream((currentPath/".git/index").string());
@@ -59,7 +59,7 @@ TEST_CASE("add command: everything is fine")
 	std::string content;
 	std::vector<std::string> args;
 	int lineCounter;
-	
+
 	file2<<"Testing writing text.";
 
     file.close();
@@ -68,7 +68,7 @@ TEST_CASE("add command: everything is fine")
 	// If wrong parameter:
 	args.push_back("1");
 	args.push_back("");
-	REQUIRE(add(args) == true);
+	REQUIRE(add(args));
 
 	// If <pathspec> parameter is ok:
 	
@@ -98,7 +98,7 @@ TEST_CASE("add command: everything is fine")
 		// - Checks if the index file contains the right count of lines for 1 file added
 	lineCounter = 0;
 	indexFile = std::ifstream((currentPath/".git/index").string());
-	
+
 	while (std::getline(indexFile, content))
     {
 	  lineCounter++;
@@ -168,7 +168,7 @@ TEST_CASE("add command: everything is fine")
 	}
 	args.push_back("test.txt");
 	args.push_back("-h");
-	REQUIRE(add(args) == true);
+	REQUIRE(add(args));
 
 	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {	// Clears the objects directory
 		fs::remove_all(it->path());
@@ -176,7 +176,7 @@ TEST_CASE("add command: everything is fine")
 	args.clear();
 	args.push_back("test.txt");
 	args.push_back("--help");
-	REQUIRE(add(args) == true);
+	REQUIRE(add(args));
 
 }
 
@@ -287,13 +287,97 @@ TEST_CASE("commit command: everything is fine")
 		if (numLines == 2)
 		{
 			// Check if the user is the same as given before
-			REQUIRE(line.find('\''+user+"\' "+'\''+mail+'\'') == 0);	
+			REQUIRE(line.find('\''+user+"\' "+'\''+mail+'\'') == 0);
 		}
 		if (numLines == 3)
 		{
-			// Check if the message is the same as given before	
+			// Check if the message is the same as given before
 			REQUIRE(line == ('\''+message+'\''));
 		}
 		numLines++;
 	}
+}
+
+TEST_CASE("ObjectsTree: everything is fine") {
+
+    REQUIRE(init());
+    gitUtils::ObjectsTree tree(boost::filesystem::current_path());
+
+    auto file1 = fs::current_path() / "a.txt";
+    auto folder= fs::current_path() / "folder";
+    auto file2 = folder / "a.txt";
+    auto file3 = folder / "b.txt";
+
+    SECTION("Check adding objects") {
+        // the file must exists
+        REQUIRE_FALSE(fs::exists(file1));
+        REQUIRE_FALSE(tree.addObject(file1));
+
+        std::ofstream output1(file1.string());
+        output1 << "a" << std::endl;
+        auto file1Sha = gitUtils::getSha1FromFile(file1);
+
+        REQUIRE(tree.addObject(file1));
+        REQUIRE(tree.getObjects().at(file1Sha).objectName == "a.txt");
+
+        // Check adding complex objects
+        fs::create_directories(folder);
+        auto folderSha = gitUtils::hashFile(folder.string());
+        std::ofstream output2(file2.string());
+        output2 << "aa" << std::endl;
+        auto file2Sha = gitUtils::getSha1FromFile(file2);
+        std::ofstream output3(file3.string());
+        output3 << "bb" << std::endl;
+        auto file3Sha = gitUtils::getSha1FromFile(file3);
+
+        REQUIRE(tree.addObject(file2));
+        REQUIRE(tree.addObject(file3));
+        REQUIRE(tree.getObjects().size() == 2);
+        REQUIRE(tree.getObjects().at(folderSha).directoryTree->getObjects().size() == 2);
+        REQUIRE(tree.getObjects().at(folderSha).directoryTree->getObjects().at(file2Sha).objectName == "a.txt");
+        REQUIRE(tree.getObjects().at(folderSha).directoryTree->getObjects().at(file3Sha).objectName == "b.txt");
+    }
+
+
+    SECTION("Checking the output file(s) of writeTree") {
+        std::ofstream output1(file1.string());
+        output1 << "a" << std::endl;
+        auto file1Sha = gitUtils::getSha1FromFile(file1);
+        fs::create_directories(folder);
+        auto folderSha = gitUtils::hashFile(folder.string());
+        std::ofstream output2(file2.string());
+        output2 << "aa" << std::endl;
+        auto file2Sha = gitUtils::getSha1FromFile(file2);
+        std::ofstream output3(file3.string());
+        output3 << "bb" << std::endl;
+        auto file3Sha = gitUtils::getSha1FromFile(file3);
+
+        REQUIRE(tree.addObject(file1));
+        REQUIRE(tree.addObject(file2));
+        REQUIRE(tree.addObject(file3));
+
+        auto rootFileSha = tree.writeTree();
+        REQUIRE_FALSE(rootFileSha.empty());
+
+        SECTION("Checking the root file") {
+            auto rootFilePath = fs::current_path() / ".git/objects" / rootFileSha.substr(0, 2) / rootFileSha.substr(2);
+            std::ifstream rootFile( rootFilePath.string() );
+
+            std::string line;
+
+            //first word is tree
+            rootFile >> line;
+            REQUIRE(line.substr(0, 4) == "tree");
+
+            //
+        }
+    }
+
+    // On teste qu'il y a les bonnes lignes dans le fichier de tree
+    // On teste que les codes en début lignes sont okay
+    // On teste que ça pointe vers des fichiers de objects qui existent
+
+    fs::remove_all(fs::current_path() / ".git");
+    fs::remove_all(fs::current_path() / "folder");
+    fs::remove_all(fs::current_path() / "a.txt");
 }

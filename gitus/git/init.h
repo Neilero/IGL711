@@ -8,7 +8,7 @@
 /**
  * Function which take care of the Init command
  */
-bool init(char * arg = nullptr);
+bool init(const char * arg = nullptr);
 
 /**
  * Function which print the help of the Init command

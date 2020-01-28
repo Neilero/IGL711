@@ -30,7 +30,8 @@ namespace gitUtils
         // check if new object is in a subdirectory or is a subdirectory
         if (objectRelativePath.has_parent_path()) {
             auto subdirectoryName = objectRelativePath.begin()->string();
-            auto subdirectorySha = hashFile(path.string()); //we use the directory's path as ID until asked to write the tree
+            auto subdirectoryPath = path.string().substr(0, path.string().find_last_of(subdirectoryName)+1);
+            auto subdirectorySha = hashFile(subdirectoryPath); //we use the directory's path as ID until asked to write the tree
 
             // check if subdirectory already exists
             auto subdirectory = objects.find(subdirectorySha);
