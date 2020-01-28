@@ -4,13 +4,6 @@ namespace fs = boost::filesystem;
 
 namespace gitUtils 
 {
-    std::string hashFile(const fs::path &path) {
-        std::ifstream ifs(path.string());
-        std::string fileContent((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-
-        return gitUtils::hashFile(fileContent);
-    }
-
     std::string hashFile(std::string stringToHash) {
         boost::compute::detail::sha1 s(stringToHash);
         return s;
@@ -24,11 +17,16 @@ namespace gitUtils
 
     bool createObjectFile(std::string content, std::string prefix)
     {
+        // If a git repo is created
         if (!isValidGitFolder())
+        {
+            std::cout << "The current directory is not a valid Gitus repository" << std::endl;
             return false;
+        }
             
         const char* pathObjects = ".git/objects/";
 
+        // generate the header and the SHA1
         std::string objectContent(prefix+" "+std::to_string((int) content.length())+'\0'+content);
         std::string hashFile = gitUtils::hashFile(objectContent);
 
@@ -59,6 +57,14 @@ namespace gitUtils
         return true;
     }
 
+    std::string getSha1FromFile(const fs::path &path)
+    {
+        std::ifstream ifs(path.string());
+        std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+
+        return gitUtils::hashFile(std::string("blob "+std::to_string((int) content.length())+'\0'+content));
+    }
+
     std::string getSha1FromContent(std::string content, std::string prefix)
     {
         return gitUtils::hashFile(std::string(prefix+" "+std::to_string((int) content.length())+'\0'+content));
@@ -66,11 +72,15 @@ namespace gitUtils
 
     bool addFileToIndex(fs::path pathToFile)
     {
+       // If a git repo is created
         if (!isValidGitFolder())
+        {
+            std::cout << "The current directory is not a valid Gitus repository" << std::endl;
             return false;
+        }
 
         std::string stringPathToFile = pathToFile.string();
-        std::string hash = hashFile(pathToFile);
+        std::string hash = getSha1FromFile(pathToFile);
 
         bool alreadyAddedFlag = false;
 

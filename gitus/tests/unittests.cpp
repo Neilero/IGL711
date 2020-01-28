@@ -60,7 +60,7 @@ TEST_CASE("add command: everything is fine")
     file.close();
 	file2.close();
 
-	// If wrong parameter:
+	// If wrong parameter:P
 	args.push_back("1");
 	args.push_back("");
 	REQUIRE(add(args) == true);

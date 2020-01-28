@@ -54,7 +54,7 @@ namespace gitUtils
 
         // the new object is not in a subdirectory and is a file, so we'll try to add it to this tree
         auto objectName = path.filename().string();
-        auto objectSha = hashFile(path);
+        auto objectSha = getSha1FromFile(path);
 
         // check object not already present
         if (objects.find(objectSha) != objects.end()) {
@@ -99,7 +99,7 @@ namespace gitUtils
         if (boost::filesystem::is_directory(path))
             objectSha = hashFile(path.string());
         else
-            objectSha = hashFile(path);
+            objectSha = getSha1FromFile(path);
 
         return objects.erase(objectSha) > 0;
     }

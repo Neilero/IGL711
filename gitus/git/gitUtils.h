@@ -22,10 +22,6 @@ namespace gitUtils
      */
     std::string hashFile(std::string stringToHash);
 
-    /**
-     * Function which hash the content file and return a SHA1 string
-     */
-    std::string hashFile(const fs::path& path);
 
     /**
      * Return true if the current working directory contains a ".git" folder
@@ -42,6 +38,11 @@ namespace gitUtils
      * Function which return the sha1 of a string
      */
     std::string getSha1FromContent(std::string content, std::string prefix);
+
+    /**
+     * Function which return the sha1 of a file
+     */
+    std::string getSha1FromFile(const fs::path &path);
 
     /**
      * Function which add a file to the index file

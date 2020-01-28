@@ -52,13 +52,11 @@ bool makeCommit(std::string message, std::string author, std::string email)
     std::ostringstream commitContent;
     commitContent << id << std::endl;
 
-    // todo itérer sur les files du index pour faire l'arbre
-
     std::ifstream readFile(".git/index");
-
     std::string line;
     std::getline(readFile, line);
 
+    // If there is a parent commit, add its SHA1
     if (line != "0")
         commitContent << "parent " << std::endl;
 
@@ -73,11 +71,13 @@ bool makeCommit(std::string message, std::string author, std::string email)
         }
     }
 
+    // If there is no staged file in the index, stop the commit process
     if (numberFiles == 0)
     {
         std::cout << "There is no staged files to commit" << std::endl;
         return false;
     }
+    
     commitContent << "tree " << tree.writeTree();
 
     commitContent << author << " ";
