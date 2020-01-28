@@ -58,7 +58,7 @@ bool makeCommit(std::string message, std::string author, std::string email)
 
     // If there is a parent commit, add its SHA1
     if (line != "0")
-        commitContent << "parent " << std::endl;
+        commitContent << "parent " << line << std::endl;
 
     gitUtils::ObjectsTree tree(boost::filesystem::current_path());
     int numberFiles = 0;
@@ -77,14 +77,14 @@ bool makeCommit(std::string message, std::string author, std::string email)
         std::cout << "There is no staged files to commit" << std::endl;
         return false;
     }
-    
-    commitContent << "tree " << tree.writeTree();
 
-    commitContent << author << " ";
-    commitContent << email << " ";
+    commitContent << "tree " << tree.writeTree() << std::endl;
+
+    commitContent << '\''<< author << "\' ";
+    commitContent << '\''<< email << "\' ";
     commitContent << time(0) << std::endl;
 
-    commitContent << message << std::endl;
+    commitContent << '\''<< message << "\'" << std::endl;
 
     // If an error occured, return false
     if (!gitUtils::createObjectFile(commitContent.str(), "commit"))
