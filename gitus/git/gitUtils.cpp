@@ -29,12 +29,11 @@ namespace gitUtils
             
         const char* pathObjects = ".git/objects/";
 
-        std::string hashFile = gitUtils::hashFile(std::string(prefix+" "+std::to_string((int) content.length())+'\0'+content));
+        std::string objectContent(prefix+" "+std::to_string((int) content.length())+'\0'+content);
+        std::string hashFile = gitUtils::hashFile(objectContent);
 
         std::string folderStringHash = hashFile.substr(0, 2);
-
         boost::filesystem::path dir(fs::current_path() / (pathObjects+folderStringHash));
-
         boost::filesystem::create_directory(dir);
 
         // If the file doesn't already exist, create it
@@ -42,27 +41,29 @@ namespace gitUtils
         {
             std::ofstream outfile ((dir / hashFile.substr(2)).string());
 
+            // If it's a blob, then we have to compress the content
             if (prefix == "blob")
             {
                 boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
                 in.push(boost::iostreams::zlib_compressor());
-                in.push(boost::make_iterator_range(content));
+                in.push(boost::make_iterator_range(objectContent));
                 std::string compressed;
                 boost::iostreams::copy(in, boost::iostreams::back_inserter(compressed));
 
-                content = compressed;
+                objectContent = compressed;
             }
 
-            outfile << content << std::endl;
-            outfile.close();
+            outfile << objectContent;
         }
 
         return true;
     }
 
-    /**
-     * Function which add a file to the index folder
-     */
+    std::string getSha1FromContent(std::string content, std::string prefix)
+    {
+        return gitUtils::hashFile(std::string(prefix+" "+std::to_string((int) content.length())+'\0'+content));
+    }
+
     bool addFileToIndex(fs::path pathToFile)
     {
         if (!isValidGitFolder())

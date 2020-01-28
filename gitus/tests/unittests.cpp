@@ -86,6 +86,23 @@ TEST_CASE("commit command: everything is fine")
 
 	REQUIRE(init());
 
+	// Clears the objects directory
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		fs::remove_all(it->path());
+	}
+
+	std::ofstream newIndex(".git/index", std::ofstream::trunc);
+
+	std::ofstream newFile1("test1.txt", std::ofstream::trunc);
+	std::ofstream newFile2("test2.txt", std::ofstream::trunc);
+	fs::create_directories(currentPath/"testFolder");
+	std::ofstream newFile23("testFolder/test3.txt", std::ofstream::trunc);
+	std::vector<std::string> files;
+	files.push_back("test1.txt");
+	files.push_back("test2.txt");
+	files.push_back("testFolder/test3.txt");
+	add(files);
+
 	std::string message("Commit message");
 	std::string user("Commit user");
 	std::string mail("Commit email");
@@ -127,7 +144,6 @@ TEST_CASE("commit command: everything is fine")
 
 	
 
-	// On ajoute 3 fichiers dans différents directories
 	// On teste qu'il y a les bonnes lignes dans le fichier de tree
 	// On teste que les codes en début lignes sont okay
 	// On teste que ça pointe vers des fichiers de objects qui existent

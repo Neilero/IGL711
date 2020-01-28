@@ -39,6 +39,11 @@ namespace gitUtils
     bool createObjectFile(std::string fileContent, std::string prefix);
 
     /**
+     * Function which return the sha1 of a string
+     */
+    std::string getSha1FromContent(std::string content, std::string prefix);
+
+    /**
      * Function which add a file to the index file
      */
     bool addFileToIndex(fs::path chemin);

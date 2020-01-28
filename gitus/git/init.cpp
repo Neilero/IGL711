@@ -36,6 +36,7 @@ bool init(char * arg)
 
     if (!fs::exists(indexFile)) {
         std::ofstream file(indexFile.string());
+        file << "0" << std::endl;
     }
 
     if (!fs::exists(headFile)) {
