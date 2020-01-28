@@ -10,7 +10,8 @@ add_library(
     init.cpp
     gitUtils.h
     gitUtils.cpp
-    )
+	ObjectsTree.cpp
+	ObjectsTree.h)
 if (UNIX)
 target_link_libraries(git 
     PUBLIC 

@@ -7,16 +7,9 @@
 #include "init.h"
 #include "add.h"
 #include "commit.h"
+#include <filesystem>
 
 namespace fs = boost::filesystem;
-/*#include <dummy.h>
-
-TEST_CASE("is the world ok") 
-{
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() == 42);
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() != 41);
-	REQUIRE(GetAnswerToLifeUniverseAndEverything() != 43);
-}*/
 
 TEST_CASE("init command: everything is fine") 
 {
@@ -165,6 +158,68 @@ TEST_CASE("add command: everything is fine")
 
 TEST_CASE("commit command: everything is fine") 
 {
-	
-}
+	fs::path currentPath = fs::current_path();
 
+	REQUIRE(init());
+
+	// Clears the objects directory
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		fs::remove_all(it->path());
+	}
+
+	std::ofstream newIndex(".git/index", std::ofstream::trunc);
+
+	std::ofstream newFile1("test1.txt", std::ofstream::trunc);
+	std::ofstream newFile2("test2.txt", std::ofstream::trunc);
+	fs::create_directories(currentPath/"testFolder");
+	std::ofstream newFile23("testFolder/test3.txt", std::ofstream::trunc);
+	std::vector<std::string> files;
+	files.push_back("test1.txt");
+	files.push_back("test2.txt");
+	files.push_back("testFolder/test3.txt");
+	add(files);
+
+	std::string message("Commit message");
+	std::string user("Commit user");
+	std::string mail("Commit email");
+	std::vector<std::string> args;
+
+	// Error with only 1 argument
+	args.push_back(message);
+	REQUIRE(!commit(args));
+
+	// Error with only 2 arguments
+	args.push_back(user);
+	REQUIRE(!commit(args));
+
+	// Error with more than 3 arguments
+	args.push_back(mail);
+	args.push_back(mail);
+	REQUIRE(!commit(args));
+
+	// No error with the -h option
+	args.push_back("-h");
+	REQUIRE(commit(args));
+
+	// No error with the --help option
+	args.clear();
+	args.push_back(message);
+	args.push_back(user);
+	args.push_back(mail);
+	args.push_back("--help");
+	REQUIRE(commit(args));
+
+	// No error with the correct number of arguments
+	args.clear();
+	args.push_back(message);
+	args.push_back(user);
+	args.push_back(mail);
+	REQUIRE(commit(args));
+
+	// Pour tester les trees
+
+	// On teste qu'il y a les bonnes lignes dans le fichier de tree
+	// On teste que les codes en début lignes sont okay
+	// On teste que ça pointe vers des fichiers de objects qui existent
+
+}
