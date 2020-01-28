@@ -1,7 +1,5 @@
 add_library(
     git
-    dummy.h 
-    dummy.cpp
     add.h
     add.cpp
     commit.h
