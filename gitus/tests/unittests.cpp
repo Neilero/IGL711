@@ -55,13 +55,17 @@ TEST_CASE("add command: everything is fine")
 	fs::path currentPath = fs::current_path();
 	std::ofstream file = std::ofstream((currentPath/"test.txt").string());
 	std::ofstream file2 = std::ofstream((currentPath/"test2.txt").string());
+	std::ifstream indexFile;
+	std::string content;
 	std::vector<std::string> args;
+	int lineCounter;
+	
 	file2<<"Testing writing text.";
 
     file.close();
 	file2.close();
 
-	// If wrong parameter:P
+	// If wrong parameter:
 	args.push_back("1");
 	args.push_back("");
 	REQUIRE(add(args) == true);
@@ -88,7 +92,23 @@ TEST_CASE("add command: everything is fine")
 	}
 
 		// - Runs the add() method
+	init();
 	add(args);
+
+		// - Checks if the index file contains the right count of lines for 1 file added
+	lineCounter = 0;
+	indexFile = std::ifstream((currentPath/".git/index").string());
+	
+	while (std::getline(indexFile, content))
+    {
+	  lineCounter++;
+	  std::cout<<"lineCounter1: "<<lineCounter<<std::endl;
+	  std::cout<<"content1: "<<content<<std::endl;
+    }
+
+	REQUIRE(lineCounter == 2);	// 1 represents the number of files added (1) + the default line of the file (1)
+
+	indexFile.close();
 
 		// - Checks the number of files in the object directory after adding a file
 	int countAfterAdding = 0;
@@ -99,7 +119,7 @@ TEST_CASE("add command: everything is fine")
 		// - Checks if the file is added in the object directory
 	REQUIRE(countAfterAdding == (countBeforeAdding + 1));
 
-	// - Checks if everything is ok while running the add() method with 1 file
+	// - Checks if everything is ok while running the add() method with 2 files
 	args.clear();
 	args.push_back("test.txt");
 	args.push_back("test2.txt");
@@ -114,17 +134,31 @@ TEST_CASE("add command: everything is fine")
 	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
 		countBeforeAdding++;
 	}
-	std::cout<<"countBefore"<<countBeforeAdding<<std::endl;
 
 		// - Runs the add() method
+	init();
 	add(args);
+
+		// - Checks if the index file contains the right count of lines for 2 files added
+	lineCounter = 0;
+	indexFile = std::ifstream((currentPath/".git/index").string());
+
+	while (std::getline(indexFile, content))
+    {
+	  lineCounter++;
+	  std::cout<<"lineCounter2: "<<lineCounter<<std::endl;
+	  std::cout<<"content2: "<<content<<std::endl;
+    }
+
+	REQUIRE(lineCounter == 3);	// 2 represents the number of files added (2) + the default line of the file (1)
+
+	indexFile.close();
 
 		// - Checks the number of files in the object directory after adding a file
 	countAfterAdding = 0;
 	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
 		countAfterAdding++;
 	}
-	std::cout<<"countAfter"<<countAfterAdding<<std::endl;
 
 		// - Checks if the two files are added in the object directory
 	REQUIRE(countAfterAdding == (countBeforeAdding + 2));
@@ -144,17 +178,6 @@ TEST_CASE("add command: everything is fine")
 	args.push_back("--help");
 	REQUIRE(add(args) == true);
 
-	//
-	
-	/*
-	Add :
-	OKTester si ça ajoute dans le object un fichier
-	Tester si ça ajoute dans index nblignes -1
-	Tester si quand on le fait une deuxième fois, ça ne crée pas les fichiers en double (dans objects et dans le fichier index)
-	Tester si quand on modifie un fichier qui a été ajouté et qu'on l'ajoute une deuxième fois, ça modifie le index à la bonne ligne 
-	et ça crée un nouveau fichier dans objects
-	*/
-		
 }
 
 TEST_CASE("commit command: everything is fine") 
