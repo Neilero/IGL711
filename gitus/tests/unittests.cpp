@@ -36,16 +36,16 @@ TEST_CASE("init command: everything is fine")
 	REQUIRE(fs::is_directory(currentPath/".git/objects") == true);
 	REQUIRE(fs::exists(currentPath/".git/index") == true);
 
-	// TODO: 0 dans fichier index
-	std::ifstream indexFile = std::ifstream((currentPath/"index").string());
+	// Checks if the index file contains "0"
+	std::ifstream indexFile = std::ifstream((currentPath/".git/index").string());
 	std::string content;
 
 	while (std::getline(indexFile, content))
     {
-      std::cout << "content : " << content << '\n';
+	  REQUIRE(content == "0");
     }
-    indexFile.close();
 
+	indexFile.close();
 
 }
 
