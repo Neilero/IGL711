@@ -235,9 +235,9 @@ TEST_CASE("commit command: everything is fine")
 	fs::remove_all(currentPath/".git");
 	REQUIRE(init());
 
-	std::string message("Commit message");
-	std::string user("Commit user");
-	std::string mail("Commit email");
+	std::string message("message");
+	std::string user("user commit");
+	std::string mail("email commit");
 	std::vector<std::string> args;
 
 	// Error with only 1 argument
@@ -272,8 +272,6 @@ TEST_CASE("commit command: everything is fine")
 	args.push_back(mail);
 	REQUIRE(!commit(args));
 
-	std::ofstream newIndex(".git/index", std::ofstream::trunc);
-
 	std::ofstream newFile1("test1.txt", std::ofstream::trunc);
 	std::ofstream newFile2("test2.txt", std::ofstream::trunc);
 	fs::create_directories(currentPath/"testFolder");
@@ -302,19 +300,48 @@ TEST_CASE("commit command: everything is fine")
 	// - Checks if the two trees file and the commit were added
 	REQUIRE(countAfterCommit == (countBeforeCommit + 3));
 
+	std::string sha;
 	int numLines = 0;
 	std::ifstream in(".git/index");
 	std::string line;
 	while ( std::getline(in, line) )
 	{
 		if (numLines == 0)
+		{
 			REQUIRE(line != "0"); // Check if the parent commit was changed
+			sha = line;
+		}
    		++numLines;
 	}
 	// Check if the index file was cleared
 	REQUIRE(numLines == 1);
 
-	fs::remove_all(currentPath/".git");
-	REQUIRE(init());
+	numLines = 0;
+	std::ifstream commitFile((currentPath / ".git/objects/" / sha.substr(0,2) / sha.substr(2, std::string::npos)).c_str());
+	while ( std::getline(commitFile, line) )
+	{
+		if (numLines == 1)
+		{
+			std::vector<std::string> result;
+			std::istringstream iss(line);
+			for(std::string s; iss >> s; )
+   				result.push_back(s);
 
+			std::string shaTree = result[1];
+
+			// Check if the tree exists in the objects folder
+			REQUIRE(fs::exists(currentPath / ".git/objects/" / shaTree.substr(0,2) / shaTree.substr(2, std::string::npos)));
+		}
+		if (numLines == 2)
+		{
+			// Check if the user is the same as given before
+			REQUIRE(line.find('\''+user+"\' "+'\''+mail+'\'') == 0);	
+		}
+		if (numLines == 3)
+		{
+			// Check if the message is the same as given before	
+			REQUIRE(line == ('\''+message+'\''));
+		}
+		numLines++;
+	}
 }
