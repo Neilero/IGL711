@@ -227,7 +227,7 @@ TEST_CASE("add command: everything is fine")
 	indexFile.close();
 
 }
-/*
+
 TEST_CASE("commit command: everything is fine") 
 {
 	fs::path currentPath = fs::current_path();
@@ -317,4 +317,4 @@ TEST_CASE("commit command: everything is fine")
 	fs::remove_all(currentPath/".git");
 	REQUIRE(init());
 
-}*/
+}
