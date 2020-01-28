@@ -29,15 +29,13 @@ namespace gitUtils
         bool addObject(const boost::filesystem::path &path);
         bool removeObject(const boost::filesystem::path &path);
 
-        bool writeTree();
+        std::string writeTree();
     };
 
     struct ObjectInfo {
         bool isDirectory;
         std::string objectName;
-        ObjectsTree *directoryTree;
-
-        ~ObjectInfo();
+        std::shared_ptr<ObjectsTree> directoryTree;
     };
 }
 

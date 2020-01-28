@@ -15,8 +15,11 @@ namespace gitUtils
     }
 
     bool ObjectsTree::addObject(const boost::filesystem::path &path) {
-        //TODO : add test exists
 
+        // check if given path is valid
+        if (!boost::filesystem::exists(path)) {
+            return false;
+        }
 
         auto objectRelativePath = boost::filesystem::relative(path, treePath);
 
@@ -32,15 +35,13 @@ namespace gitUtils
             // check if subdirectory already exists
             auto subdirectory = objects.find(subdirectorySha);
             if (subdirectory != objects.end()) {
-                std::cout << "Exists: " << subdirectoryName << std::endl;
                 return subdirectory->second.directoryTree->addObject(path);
             }
 
             // the subdirectory doesn't exists, so we'll create it
-            auto *subdirectoryTree = new ObjectsTree(treePath / subdirectoryName);
+            std::shared_ptr<ObjectsTree> subdirectoryTree(new ObjectsTree(treePath / subdirectoryName));
             bool objectInserted = subdirectoryTree->addObject(path);
 
-            std::cout << "Created: " << subdirectoryName << std::endl;
             ObjectInfo subdirectoryInfo{true, subdirectoryName, subdirectoryTree};
             objects.insert( std::make_pair(subdirectorySha, subdirectoryInfo) );
 
@@ -53,11 +54,9 @@ namespace gitUtils
 
         // check object not already present
         if (objects.find(objectSha) != objects.end()) {
-            std::cout << "Exists: " << objectName << std::endl;
             return false;
         }
 
-        std::cout << "Created: " << objectName << std::endl;
         ObjectInfo objectInfo{false, objectName, nullptr}; // we don't need an ObjectsTree for a file
 
         objects.insert( std::make_pair(objectSha, objectInfo) );
@@ -77,7 +76,7 @@ namespace gitUtils
         return true;
     }
 
-    bool ObjectsTree::writeTree() {
+    std::string ObjectsTree::writeTree() {
         // the tree is written with the CSV format
         std::stringstream treeContent;
 
@@ -97,10 +96,6 @@ namespace gitUtils
                         << "\n";
         }
 
-        return createObjectFile(treeContent.str());
-    }
-
-    ObjectInfo::~ObjectInfo() {
-        delete directoryTree;
+        return getSha1FromContent(treeContent.str(), "tree");
     }
 }

@@ -9,8 +9,8 @@ Ce programme a été développé et testé avec les 3 configurations suivantes :
 
 Première configuration :
 * Ubuntu 18.04 (Sous-système Linux de Windows)
-* GCC / G++ version 9.0.1
-* Boost version 1.72.0
+* GCC / G++ version 8.4.0 & 9.0.1
+* Boost version 1.71.0 & 1.72.0
 * Zlib version 1.2.11
 * GNU Make 4.1
 * CMake version 3.16.2
