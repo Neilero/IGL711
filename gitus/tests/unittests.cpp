@@ -338,6 +338,11 @@ TEST_CASE("commit command: everything is fine")
 		}
 		numLines++;
 	}
+
+	fs::remove_all(currentPath/"testFolder");
+	fs::remove(currentPath/"test.txt");
+	fs::remove(currentPath/"test1.txt");
+	fs::remove(currentPath/"test2.txt");
 }
 
 TEST_CASE("ObjectsTree: everything is fine") {
