@@ -47,15 +47,26 @@ bool makeCommit(std::string message, std::string author, std::string email)
     boost::uuids::uuid id = gen();
 
     std::ostringstream commitContent;
-    commitContent << id << id << std::endl;
+    commitContent << id << std::endl;
+
+    // todo itérer sur les files du index pour faire l'arbre
+
+    commitContent << "parent " << std::endl;
+
+    commitContent << author << " ";
+    commitContent << email << " ";
+    commitContent << time(0) << std::endl;
+
     commitContent << message << std::endl;
-    commitContent << author << std::endl;
-    commitContent << email << std::endl;
 
     // If an error occured, return false
-    if (!gitUtils::createObjectFile(commitContent.str()))
+    if (!gitUtils::createObjectFile(commitContent.str(), "commit"))
         return false;
 
+    std::ofstream newIndex(".git/index", std::ofstream::trunc);
+    newIndex << gitUtils::getSha1FromContent(commitContent.str(), "commit") << std::endl;
+
+    std::cout << "Commit " << id << " created" << std::endl;
     return true;
 }
 
