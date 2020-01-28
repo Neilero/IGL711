@@ -1,3 +1,6 @@
+#ifndef GITUS_ADD_H
+#define GITUS_ADD_H
+
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include "gitUtils.h"
@@ -16,3 +19,5 @@ bool addFileToGit(fs::path pathToFile);
  * Function which print the help of the Add command
  */
 void showAddHelp();
+
+#endif //GITUS_ADD_H
