@@ -43,7 +43,7 @@ TEST_CASE("init command: everything is fine")
 
 	while (std::getline(indexFile, content))
     {
-	  REQUIRE(content == "0");
+	  	REQUIRE(content == "0");
     }
 
 	indexFile.close();
@@ -56,9 +56,11 @@ TEST_CASE("add command: everything is fine")
 	std::ofstream file = std::ofstream((currentPath/"test.txt").string());
 	std::ofstream file2 = std::ofstream((currentPath/"test2.txt").string());
 	std::ifstream indexFile;
-	std::string content;
+	std::string content, content1, content2;
 	std::vector<std::string> args;
 	int lineCounter;
+	std::string tmp1;
+	std::string tmp2;
 	
 	file2<<"Testing writing text.";
 
@@ -101,9 +103,7 @@ TEST_CASE("add command: everything is fine")
 	
 	while (std::getline(indexFile, content))
     {
-	  lineCounter++;
-	  std::cout<<"lineCounter1: "<<lineCounter<<std::endl;
-	  std::cout<<"content1: "<<content<<std::endl;
+	  	lineCounter++;
     }
 
 	REQUIRE(lineCounter == 2);	// 1 represents the number of files added (1) + the default line of the file (1)
@@ -145,9 +145,7 @@ TEST_CASE("add command: everything is fine")
 
 	while (std::getline(indexFile, content))
     {
-	  lineCounter++;
-	  std::cout<<"lineCounter2: "<<lineCounter<<std::endl;
-	  std::cout<<"content2: "<<content<<std::endl;
+	  	lineCounter++;
     }
 
 	REQUIRE(lineCounter == 3);	// 2 represents the number of files added (2) + the default line of the file (1)
@@ -166,6 +164,8 @@ TEST_CASE("add command: everything is fine")
 	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {	// Clears the objects directory
 		fs::remove_all(it->path());
 	}
+
+	// Checks if the method works with -h
 	args.push_back("test.txt");
 	args.push_back("-h");
 	REQUIRE(add(args) == true);
@@ -173,13 +173,61 @@ TEST_CASE("add command: everything is fine")
 	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {	// Clears the objects directory
 		fs::remove_all(it->path());
 	}
+
+	// Checks if the method works with --help
 	args.clear();
 	args.push_back("test.txt");
 	args.push_back("--help");
 	REQUIRE(add(args) == true);
 
-}
+	// Checks if, when a modified file is re-added, the index file and the objects directory are well modified
 
+	init();
+	file2 = std::ofstream((currentPath/"test2.txt").string());
+	file2<<"Testing modifying text.";
+	file2.close();
+	args.clear();
+	args.push_back("test2.txt");
+	add(args);
+	lineCounter = 0;
+	indexFile = std::ifstream((currentPath/".git/index").string());
+
+	while (std::getline(indexFile, content1))
+    {
+	  	std::cout<<"content1: "<<content1<<std::endl;
+		tmp1 += content1 + "\n";
+		std::cout<<"tmp1: "<<tmp1<<std::endl;
+    }
+	
+	
+	//indexFile.close();
+
+	file2 = std::ofstream((currentPath/"test2.txt").string());
+	file2<<"Testing modifying text again.";
+	file2.close();
+	args.clear();
+	args.push_back("test2.txt");
+	add(args);
+
+	lineCounter = 0;
+	indexFile = std::ifstream((currentPath/".git/index").string());
+
+	while (std::getline(indexFile, content2))
+    {
+	  	std::cout<<"content2: "<<content2<<std::endl;
+		tmp2 += content2 + "\n";
+		std::cout<<"tmp2: "<<tmp2<<std::endl;
+    }
+
+	//indexFile.close();
+
+	std::cout<<"testing: \n"<<tmp1<<" != "<<tmp2<<std::endl;
+	REQUIRE_FALSE(tmp1 == tmp2);
+
+	indexFile.close();
+
+}
+/*
 TEST_CASE("commit command: everything is fine") 
 {
 	fs::path currentPath = fs::current_path();
@@ -269,4 +317,4 @@ TEST_CASE("commit command: everything is fine")
 	fs::remove_all(currentPath/".git");
 	REQUIRE(init());
 
-}
+}*/
