@@ -16,9 +16,8 @@ TEST_CASE("init command: everything is fine")
 {
 	fs::path currentPath = fs::current_path();
 
-	for (fs::directory_iterator endDirIt, it(currentPath/".git"); it != endDirIt; ++it) {	// Clears the .git directory
-		fs::remove_all(it->path());
-	}
+	// Clears the .git directory
+	fs::remove_all(currentPath/".git");
 
 	// If arguments: 
 		// - Checks if -h and --help parameters are ok
@@ -31,7 +30,7 @@ TEST_CASE("init command: everything is fine")
 	// If no argument:
 		// - Checks if everything is ok and runs the init() method
 	REQUIRE(init() == true);
-	init();
+
 		// - Checks whether the .git and objects directories and the index file are created or not
 	REQUIRE(fs::is_directory(currentPath/".git") == true);
 	REQUIRE(fs::is_directory(currentPath/".git/objects") == true);
@@ -47,7 +46,6 @@ TEST_CASE("init command: everything is fine")
     }
 
 	indexFile.close();
-
 }
 
 TEST_CASE("add command: everything is fine") 
@@ -66,6 +64,8 @@ TEST_CASE("add command: everything is fine")
 
     file.close();
 	file2.close();
+
+	REQUIRE(init());
 
 	// If wrong parameter:
 	args.push_back("1");
