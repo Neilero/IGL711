@@ -414,7 +414,7 @@ TEST_CASE("ObjectsTree: everything is fine") {
                     REQUIRE(line.substr(0, 4) == "tree");
                 else if (numLines == 1) {
                     auto folderSha = line.substr(line.find_last_of(", ") + 1);
-                    REQUIRE(fs::exists(fs::current_path() / folderSha.substr(0, 2) / folderSha.substr(2)));
+                    REQUIRE(fs::exists(fs::current_path()/".git/objects" / folderSha.substr(0, 2) / folderSha.substr(2)));
                 }
                 else if (numLines == 2)
                     REQUIRE(line == ("100644, a.txt, "+file1Sha));
