@@ -5,6 +5,7 @@
 #include "git/init.h"
 #include "git/add.h"
 #include "git/commit.h"
+#include "git/ObjectsTree.h"
 
 void help()
 {
@@ -24,6 +25,18 @@ int main(int argc, char * argv[])
         command = std::string(argv[1]);
     else
         command = std::string("");
+
+        //TODO: remove debug
+    if (command == "test") {
+        gitUtils::ObjectsTree tree(boost::filesystem::current_path());
+
+        tree.addObject(boost::filesystem::current_path() / "git" / "MakeFile");
+        tree.addObject(boost::filesystem::current_path() / "git" / "cmake_install.cmake");
+
+        tree.writeTree();
+
+        return 0;
+    }
 
     // If the command is Init
     if (command == "init")

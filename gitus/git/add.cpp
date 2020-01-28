@@ -6,7 +6,10 @@ bool add(std::vector<std::string> arguments)
 {
     // If a git repo is created
     if (!gitUtils::isValidGitFolder())
+    {
+        std::cout << "The current directory is not a valid Gitus repository" << std::endl;
         return false;
+    }
 
     // Check if optional parameter --help has been given
     bool helpFlag = false;

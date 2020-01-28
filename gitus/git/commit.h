@@ -5,6 +5,7 @@
 #include <ctime>
 
 #include "gitUtils.h"
+#include "ObjectsTree.h"
 
 /**
  * Function which take care of the command init

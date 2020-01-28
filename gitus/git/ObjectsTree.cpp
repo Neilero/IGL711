@@ -96,6 +96,7 @@ namespace gitUtils
                         << "\n";
         }
 
+        createObjectFile(treeContent.str(), "tree");
         return getSha1FromContent(treeContent.str(), "tree");
     }
 }

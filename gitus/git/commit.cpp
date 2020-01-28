@@ -4,7 +4,10 @@ bool commit(std::vector<std::string> arguments)
 {
     // If a git repo is created
     if (!gitUtils::isValidGitFolder())
+    {
+        std::cout << "The current directory is not a valid Gitus repository" << std::endl;
         return false;
+    }
 
     // Check if optional parameter --help was given
     bool helpFlag = false;
@@ -51,7 +54,31 @@ bool makeCommit(std::string message, std::string author, std::string email)
 
     // todo itérer sur les files du index pour faire l'arbre
 
-    commitContent << "parent " << std::endl;
+    std::ifstream readFile(".git/index");
+
+    std::string line;
+    std::getline(readFile, line);
+
+    if (line != "0")
+        commitContent << "parent " << std::endl;
+
+    gitUtils::ObjectsTree tree(boost::filesystem::current_path());
+    int numberFiles = 0;
+    while (std::getline(readFile, line))
+    {
+        if (line != "")
+        {
+            tree.addObject(boost::filesystem::current_path() / line.substr(0, line.find('\t')));
+            numberFiles++;
+        }
+    }
+
+    if (numberFiles == 0)
+    {
+        std::cout << "There is no staged files to commit" << std::endl;
+        return false;
+    }
+    commitContent << "tree " << tree.writeTree();
 
     commitContent << author << " ";
     commitContent << email << " ";
