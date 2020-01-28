@@ -7,6 +7,7 @@
 #include "init.h"
 #include "add.h"
 #include "commit.h"
+#include "ObjectsTree.h"
 #include <filesystem>
 
 namespace fs = boost::filesystem;
@@ -160,24 +161,8 @@ TEST_CASE("commit command: everything is fine")
 {
 	fs::path currentPath = fs::current_path();
 
+	fs::remove_all(currentPath/".git");
 	REQUIRE(init());
-
-	// Clears the objects directory
-	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
-		fs::remove_all(it->path());
-	}
-
-	std::ofstream newIndex(".git/index", std::ofstream::trunc);
-
-	std::ofstream newFile1("test1.txt", std::ofstream::trunc);
-	std::ofstream newFile2("test2.txt", std::ofstream::trunc);
-	fs::create_directories(currentPath/"testFolder");
-	std::ofstream newFile23("testFolder/test3.txt", std::ofstream::trunc);
-	std::vector<std::string> files;
-	files.push_back("test1.txt");
-	files.push_back("test2.txt");
-	files.push_back("testFolder/test3.txt");
-	add(files);
 
 	std::string message("Commit message");
 	std::string user("Commit user");
@@ -209,17 +194,59 @@ TEST_CASE("commit command: everything is fine")
 	args.push_back("--help");
 	REQUIRE(commit(args));
 
-	// No error with the correct number of arguments
+	// Error with the correct number of arguments but no staged file
 	args.clear();
 	args.push_back(message);
 	args.push_back(user);
 	args.push_back(mail);
+	REQUIRE(!commit(args));
+
+	std::ofstream newIndex(".git/index", std::ofstream::trunc);
+
+	std::ofstream newFile1("test1.txt", std::ofstream::trunc);
+	std::ofstream newFile2("test2.txt", std::ofstream::trunc);
+	fs::create_directories(currentPath/"testFolder");
+	std::ofstream newFile23("testFolder/test3.txt", std::ofstream::trunc);
+	std::vector<std::string> files;
+	files.push_back("test1.txt");
+	files.push_back("test2.txt");
+	files.push_back("testFolder/test3.txt");
+	add(files);
+
+	// - Checks the number of files in the object directory before committing
+	int countBeforeCommit = 0;
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		countBeforeCommit++;
+	}
+	std::cout<<"countBefore"<<countBeforeCommit<<std::endl;
+
+	// - Runs the commit() method
 	REQUIRE(commit(args));
 
-	// Pour tester les trees
+	// - Checks the number of files in the object directory after committing
+	int countAfterCommit = 0;
+	for (fs::directory_iterator endDirIt, it(currentPath/".git/objects"); it != endDirIt; ++it) {
+		countAfterCommit++;
+	}
+	std::cout<<"countAfter"<<countAfterCommit<<std::endl;
 
-	// On teste qu'il y a les bonnes lignes dans le fichier de tree
-	// On teste que les codes en début lignes sont okay
-	// On teste que ça pointe vers des fichiers de objects qui existent
+	// - Checks if the two trees file and the commit were added
+	REQUIRE(countAfterCommit == (countBeforeCommit + 3));
 
+	int numLines = 0;
+	std::ifstream in(".git/index");
+	std::string line;
+	while ( std::getline(in, line) )
+	{
+		if (numLines == 0)
+			REQUIRE(line != "0"); // Check if the parent commit was changed
+   		++numLines;
+	}
+	// Check if the index file was cleared
+	REQUIRE(numLines == 1);
+
+	fs::remove_all(currentPath/".git");
+	REQUIRE(init());
+
+	
 }
