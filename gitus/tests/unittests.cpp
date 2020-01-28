@@ -12,9 +12,9 @@
 
 namespace fs = boost::filesystem;
 
-TEST_CASE("init command: everything is fine") 
+TEST_CASE("init command: everything is fine")
 {
-	fs::path currentPath = fs::current_path();
+    fs::path currentPath = fs::current_path();
 
 	// Clears the .git directory
 	fs::remove_all(currentPath/".git");
@@ -46,6 +46,7 @@ TEST_CASE("init command: everything is fine")
     }
 
 	indexFile.close();
+
 }
 
 TEST_CASE("add command: everything is fine") 
@@ -216,6 +217,9 @@ TEST_CASE("add command: everything is fine")
     }
 
 	REQUIRE_FALSE(tmp1 == tmp2);
+
+	indexFile.close();
+
 }
 
 TEST_CASE("commit command: everything is fine") 
@@ -382,7 +386,6 @@ TEST_CASE("ObjectsTree: everything is fine") {
         output1 << "a" << std::endl;
         auto file1Sha = gitUtils::getSha1FromFile(file1);
         fs::create_directories(folder);
-        auto folderSha = gitUtils::hashFile(folder.string());
         std::ofstream output2(file2.string());
         output2 << "aa" << std::endl;
         auto file2Sha = gitUtils::getSha1FromFile(file2);
@@ -404,10 +407,24 @@ TEST_CASE("ObjectsTree: everything is fine") {
             std::string line;
 
             //first word is tree
-            rootFile >> line;
-            REQUIRE(line.substr(0, 4) == "tree");
+            int numLines = 0;
+            while(std::getline(rootFile, line))
+            {
+                if (numLines == 0)
+                    REQUIRE(line.substr(0, 4) == "tree");
+                else if (numLines == 1) {
+                    auto folderSha = line.substr(line.find_last_of(", ") + 1);
+                    REQUIRE(fs::exists(fs::current_path() / folderSha.substr(0, 2) / folderSha.substr(2)));
+                }
+                else if (numLines == 2)
+                    REQUIRE(line == ("100644, a.txt, "+file1Sha));
+                else if (numLines == 3)
+                    REQUIRE(line == ("100644, folder/a.txt, "+file2Sha));
+                else if (numLines == 4)
+                    REQUIRE(line == ("100644, folder/b.txt, "+file3Sha));
 
-            //
+                numLines++;
+            }
         }
     }
 
