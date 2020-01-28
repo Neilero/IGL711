@@ -30,7 +30,7 @@ namespace gitUtils
         // check if new object is in a subdirectory or is a subdirectory
         if (objectRelativePath.has_parent_path()) {
             auto subdirectoryName = objectRelativePath.begin()->string();
-            auto subdirectorySha = hashFile(subdirectoryName);
+            auto subdirectorySha = hashFile(path.string()); //we use the directory's path as ID until asked to write the tree
 
             // check if subdirectory already exists
             auto subdirectory = objects.find(subdirectorySha);
@@ -85,15 +85,15 @@ namespace gitUtils
             auto [isDirectory, objectName, directory] = object.second;
 
             if (isDirectory)
-                directory->writeTree();
+                //write the directory content in another file and update its sha for the written file
+                objectSha = directory->writeTree();
 
             // see git tree code (https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_tree_objects)
             std::string objectCode = isDirectory ? "040000" : "100644";
 
             treeContent << objectCode << ", "
                         << objectName << ", "
-                        << objectSha << ", "
-                        << "\n";
+                        << objectSha << "\n";
         }
 
         return getSha1FromContent(treeContent.str(), "tree");
