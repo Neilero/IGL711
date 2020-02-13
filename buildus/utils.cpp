@@ -7,7 +7,10 @@
 #include <cstring>
 #include <boost/filesystem.hpp>
 
-namespace Utils {
+namespace Utils 
+{
+    static std::string temporaryFolder = "/tmp/";
+
     double FilesDateDifference(std::string pathToFile, std::string pathToFile1)
     {
         struct stat fileInfo1;
@@ -22,6 +25,7 @@ namespace Utils {
         return difftime(timeFile1, timeFile2);
     }
 
+    // TODO refaire avec la prise en compte du dossier temporaire des fichiers intermédiaires.
     bool CheckIfFileNeedBuild(std::string name, std::string extension)
     {
         boost::filesystem::path currentPath = boost::filesystem::current_path();
