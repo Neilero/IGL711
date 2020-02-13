@@ -1,5 +1,6 @@
 #include <iostream>
 #include "utils.cpp"
+#include "build.cpp"
 
 void printHelp()
 {
@@ -11,6 +12,7 @@ int main(int argc, char * argv[])
     std::string option;
     if (argv[1] == nullptr)
     {
+        std::cout << "Please provide the path to a BuildUS configuration file." << std::endl;
         printHelp();
         return -1;
     }
@@ -22,8 +24,8 @@ int main(int argc, char * argv[])
     {
         std::cout << "C'est un clean" << std::endl;
     }
-    // if it's a config file
-    else if (Utils::GetExtension(option) == ".buildus")
+    // If it's a config file
+    else
     {
         // Check if it exists
         if (!boost::filesystem::exists(option))
@@ -33,13 +35,8 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        
-        
-    }
-    else
-    {
-        std::cout << "Please provide the path to a .buildus configuration file." << std::endl;
-        printHelp();
+        Config configuration;
+        build(configuration);
     }
 
     return 0;
