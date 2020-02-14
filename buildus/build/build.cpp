@@ -7,16 +7,24 @@ int build(const Config& configuration)
 
 int compileFiles(const Config& configuration)
 {
+    std::filesystem::create_directory(Utils::temporaryFolder);
+
     std::string includeString;
+
     for(auto & includeVar : configuration.deps_include_var)
     {
-        std::string pathVar = std::getenv(includeVar.c_str());
-        includeString += " -I "+pathVar;
+        char * pathVar = std::getenv(includeVar.c_str());
+
+        if (pathVar == nullptr)
+            return -1;
+
+        includeString.append(" -I "+std::string(pathVar));
     }
     for(const auto & includeVar : configuration.deps_include_head)
     {
-        includeString += " -I " + includeVar;
+        includeString.append(" -I " + includeVar);
     }
+
 
     for(const auto & index : configuration.compile)
     {
@@ -27,6 +35,8 @@ int compileFiles(const Config& configuration)
                       .append(Utils::temporaryFolder)
                       .append(index.name)
                       .append(includeString);
+
+        std::cout << compileCommand << std::endl;
 
         int returnCode = system(compileCommand.c_str());
         if (returnCode != 0)

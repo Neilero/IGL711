@@ -6,11 +6,11 @@ add_executable(buildtests
 target_link_libraries(buildtests
         PRIVATE
         build
-        )
+)
 
 target_include_directories(buildtests
         PRIVATE
         build
-        )
+)
 
 

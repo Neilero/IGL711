@@ -11,11 +11,11 @@
 #include <filesystem>
 
 namespace Utils {
-    const static std::string temporaryFolder = "/tmp/";
+    const static std::string temporaryFolder = "temp";
 
     double FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1);
 
-    bool CheckIfFileNeedBuild(const std::string& name, const std::string& extension);
+        bool CheckIfFileNeedBuild(const std::string& name, const std::string& path, const std::string& extension);
 
     std::string GetFileNameWithoutExtension(const std::string& pathWithExtension);
 

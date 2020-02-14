@@ -17,27 +17,27 @@ namespace Utils
     }
 
     // TODO refaire avec la prise en compte du dossier temporaire des fichiers intermédiaires.
-    bool CheckIfFileNeedBuild(const std::string& name, const std::string& extension)
+    bool CheckIfFileNeedBuild(const std::string& name, const std::string& path, const std::string& extension)
     {
         std::filesystem::path currentPath = std::filesystem::current_path();
 
-        if(!std::filesystem::exists(currentPath / (name+extension)))
+        if(!std::filesystem::exists(currentPath / Utils::temporaryFolder / (name+extension)))
         {
             return true;
         }
 
-        if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".cpp")).string()) <= 0)
+        if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+extension)).string(), (currentPath / path).string()) <= 0)
             return true;
 
         if(std::filesystem::exists(currentPath / (name+".h")))
         {
-            if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".h")).string()) <= 0)
+            if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+extension)).string(), (currentPath / (name+".h")).string()) <= 0)
                 return true;
         }
 
         if(std::filesystem::exists(currentPath / (name+".hpp")))
         {
-            if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".hpp")).string()) <= 0)
+            if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+extension)).string(), (currentPath / (name+".hpp")).string()) <= 0)
                 return true;
         }
 
