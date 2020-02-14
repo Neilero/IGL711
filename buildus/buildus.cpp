@@ -1,10 +1,12 @@
 #include <iostream>
-#include "utils.cpp"
-#include "build.cpp"
+#include <filesystem>
+
+#include "build/utils.h"
+#include "build/build.h"
 
 void printHelp()
 {
-    std::cout << "usage:\t buildus [ <pathToConfigFile> | clean ]" << std::endl;
+    std::cout << "usage:\t buildus [ <path-to-config-file> | clean ]" << std::endl;
 }
 
 int main(int argc, char * argv[])
@@ -28,7 +30,7 @@ int main(int argc, char * argv[])
     else
     {
         // Check if it exists
-        if (!boost::filesystem::exists(option))
+        if (!std::filesystem::exists(std::filesystem::path(option)))
         {
             std::cout << "The configuration file " << option << " does not exist." << std::endl;
             printHelp();
