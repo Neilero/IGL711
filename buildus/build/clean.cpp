@@ -1,7 +1,6 @@
 #include "clean.h"
-//#include <boost/filesystem.hpp>
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 void clean(){
     if(fs::exists(fs::current_path()/"temp")){
