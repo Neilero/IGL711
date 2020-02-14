@@ -22,7 +22,7 @@ add_subdirectory(tests)
 add_executable(buildus buildus.cpp)
 
 target_link_libraries(buildus
-		PRIVATE
-			build
-			"stdc++fs"
-		)
+	PRIVATE
+		build
+		"stdc++fs"
+	)

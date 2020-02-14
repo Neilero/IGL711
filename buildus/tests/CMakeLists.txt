@@ -1,4 +1,5 @@
 add_executable(buildtests
+        unittests.cpp
         catch.hpp
         )
 
