@@ -5,8 +5,8 @@
 #include <fstream>
 
 #include "catch.hpp"
-#include "build.h"
-#include "utils.h"
+#include "../build/build.h"
+#include "../build/utils.h"
 
 TEST_CASE("Compile intermediate cpp files")
 {
@@ -46,7 +46,7 @@ TEST_CASE("Compile intermediate cpp files")
 
     SECTION("Files without includes")
     {
-        REQUIRE(build(configuration));
+        REQUIRE(build(configuration) == 0);
     }
 
     SECTION("Files with headers")
@@ -58,7 +58,7 @@ TEST_CASE("Compile intermediate cpp files")
 
         configuration.deps_include_head = include_headers;
 
-        REQUIRE(build(configuration));
+        REQUIRE(build(configuration) == 0);
     }
 
     SECTION("Files with environment variables")
@@ -69,8 +69,6 @@ TEST_CASE("Compile intermediate cpp files")
 
         configuration.deps_include_var = include_vars;
 
-        build(configuration);
-
-        REQUIRE(build(configuration));
+        REQUIRE(build(configuration) == 0);
     }
 }
