@@ -18,11 +18,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(build)
 add_subdirectory(tests)
+add_subdirectory(yaml-cpp-yaml-cpp-0.6.3) #see https://github.com/jbeder/yaml-cpp
 
 add_executable(buildus buildus.cpp)
 
 target_link_libraries(buildus
 	PRIVATE
 		build
+		yaml-cpp
 		"stdc++fs"
 	)
