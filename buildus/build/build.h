@@ -15,7 +15,6 @@ struct CompileFile
 struct Config {
     std::string projet;
     std::vector<std::string> deps_include_var;
-    std::vector<std::string> deps_include_head;
     std::vector<std::string> deps_library_var;
     std::vector<std::string> deps_library_libs;
     std::vector<CompileFile> compile;

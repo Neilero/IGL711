@@ -3,7 +3,7 @@
 namespace fs = std::filesystem;
 
 void clean(){
-    if(fs::exists(fs::current_path()/"temp")){
-        fs::remove_all(fs::current_path()/"temp");
+    if(fs::exists(fs::current_path()/Utils::temporaryFolder)){
+        fs::remove_all(fs::current_path()/Utils::temporaryFolder);
     }
 }

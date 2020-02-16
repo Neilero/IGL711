@@ -16,9 +16,7 @@ namespace Utils {
 
     double FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1);
 
-    bool CheckIfFileChanged(const std::string file, const std::string intermediateFile);
-
-    bool DoesCPPNeedRebuild(const std::string& path, const std::vector<std::string>& includes, const std::string& name);
+    bool DoesCPPNeedRebuild(const std::string& path /*, const std::vector<std::string>& includes */, const std::string& name);
 
     std::string GetFileNameWithoutExtension(const std::string& pathWithExtension);
 

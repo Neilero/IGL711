@@ -21,16 +21,10 @@ int compileFiles(const Config& configuration)
 
         includeString.append(" -I "+std::string(pathVar));
     }
-    for(const auto & includeHeader : configuration.deps_include_head)
-    {
-        includeString.append(" -I " + includeHeader);
-
-        includesPaths.push_back(includeHeader);
-    }
 
     for(const auto & file : configuration.compile)
     {
-        if (Utils::DoesCPPNeedRebuild(file.path, includesPaths, file.name))
+        if (Utils::DoesCPPNeedRebuild(file.path, file.name))
         {
             std::string compileCommand;
             compileCommand.append("g++ -c ")

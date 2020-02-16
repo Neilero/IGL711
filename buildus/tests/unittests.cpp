@@ -44,25 +44,25 @@ TEST_CASE("Minimal compilation")
     ofs << "" << std::endl; 
     ofs.close();
 
-    std::vector<std::string> includes;
+    std::filesystem::create_directory("intermediate");
 
     SECTION("Intermediate files are more recent")
     {
-        REQUIRE(system("g++ -c file1.cpp -o temp/f1.o") == 0);
-        REQUIRE(system("g++ -c file2.cpp -o temp/f2.o") == 0);
-        REQUIRE(system("g++ -c file3.cpp -o temp/f3.o") == 0);
+        REQUIRE(system("g++ -c file1.cpp -o intermediate/f1.o") == 0);
+        REQUIRE(system("g++ -c file2.cpp -o intermediate/f2.o") == 0);
+        REQUIRE(system("g++ -c file3.cpp -o intermediate/f3.o") == 0);
 
         for(const auto & file : configuration.compile)
         {
-            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, includes, file.name));
+            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, file.name));
         }
     }
 
     SECTION("Intermediate files are older")
     {
-        REQUIRE(system("g++ -c file1.cpp -o temp/f1.o") == 0);
-        REQUIRE(system("g++ -c file2.cpp -o temp/f2.o") == 0);
-        REQUIRE(system("g++ -c file3.cpp -o temp/f3.o") == 0);
+        REQUIRE(system("g++ -c file1.cpp -o intermediate/f1.o") == 0);
+        REQUIRE(system("g++ -c file2.cpp -o intermediate/f2.o") == 0);
+        REQUIRE(system("g++ -c file3.cpp -o intermediate/f3.o") == 0);
 
         ofs = std::ofstream ("file1.cpp");
         ofs << "" << std::endl; 
@@ -78,7 +78,7 @@ TEST_CASE("Minimal compilation")
 
         for(const auto & file : configuration.compile)
         {
-            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, includes, file.name));
+            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, file.name));
         }
     }
 }
@@ -124,18 +124,6 @@ TEST_CASE("Compile intermediate cpp files")
         REQUIRE(build(configuration) == 0);
     }
 
-    SECTION("Files with headers")
-    {
-        std::vector<std::string> include_headers;
-
-        include_headers.push_back("headers/header.h");
-        include_headers.push_back("headers/header1.h");
-
-        configuration.deps_include_head = include_headers;
-
-        REQUIRE(build(configuration) == 0);
-    }
-
     SECTION("Files with environment variables")
     {
         std::vector<std::string> include_vars;
@@ -153,7 +141,8 @@ TEST_CASE("Clean command")
     clean();
 
     int count = 0;
-	for (fs::directory_iterator endDirIt, it(fs::current_path()/"temp"); it != endDirIt; ++it) {
+
+	for (fs::directory_iterator endDirIt, it(fs::current_path()/Utils::temporaryFolder); it != endDirIt; ++it) {
 		count++;
 	}
 
