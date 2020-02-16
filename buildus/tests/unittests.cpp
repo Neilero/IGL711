@@ -153,7 +153,7 @@ TEST_CASE("Clean command")
     clean();
 
     int count = 0;
-	for (fs::directory_iterator endDirIt, it(fs::current_path()/"temporaire"); it != endDirIt; ++it) {
+	for (fs::directory_iterator endDirIt, it(fs::current_path()/"intermediate"); it != endDirIt; ++it) {
 		count++;
 	}
 
