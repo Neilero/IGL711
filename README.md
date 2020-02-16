@@ -1,12 +1,12 @@
 # eq05
 
-## Installation de `yaml-cpp`
+## Installation de la librairie `yaml-cpp`
 
 Depuis le dossier source de la librairie (`yaml-cpp-yaml-cpp-0.6.3`) exécuter les lignes de codes suivantes :
 ```
 mkdir build
 cd build
-cmake..
+cmake ..
 make
 sudo make install
 ```
