@@ -8,6 +8,78 @@
 #include "../build/build.h"
 #include "../build/utils.h"
 
+TEST_CASE("Minimal compilation")
+{
+    Config configuration;
+
+    CompileFile file1;
+    file1.name = "f1";
+    file1.path = "file1.cpp";
+
+    CompileFile file2;
+    file2.name = "f2";
+    file2.path = "file2.cpp";
+
+    CompileFile file3;
+    file3.name = "f3";
+    file3.path = "file3.cpp";
+
+    std::vector<CompileFile> files;
+    files.push_back(file1);
+    files.push_back(file2);
+    files.push_back(file3);
+
+    std::ofstream ofs("file1.cpp");
+    ofs << "" << std::endl; 
+    ofs.close();
+
+    ofs = std::ofstream("file2.cpp");
+    ofs << "" << std::endl; 
+    ofs.close();
+
+    ofs = std::ofstream("file3.cpp");
+    ofs << "" << std::endl; 
+    ofs.close();
+
+    std::vector<std::string> includes;
+
+    SECTION("Intermediate files are more recent")
+    {
+        REQUIRE(system("g++ -c file1.cpp -o temp/f1.o") == 0);
+        REQUIRE(system("g++ -c file2.cpp -o temp/f2.o") == 0);
+        REQUIRE(system("g++ -c file3.cpp -o temp/f3.o") == 0);
+
+        for(const auto & file : configuration.compile)
+        {
+            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, includes, file.name));
+        }
+    }
+
+    SECTION("Intermediate files are older")
+    {
+        REQUIRE(system("g++ -c file1.cpp -o temp/f1.o") == 0);
+        REQUIRE(system("g++ -c file2.cpp -o temp/f2.o") == 0);
+        REQUIRE(system("g++ -c file3.cpp -o temp/f3.o") == 0);
+
+        ofs = std::ofstream ("file1.cpp");
+        ofs << "" << std::endl; 
+        ofs.close();
+
+        ofs = std::ofstream ("file2.cpp");
+        ofs << "" << std::endl; 
+        ofs.close();
+
+        ofs = std::ofstream ("file3.cpp");
+        ofs << "" << std::endl; 
+        ofs.close();
+
+        for(const auto & file : configuration.compile)
+        {
+            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, includes, file.name));
+        }
+    }
+}
+
 TEST_CASE("Compile intermediate cpp files")
 {
     Config configuration;
