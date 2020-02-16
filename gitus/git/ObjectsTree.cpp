@@ -21,6 +21,7 @@ namespace gitUtils
             return false;
         }
 
+        // AB excellent nom
         auto objectRelativePath = boost::filesystem::relative(path, treePath);
 
         // check if new object is in tree directory or in a subdirectory

@@ -17,6 +17,9 @@ namespace gitUtils
     /**
      * Class representing the content of a folder in the repository
      */
+
+    // AB - is it necessary?
+    // je suis mitigé sur son utilité
     class ObjectsTree {
 
         /**
@@ -76,6 +79,7 @@ namespace gitUtils
     /**
      * Structure containing information about an object in a gitUtils::ObjectsTree
      */
+
     struct ObjectInfo {
 
         /**

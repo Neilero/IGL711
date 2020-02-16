@@ -13,11 +13,11 @@ bool add(std::vector<std::string> arguments);
 /**
  * Function which add a file to the staging state
  */
-bool addFileToGit(fs::path pathToFile);
+bool addFileToGit(fs::path pathToFile); // AB - pourquoi dans le .h?
 
 /**
  * Function which print the help of the Add command
  */
-void showAddHelp();
+void showAddHelp(); // AB - pourquoi dans le .h?
 
 #endif //GITUS_ADD_H

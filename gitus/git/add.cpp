@@ -1,3 +1,6 @@
+// AB - sommaire
+//  1xDNG
+
 #include "add.h"
 
 namespace fs = boost::filesystem;
@@ -12,12 +15,14 @@ bool add(std::vector<std::string> arguments)
     }
 
     // Check if optional parameter --help has been given
+    // AB - sa aurait été plus simple de juste vérifier si le 0e param est le help?
+
     bool helpFlag = false;
-    for (auto iterator = arguments.begin(); iterator != arguments.end();)
+    for (auto iterator = arguments.begin(); iterator != arguments.end();) 
     {
         // if the optional parameter is found, make the help flag to true
         // and remove the optional parameter from the list
-        if (*iterator == "--help" || *iterator =="-h")
+        if (*iterator == "--help" || *iterator =="-h") // constantes? // 
         {
             arguments.erase(iterator);
             helpFlag = true;
@@ -43,7 +48,7 @@ bool add(std::vector<std::string> arguments)
     // if everything is okay, add each given file to the repo if it exists
     for (auto file : arguments)
     {
-        if (fs::exists(file))
+        if (fs::exists(file)) // AB - danger, exception potentielle - DNG
         {
             fs::path pathToFile(file);
             if (addFileToGit(pathToFile))

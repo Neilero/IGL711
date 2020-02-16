@@ -1,3 +1,7 @@
+// AB - sommaire
+//  1xCNS
+//  1xNRC
+
 #include "commit.h"
 
 bool commit(std::vector<std::string> arguments)
@@ -46,12 +50,15 @@ bool commit(std::vector<std::string> arguments)
 bool makeCommit(std::string message, std::string author, std::string email)
 {
     // Generate UUID for the commit
-    boost::uuids::random_generator gen;
+    boost::uuids::random_generator gen; // ?
     boost::uuids::uuid id = gen();
 
+    // AB - ce n'est pas la facon de faire
+    //  NRC
     std::ostringstream commitContent;
     commitContent << id << std::endl;
 
+    // AB - constante ".git/index" - CNS
     std::ifstream readFile(".git/index");
     std::string line;
     std::getline(readFile, line);
@@ -90,6 +97,7 @@ bool makeCommit(std::string message, std::string author, std::string email)
     if (!gitUtils::createObjectFile(commitContent.str(), "commit"))
         return false;
 
+    // AB - constante ".git/index"
     std::ofstream newIndex(".git/index", std::ofstream::trunc);
     newIndex << gitUtils::getSha1FromContent(commitContent.str(), "commit") << std::endl;
 

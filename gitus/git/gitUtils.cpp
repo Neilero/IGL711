@@ -1,3 +1,7 @@
+// AB - somnmaire
+//  1xCNS
+//  1xQLT   
+
 #include "gitUtils.h"
 
 namespace fs = boost::filesystem;
@@ -35,7 +39,7 @@ namespace gitUtils
         boost::filesystem::create_directory(dir);
 
         // If the file doesn't already exist, create it
-        if (!fs::exists(dir / hashFile.substr(2)))
+        if (!fs::exists(dir / hashFile.substr(2))) // AB la variable folderStringHash existe - QLT
         {
             std::ofstream outfile ((dir / hashFile.substr(2)).string());
 
@@ -62,6 +66,7 @@ namespace gitUtils
         std::ifstream ifs(path.string());
         std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
+        // good!
         return gitUtils::hashFile(std::string("blob "+std::to_string((int) content.length())+'\0'+content));
     }
 
@@ -84,7 +89,7 @@ namespace gitUtils
 
         bool alreadyAddedFlag = false;
 
-        std::ifstream inFile(".git/index");
+        std::ifstream inFile(".git/index"); // AB - constante? CNS
         std::vector<std::string> lines;
         std::string line;
         while (getline(inFile, line))
