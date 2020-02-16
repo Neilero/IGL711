@@ -7,6 +7,9 @@
 #include "catch.hpp"
 #include "../build/build.h"
 #include "../build/utils.h"
+#include "../build/clean.h"
+
+namespace fs = std::filesystem;
 
 TEST_CASE("Minimal compilation")
 {
@@ -143,4 +146,17 @@ TEST_CASE("Compile intermediate cpp files")
 
         REQUIRE(build(configuration) == 0);
     }
+}
+
+TEST_CASE("Clean command")
+{
+    clean();
+
+    int count = 0;
+	for (fs::directory_iterator endDirIt, it(fs::current_path()/"temp"); it != endDirIt; ++it) {
+		count++;
+	}
+
+    REQUIRE(count == 0);
+
 }
