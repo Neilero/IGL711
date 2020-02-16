@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        Config configuration;
+        Config configuration = readConfig(option);
         build(configuration);
     }
 

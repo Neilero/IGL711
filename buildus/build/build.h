@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
+#include <yaml-cpp/yaml.h> //see https://github.com/jbeder/yaml-cpp
 
 #include "utils.h"
 
@@ -22,6 +24,7 @@ struct Config {
     std::vector<std::string> package;
 };
 
+Config readConfig(const std::string &configFile);
 int build(const Config& configuration);
 int compileFiles(const Config& configuration);
 

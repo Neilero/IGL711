@@ -15,7 +15,7 @@ project(BuildUS
 #endif ()
 
 find_library(yaml-cpp REQUIRED)
-		
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(build)
