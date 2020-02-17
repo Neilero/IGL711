@@ -24,7 +24,7 @@ build:
     - make
   artifacts:
     paths:
-      - /builds/dinf/cours/h20/igl601/eq05/buildus/cmake_build/buildtest
+      - "./*"
 
 # run tests using the binary built before
 test:
