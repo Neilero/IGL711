@@ -5,13 +5,13 @@ image: matrim/cmake-examples:3.10.2
 # cache outputs to reduce the build time
 cache:
   paths:
-    - "cmake_build/*"
+    - "buildus/cmake_build/*"
 
 build:
   stage: build
   script:
-    - mkdir -p cmake_build
-    - cd cmake_build
+    - mkdir -p buildus/cmake_build
+    - cd buildus/cmake_build
     - cmake ..
     - make buildtest
   artifacts:
@@ -22,4 +22,4 @@ build:
 test:
   stage: test
   script:
-    - ./cmake_build/buildtest
+    - ./buildus/cmake_build/buildtest
