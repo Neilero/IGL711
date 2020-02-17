@@ -13,6 +13,10 @@ class Config {
         std::string path;
     };
 
+    struct ConfigParsingException : public std::logic_error {
+        explicit ConfigParsingException(const std::string &message) : logic_error(message) {};
+    };
+
     std::string projet;
     std::vector<std::string> deps_include_var;
     std::vector<std::string> deps_include_head;

@@ -67,7 +67,7 @@ void Config::throwYamlError(const std::string& message) {
     const std::string errorSuffix(" in the .buildus configuration file.");
 
     std::string fullMessage = errorPrefix + message + errorSuffix;
-    throw std::invalid_argument(fullMessage);
+    throw ConfigParsingException(fullMessage);
 }
 
 void Config::checkAndAddProjet(const YAML::Node& projetNode) {
@@ -160,4 +160,3 @@ void Config::checkAndAddPackage(const YAML::Node &packageNode) {
         package.push_back(packageBuffer);
     }
 }
-
