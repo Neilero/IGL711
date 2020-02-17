@@ -19,7 +19,7 @@ before_script:
 build:
   stage: build
   script:
-    - ls
+    - cd builds/dinf/cours/h20/igl601/eq05
     - mkdir -p ./buildus/cmake_build
     - cd buildus/cmake_build
     - cmake ..
