@@ -30,5 +30,5 @@ build:
 test:
   stage: test
   script:
-    - cmake .
-    - ./buildus/cmake_build/buildtest
+    - cd buildus/cmake_build
+    - ./buildtest
