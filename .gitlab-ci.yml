@@ -11,15 +11,13 @@ cache:
 
 before_script:
   # install cmake
-  - mkdir ~/temp && cd ~/temp
   - wget https://github.com/Kitware/CMake/releases/download/v3.17.0-rc1/cmake-3.17.0-rc1-Linux-x86_64.sh
   - sh cmake-3.17.0-rc1-Linux-x86_64.sh --skip-license --prefix=/usr/local/ --exclude-subdir
-  - cd .. && rm -rf temp
+  - rm cmake-3.17.0-rc1-Linux-x86_64.sh
 
 build:
   stage: build
   script:
-    - cd builds/dinf/cours/h20/igl601/eq05
     - mkdir -p ./buildus/cmake_build
     - cd buildus/cmake_build
     - cmake ..
