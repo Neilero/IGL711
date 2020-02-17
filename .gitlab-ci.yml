@@ -2,6 +2,11 @@
 # see https://hub.docker.com/r/matrim/cmake-examples
 image: matrim/cmake-examples
 
+# cache outputs to reduce the build time
+cache:
+  paths:
+    - "cmake_build/*"
+
 build:
   stage: build
   script:
@@ -12,10 +17,6 @@ build:
   artifacts:
     paths:
       - buildtest
-      # cache outputs to reduce the build time
-      cache:
-        paths:
-          - "cmake_build/*"
 
 # run tests using the binary built before
 test:
