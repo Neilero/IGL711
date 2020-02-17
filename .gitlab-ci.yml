@@ -7,6 +7,11 @@ cache:
   paths:
     - "buildus/cmake_build/*"
 
+before_script:
+  # update g++ from 5.4 to 8
+  - apt update && apt -y install g++-8
+  - update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
+
 build:
   stage: build
   script:
