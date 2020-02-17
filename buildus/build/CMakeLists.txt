@@ -1,4 +1,6 @@
 add_library(build
+        link.h
+        link.cpp
         utils.h
         utils.cpp
         build.h
