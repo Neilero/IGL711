@@ -19,7 +19,8 @@ before_script:
 build:
   stage: build
   script:
-    - mkdir -p buildus/cmake_build
+    - ls
+    - mkdir -p ./buildus/cmake_build
     - cd buildus/cmake_build
     - cmake ..
     - make
