@@ -1,0 +1,24 @@
+# use a cmake image, based on ubuntu:16.04
+# see https://hub.docker.com/r/matrim/cmake-examples
+image: matrim/cmake-examples
+
+build:
+  stage: build
+  script:
+    - mkdir -p cmake-build
+    - cd cmake-build
+    - cmake ..
+    - make buildtest
+  artifacts:
+    paths:
+      - cmake-build
+      # cache outputs to reduce the build time
+      cache:
+        paths:
+          - "cmake-build/*"
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - ./cmake-build/buildtest
