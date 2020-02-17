@@ -5,20 +5,20 @@ image: matrim/cmake-examples
 build:
   stage: build
   script:
-    - mkdir -p cmake-build
-    - cd cmake-build
+    - mkdir -p cmake_build
+    - cd cmake_build
     - cmake ..
     - make buildtest
   artifacts:
     paths:
-      - cmake-build
+      - cmake_build
       # cache outputs to reduce the build time
       cache:
         paths:
-          - "cmake-build/*"
+          - "cmake_build/*"
 
 # run tests using the binary built before
 test:
   stage: test
   script:
-    - ./cmake-build/buildtest
+    - ./cmake_build/buildtest
