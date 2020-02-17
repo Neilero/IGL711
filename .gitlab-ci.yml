@@ -11,7 +11,7 @@ build:
     - make buildtest
   artifacts:
     paths:
-      - cmake_build
+      - buildtest
       # cache outputs to reduce the build time
       cache:
         paths:
