@@ -1,6 +1,8 @@
-# use a cmake image, based on ubuntu:16.04
-# see https://hub.docker.com/r/matrim/cmake-examples
-image: matrim/cmake-examples:3.10.2
+# This file is a template, and might need editing before it works on your project.
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
 
 # cache outputs to reduce the build time
 cache:
@@ -8,9 +10,11 @@ cache:
     - "buildus/cmake_build/*"
 
 before_script:
-  # update g++ from 5.4 to 8
-  - sudo apt-get update && sudo apt-get -y install g++-8
-  - update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 100
+  # install cmake
+  - mkdir ~/temp && cd ~/temp
+  - wget https://github.com/Kitware/CMake/releases/download/v3.17.0-rc1/cmake-3.17.0-rc1-Linux-x86_64.sh
+  - sudo sh cmake-3.17.0-rc1-Linux-x86_64.sh --skip-license --prefix=/usr/local/ --exclude-subdir
+  - cd .. && rm -rf temp
 
 build:
   stage: build
