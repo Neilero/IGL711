@@ -24,11 +24,10 @@ build:
     - make
   artifacts:
     paths:
-      - "./*"
+      - ./buildus/cmake_build/tests/buildtest
 
 # run tests using the binary built before
 test:
   stage: test
   script:
-    - cd buildus/cmake_build
-    - ./buildtest
+    - ./buildus/cmake_build/tests/buildtest
