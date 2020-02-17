@@ -13,7 +13,7 @@ build:
     - mkdir -p buildus/cmake_build
     - cd buildus/cmake_build
     - cmake ..
-    - make buildtest
+    - make
   artifacts:
     paths:
       - buildtest
