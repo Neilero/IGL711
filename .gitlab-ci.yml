@@ -30,4 +30,4 @@ build:
 test:
   stage: test
   script:
-    - ./buildtests
+    - ./buildus/cmake_build/tests/buildtests
