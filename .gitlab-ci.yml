@@ -24,7 +24,7 @@ build:
     - make
   artifacts:
     paths:
-      - ./buildus/cmake_build/tests/buildtest
+      - ./buildus/cmake_build/tests/*
 
 # run tests using the binary built before
 test:
