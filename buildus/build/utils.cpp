@@ -16,30 +16,27 @@ namespace Utils
         return difftime(timeFile1, timeFile2);
     }
 
-    // TODO refaire avec la prise en compte du dossier temporaire des fichiers intermédiaires.
-    bool CheckIfFileNeedBuild(const std::string& name, const std::string& extension)
+    bool DoesCPPNeedRebuild(const std::string& path, const std::string& name)
     {
         std::filesystem::path currentPath = std::filesystem::current_path();
 
-        if(!std::filesystem::exists(currentPath / (name+extension)))
-        {
-            return true;
-        }
-
-        if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".cpp")).string()) <= 0)
+        if(!std::filesystem::exists(currentPath / Utils::temporaryFolder / (name+".o")))
             return true;
 
-        if(std::filesystem::exists(currentPath / (name+".h")))
-        {
-            if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".h")).string()) <= 0)
-                return true;
-        }
+        if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(), (currentPath / path).string()) <= 0)
+            return true;
 
-        if(std::filesystem::exists(currentPath / (name+".hpp")))
-        {
-            if (FilesDateDifference((currentPath / (name+extension)).string(), (currentPath / (name+".hpp")).string()) <= 0)
-                return true;
-        }
+        // if(std::filesystem::exists(currentPath / (GetFileNameWithoutExtension(path)+".h")))
+        // {
+        //     if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(),  (GetFileNameWithoutExtension(path)+".h")) <= 0)
+        //         return true;
+        // }
+
+        // if(std::filesystem::exists(currentPath / (GetFileNameWithoutExtension(path)+".hpp")))
+        // {
+        //     if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(),  (GetFileNameWithoutExtension(path)+".hpp")) <= 0)
+        //         return true;
+        // }
 
         return false;
     }

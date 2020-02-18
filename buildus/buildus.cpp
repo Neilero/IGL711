@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
     else
     {
         // Check if it exists
-        if (!std::filesystem::exists(std::filesystem::path(option)))
+        if (!std::filesystem::exists(option))
         {
             std::cout << "The configuration file " << option << " does not exist." << std::endl;
             printHelp();
