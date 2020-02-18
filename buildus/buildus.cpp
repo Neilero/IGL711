@@ -1,4 +1,5 @@
-#include <string>
+#include <iostream>
+#include <filesystem>
 
 #include "build/utils.h"
 #include "build/build.h"
@@ -35,6 +36,9 @@ int main(int argc, char * argv[])
             printHelp();
             return -1;
         }
+
+        Config configuration(option);
+        build(configuration);
     }
 
     return 0;

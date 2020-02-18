@@ -13,7 +13,9 @@ project(BuildUS
 #else ()
 #find_package(Boost 1.71.0 REQUIRED COMPONENTS iostreams filesystem zlib)
 #endif ()
-		
+
+find_library(yaml-cpp REQUIRED)
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(build)
@@ -24,5 +26,6 @@ add_executable(buildus buildus.cpp)
 target_link_libraries(buildus
 	PRIVATE
 		build
+		yaml-cpp
 		"stdc++fs"
 	)

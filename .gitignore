@@ -5,6 +5,7 @@
 # Build folders
 buildus/cmake-build-debug/*
 buildus/cmake-build-project/*
+buildus/yaml-cpp-yaml-cpp-0.6.3
 
 # Prerequisites
 *.d

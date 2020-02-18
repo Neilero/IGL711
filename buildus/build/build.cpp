@@ -11,9 +11,9 @@ int compileFiles(const Config& configuration)
     std::filesystem::create_directory(Utils::temporaryFolder);
 
     // generate the string of includes options based on environment variables
-    std::string includes = createIncludeOptionsFromVars(configuration.deps_include_var);
+    std::string includes = createIncludeOptionsFromVars(configuration.getDepsIncludeVar());
 
-    for(const auto & file : configuration.compile)
+    for(const auto & file : configuration.getCompile())
     {
         if (Utils::DoesCPPNeedRebuild(file.path, file.name))
         {
