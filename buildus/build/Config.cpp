@@ -12,10 +12,6 @@ const std::vector<std::string> &Config::getDepsIncludeVar() const {
     return deps_include_var;
 }
 
-const std::vector<std::string> &Config::getDepsIncludeHead() const {
-    return deps_include_head;
-}
-
 const std::vector<std::string> &Config::getDepsLibraryVar() const {
     return deps_library_var;
 }

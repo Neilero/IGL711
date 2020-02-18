@@ -24,7 +24,6 @@ public:
 private:
     std::string projet;
     std::vector<std::string> deps_include_var;
-    std::vector<std::string> deps_include_head;
     std::vector<std::string> deps_library_var;
     std::vector<std::string> deps_library_libs;
     std::vector<CompileFile> compile;
@@ -36,8 +35,6 @@ public:
     [[nodiscard]] const std::string &getProjet() const;
 
     [[nodiscard]] const std::vector<std::string> &getDepsIncludeVar() const;
-
-    [[nodiscard]] const std::vector<std::string> &getDepsIncludeHead() const;
 
     [[nodiscard]] const std::vector<std::string> &getDepsLibraryVar() const;
 
@@ -57,6 +54,5 @@ private:
     void checkAndAddCompile(const YAML::Node& compileNode);
     void checkAndAddPackage(const YAML::Node& packageNode);
 };
-
 
 #endif //BUILDUS_CONFIG_H
