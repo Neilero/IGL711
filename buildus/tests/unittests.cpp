@@ -124,7 +124,7 @@ TEST_CASE("Compile intermediate cpp files")
         REQUIRE(build(configuration) == 0);
     }
 
-    SECTION("Files with environment variables")
+    SECTION("Files with environment variables ")
     {
         std::vector<std::string> include_vars;
 
@@ -133,6 +133,9 @@ TEST_CASE("Compile intermediate cpp files")
         configuration.deps_include_var = include_vars;
 
         REQUIRE(build(configuration) == 0);
+
+        configuration.deps_include_var.push_back("CANEXISTEPAS");
+        REQUIRE_THROWS(build(configuration) == 0);
     }
 }
 
