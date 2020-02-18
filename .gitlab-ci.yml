@@ -1,0 +1,33 @@
+# This file is a template, and might need editing before it works on your project.
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
+
+# cache outputs to reduce the build time
+cache:
+  paths:
+    - "buildus/cmake_build/*"
+
+before_script:
+  # install cmake
+  - wget https://github.com/Kitware/CMake/releases/download/v3.17.0-rc1/cmake-3.17.0-rc1-Linux-x86_64.sh
+  - sh cmake-3.17.0-rc1-Linux-x86_64.sh --skip-license --prefix=/usr/local/ --exclude-subdir
+  - rm cmake-3.17.0-rc1-Linux-x86_64.sh
+
+build:
+  stage: build
+  script:
+    - mkdir -p ./buildus/cmake_build
+    - cd buildus/cmake_build
+    - cmake ..
+    - make
+  artifacts:
+    paths:
+      - ./buildus/cmake_build/tests/buildtests
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - ./buildus/cmake_build/tests/buildtests
