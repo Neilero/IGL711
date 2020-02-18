@@ -160,3 +160,12 @@ void Config::checkAndAddPackage(const YAML::Node &packageNode) {
         package.push_back(packageBuffer);
     }
 }
+
+bool Config::CompileFile::operator==(const Config::CompileFile &rhs) const {
+    return name == rhs.name &&
+           path == rhs.path;
+}
+
+bool Config::CompileFile::operator!=(const Config::CompileFile &rhs) const {
+    return !(rhs == *this);
+}

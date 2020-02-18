@@ -7,16 +7,21 @@
 #include <yaml-cpp/yaml.h> //see https://github.com/jbeder/yaml-cpp
 
 class Config {
+public:
     struct CompileFile
     {
         std::string name;
         std::string path;
+
+        bool operator==(const CompileFile &rhs) const;
+        bool operator!=(const CompileFile &rhs) const;
     };
 
     struct ConfigParsingException : public std::logic_error {
         explicit ConfigParsingException(const std::string &message) : logic_error(message) {};
     };
 
+private:
     std::string projet;
     std::vector<std::string> deps_include_var;
     std::vector<std::string> deps_include_head;

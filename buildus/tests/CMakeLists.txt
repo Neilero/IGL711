@@ -5,12 +5,14 @@ add_executable(buildtests
 
 target_link_libraries(buildtests
         PRIVATE
-        build
+            build
+            yaml-cpp
+            "stdc++fs"
         )
 
 target_include_directories(buildtests
         PRIVATE
-        build
+            build
         )
 
 
