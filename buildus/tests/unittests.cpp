@@ -440,7 +440,7 @@ TEST_CASE("Linking files")
                              "int main(){\n"
                              "cout << \"Hello, world, from Visual C++!\" << endl;}";
         helloWorldCPP << helloWorld << std::endl;
-        system(("g++ -c helloWorld.cpp -o " + Utils::temporaryFolder + "/helloWorld.o").c_str());
+        REQUIRE(system(("g++ -c helloWorld.cpp -o " + Utils::temporaryFolder + "/helloWorld.o").c_str()) == 0);
 
         auto configContent = "projet: " + appName + "\n"
                              "compile:\n"
