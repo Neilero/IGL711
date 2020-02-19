@@ -462,7 +462,7 @@ TEST_CASE("Linking files")
         SECTION("Executable created")
         {
             REQUIRE(linkFiles(config) == 0);
-            REQUIRE(fs::exists(intermediatePath + appName));            
+            REQUIRE(fs::exists(intermediatePath + appName));
         }
 
     }
@@ -477,7 +477,7 @@ TEST_CASE("Linking files")
                              "cout << \"Hello, world, from Visual C++!\" << endl;}";
         helloWorldCPP << helloWorld << std::endl;
         REQUIRE(system(("g++ -c helloWorld.cpp -o " + Utils::temporaryFolder + "/helloWorld.o").c_str()) == 0);
-        
+
         auto configContent = "projet: " + appName + "\n"
                              "deps_library:\n"
                              " libs:\n"
@@ -503,7 +503,7 @@ TEST_CASE("Linking files")
         SECTION("Executable created")
         {
             REQUIRE(linkFiles(config) == 0);
-            REQUIRE(fs::exists(intermediatePath + appName)); 
+            REQUIRE(fs::exists(intermediatePath + appName));
         }
 
     }
@@ -517,7 +517,7 @@ TEST_CASE("Linking files")
                              "compile:\n"
                              " - helloWorld : helloWorld.cpp\n"
                              "package: hw";
-    
+
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
 
@@ -536,7 +536,7 @@ TEST_CASE("Linking files")
         {
             REQUIRE(linkFiles(config) != 0);
             std::cout<<intermediatePath + appName<<std::endl;
-            REQUIRE_FALSE(fs::exists(intermediatePath + appName)); 
+            REQUIRE_FALSE(fs::exists(intermediatePath + appName));
         }
     }
 
