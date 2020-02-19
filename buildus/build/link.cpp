@@ -9,10 +9,9 @@ int linkFiles(const Config& configuration)
     {
         throw std::string("Intermediate folder doesn't exist.");
     }
-    
+
     string linkCmd = createLinkCommand(configuration);
     int returnCode = system(linkCmd.c_str());
-    std::cout<<"code: "<<returnCode;
     return returnCode;
 }
 
