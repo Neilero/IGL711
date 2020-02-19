@@ -429,9 +429,12 @@ TEST_CASE("Linking files")
 {
     clean();
 
-    /*SECTION("Simple config") 
+    std::string intermediatePath = (fs::current_path()/Utils::temporaryFolder).string() + "/";
+    const std::string appName = "app";
+
+    SECTION("Simple config") 
     {
-        auto configContent = "projet: app\n"
+        auto configContent = "projet: " + appName + "\n"
                              "compile:\n"
                              " - f1 : fichier1.cpp\n"
                              " - f2 : fichier2.cpp\n"
@@ -443,36 +446,33 @@ TEST_CASE("Linking files")
         configFile << configContent << std::endl;
         Config config(configFilePath.string());
 
-        
-
         /*SECTION("Command created")
         {
-            std::string expectedCommand = "g++ f1.o f2.o -o app";
+            std::string expectedCommand = "g++ " + intermediatePath + "f1.o " + intermediatePath + "f2.o -o " + intermediatePath + appName;
             REQUIRE(createLinkCommand(config) == expectedCommand);
         }*/
 
-        /*SECTION("Executable created")
+        SECTION("Executable created")
         {
-            std::cout<<linkFiles(config);
             compileFiles(config);
+            std::cout<<linkFiles(config);
             linkFiles(config);
-            fs::path folderPath = fs::current_path();
-            std::cout<<"folder: "<<folderPath;
-            REQUIRE(fs::exists(folderPath/config.getProjet()));
+            std::cout<<intermediatePath + appName<<std::endl;
+            REQUIRE(fs::exists(intermediatePath + appName));
             
             //REQUIRE(fs::exists(folderPath));
-        }*/
+        }
 
-        /*SECTION("Returned code")
+        SECTION("Returned code")
         {
             //REQUIRE(linkFiles(config) == 0);
-        }*/
+        }
 
-    //}
+    }
 
-    /*SECTION("Complex config") 
+    SECTION("Complex config") 
     {
-        auto configContent = "projet: app\n"
+        auto configContent = "projet: " + appName + "\n"
                              "deps_include:\n"
                              " var: BOOST_INCLUDEDIR\n"
                              "deps_library:\n"
@@ -491,8 +491,8 @@ TEST_CASE("Linking files")
         configFile << configContent << std::endl;
         Config config(configFilePath.string());
 
-        build(config);
-        linkFiles(config);
+        //build(config);
+        //linkFiles(config);
 
         /*SECTION("Command created")
         {
@@ -512,10 +512,10 @@ TEST_CASE("Linking files")
             //REQUIRE(fs::exists(folderPath));
         }*/
 
-    //}
+    }
 
     //Cas d'erreur
 
-    clean();
+    //clean();
 
 }
