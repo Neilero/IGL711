@@ -7,7 +7,7 @@ int linkFiles(const Config& configuration)
     
     if(!(filesystem::exists(filesystem::current_path()/Utils::temporaryFolder)))
     {
-        throw std::string("Intermediate folder doesn't exist.");
+        throw std::runtime_error("Intermediate folder doesn't exist.");
     }
 
     string linkCmd = createLinkCommand(configuration);
@@ -25,7 +25,7 @@ string createLinkCommand(const Config& configuration) //g++ f1.o f2.o f3.o -o ap
         char * pathVar = getenv(libraryVar.c_str());
         
         if (pathVar == nullptr){
-            return "-1";
+            throw std::runtime_error("The environment variable " + libraryVar + " does not exist.");
         }            
 
         libraryString.append(" -L" + string(pathVar));
