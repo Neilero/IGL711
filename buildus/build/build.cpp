@@ -21,13 +21,12 @@ int compileFiles(const Config& configuration)
 
             int returnCode = system(compileCommand.c_str());
 
-            if (returnCode != 0)
+            if (returnCode != 1 && returnCode != 0)
             {
                 return returnCode;
             }
         }
     }
-
     return 0;
 }
 

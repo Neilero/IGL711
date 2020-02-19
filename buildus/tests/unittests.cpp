@@ -102,7 +102,7 @@ TEST_CASE("Minimal compilation")
     SECTION("Intermediate files are more recent")
     {
         // To have enough time between modification dates
-        usleep(100);
+        usleep(1000);
 
         ofs = std::ofstream ("intermediate/f1.o");
         ofs << "" << std::endl;
@@ -136,7 +136,7 @@ TEST_CASE("Minimal compilation")
         ofs.close();
 
         // To have enough time between modification dates
-        usleep(100);
+        usleep(1000);
 
         ofs = std::ofstream ("fichier1.cpp");
         ofs << "" << std::endl;
@@ -157,6 +157,16 @@ TEST_CASE("Minimal compilation")
         REQUIRE(Utils::DoesCPPNeedRebuild("fichier2.cpp", "f2"));
         REQUIRE(Utils::DoesCPPNeedRebuild("fichier3.cpp", "f3"));
     }
+
+    if(fs::exists(fs::current_path()/"intermediate"))
+    {
+        fs::remove_all(fs::current_path()/"intermediate");
+    }
+
+    fs::remove_all(fs::current_path()/"fichier1.cpp");
+    fs::remove_all(fs::current_path()/"fichier2.cpp");
+    fs::remove_all(fs::current_path()/"fichier3.cpp");
+
 }
 
 TEST_CASE("Compile intermediate cpp files")
@@ -181,23 +191,89 @@ TEST_CASE("Compile intermediate cpp files")
         REQUIRE(createCompileCommand("quelquepart/fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c quelquepart/fichier1.cpp -o intermediate/f1.o -I /home/user/something");
     }
 
-    SECTION("Main function")
+    SECTION("Main function with configuration file")
     {
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
-        auto configContent = "projet: app1\n"
-                                "compile:\n"
-                                " - f1 : fichier1.cpp\n"
-                                " - f2 : fichier2.cpp\n"
-                                " - f3 : fichier3.cpp\n"
-                                "package: f1 f2 f3";
 
-        configFile << configContent;
-        configFile.flush();
-        Config config(configFilePath.string());
+        SECTION("Config file without includes")
+        {
+            std::string configContent = "projet: app1\n"
+                "compile:\n"
+                " - f1 : fichier1.cpp\n"
+                " - f2 : fichier2.cpp\n"
+                " - f3 : fichier3.cpp\n"
+                "package: f1 f2 f3";
 
-        
+            configFile << configContent;
+            configFile.flush();
+            Config config(configFilePath.string());
+
+            SECTION("CPP Files don't exist")
+            {
+                REQUIRE(compileFiles(config) != 0);
+            }
+            SECTION("CPP Files exist")
+            {
+                SECTION("One file or more aren't valid")
+                {
+                    std::ofstream ofs("fichier1.cpp");
+                    ofs << "#incln 0;}" << std::endl;
+                    ofs.close();
+
+                    ofs = std::ofstream ("fichier2.cpp");
+                    ofs << "#inn 0;}" << std::endl;
+                    ofs.close();
+
+                    ofs = std::ofstream ("fichier3.cpp");
+                    ofs << "#inrn 0;}" << std::endl;
+                    ofs.close();
+
+                    REQUIRE(compileFiles(config) != 0);
+
+                    ofs = std::ofstream ("fichier2.cpp");
+                    ofs << "#include <iostream>\nint main() {std::cout << \"Hello, World!\";return 0;}" << std::endl;
+                    ofs.close();
+
+                    ofs = std::ofstream ("fichier3.cpp");
+                    ofs << "#include <iostream>\nint main() {std::cout << \"Hello, World!\";return 0;}" << std::endl;
+                    ofs.close();
+
+                    REQUIRE(compileFiles(config) != 0);
+                }
+
+                SECTION("Files are valid")
+                {
+                    std::ofstream ofs("fichier1.cpp");
+                    ofs << "#include <iostream>\nint main() {std::cout << \"Hello, World!\";return 0;}" << std::endl;
+                    ofs.close();
+
+                    ofs = std::ofstream ("fichier2.cpp");
+                    ofs << "#include <iostream>\nint main() {std::cout << \"Hello, World!\";return 0;}" << std::endl;
+                    ofs.close();
+
+                    ofs = std::ofstream ("fichier3.cpp");
+                    ofs << "#include <iostream>\nint main() {std::cout << \"Hello, World!\";return 0;}" << std::endl;
+                    ofs.close();
+
+                    REQUIRE(compileFiles(config) == 0);
+                    REQUIRE(fs::exists("intermediate/f1.o"));
+                    REQUIRE(fs::exists("intermediate/f2.o"));
+                    REQUIRE(fs::exists("intermediate/f3.o"));
+                }
+            }
+        }
     }
+
+    if(fs::exists(fs::current_path()/"intermediate"))
+    {
+        fs::remove_all(fs::current_path()/"intermediate");
+    }
+
+    fs::remove_all(fs::current_path()/"fichier1.cpp");
+    fs::remove_all(fs::current_path()/"fichier2.cpp");
+    fs::remove_all(fs::current_path()/"fichier3.cpp");
+    
 }
 
 TEST_CASE("Clean command")
@@ -205,7 +281,7 @@ TEST_CASE("Clean command")
     fs::path tempPath = fs::current_path() / Utils::temporaryFolder;
 
     SECTION("No temporary folder") {
-        //nothing should happened
+        //nothing should happen
         REQUIRE_FALSE(fs::exists(tempPath));
         REQUIRE_NOTHROW(clean());
     }
@@ -215,7 +291,7 @@ TEST_CASE("Clean command")
         REQUIRE(fs::exists(tempPath));
 
         SECTION("No file in temporary folder") {
-            //nothing should happened
+            //nothing should happen
             long fileCount = std::distance(fs::directory_iterator(tempPath), fs::directory_iterator());
             REQUIRE(fileCount == 0);
             REQUIRE_NOTHROW(clean());
