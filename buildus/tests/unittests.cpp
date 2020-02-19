@@ -4,6 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <iomanip>
+
+using namespace std::chrono_literals;
 
 #include "catch.hpp"
 #include "../build/Config.h"
@@ -97,35 +100,46 @@ TEST_CASE("Minimal compilation")
 
     std::filesystem::create_directory("intermediate");
 
-    std::vector<Config::CompileFile> compilesFiles;
-
-    compilesFiles.push_back(Config::CompileFile{"f1", "fichier1.cpp"});
-    compilesFiles.push_back(Config::CompileFile{"f2", "fichier2.cpp"});
-    compilesFiles.push_back(Config::CompileFile{"f3", "fichier3.cpp"});
-
     SECTION("Intermediate files are more recent")
     {
-        REQUIRE(system("g++ -c fichier1.cpp -o intermediate/f1.o") == 0);
-        REQUIRE(system("g++ -c fichier2.cpp -o intermediate/f2.o") == 0);
-        REQUIRE(system("g++ -c fichier3.cpp -o intermediate/f3.o") == 0);
+        // To have enough time between modification dates
+        usleep(100);
 
-        for(const auto & file : compilesFiles)
-        {
-            REQUIRE_FALSE(Utils::DoesCPPNeedRebuild(file.path, file.name));
-        }
+        ofs = std::ofstream ("intermediate/f1.o");
+        ofs << "" << std::endl;
+        ofs.close();
+
+        ofs = std::ofstream ("intermediate/f2.o");
+        ofs << "" << std::endl;
+        ofs.close();
+
+        ofs = std::ofstream ("intermediate/f3.o");
+        ofs << "" << std::endl;
+        ofs.close();
+
+        REQUIRE_FALSE(Utils::DoesCPPNeedRebuild("fichier1.cpp", "f1"));
+        REQUIRE_FALSE(Utils::DoesCPPNeedRebuild("fichier2.cpp", "f2"));
+        REQUIRE_FALSE(Utils::DoesCPPNeedRebuild("fichier3.cpp", "f3"));
     }
 
     SECTION("Intermediate files are older")
     {
-        REQUIRE(system("g++ -c fichier1.cpp -o intermediate/f1.o") == 0);
-        REQUIRE(system("g++ -c fichier2.cpp -o intermediate/f2.o") == 0);
-        REQUIRE(system("g++ -c fichier3.cpp -o intermediate/f3.o") == 0);
-
-        ofs = std::ofstream ("fichier1.cpp");
+        ofs = std::ofstream ("intermediate/f1.o");
         ofs << "" << std::endl;
         ofs.close();
 
-        ofs = std::ofstream ("fichier2.cpp");
+        ofs = std::ofstream ("intermediate/f2.o");
+        ofs << "" << std::endl;
+        ofs.close();
+
+        ofs = std::ofstream ("intermediate/f3.o");
+        ofs << "" << std::endl;
+        ofs.close();
+
+        // To have enough time between modification dates
+        usleep(100);
+
+        ofs = std::ofstream ("fichier1.cpp");
         ofs << "" << std::endl;
         ofs.close();
 
@@ -133,10 +147,16 @@ TEST_CASE("Minimal compilation")
         ofs << "" << std::endl;
         ofs.close();
 
-        for(const auto & file : compilesFiles)
-        {
-            REQUIRE(Utils::DoesCPPNeedRebuild(file.path, file.name));
-        }
+        REQUIRE(Utils::DoesCPPNeedRebuild("fichier1.cpp", "f1"));
+        REQUIRE_FALSE(Utils::DoesCPPNeedRebuild("fichier2.cpp", "f2"));
+        REQUIRE(Utils::DoesCPPNeedRebuild("fichier3.cpp", "f3"));
+    }
+
+    SECTION("No intermediate files")
+    {
+        REQUIRE(Utils::DoesCPPNeedRebuild("fichier1.cpp", "f1"));
+        REQUIRE(Utils::DoesCPPNeedRebuild("fichier2.cpp", "f2"));
+        REQUIRE(Utils::DoesCPPNeedRebuild("fichier3.cpp", "f3"));
     }
 }
 
@@ -148,13 +168,18 @@ TEST_CASE("Compile intermediate cpp files")
         vars.push_back("HOME");
         REQUIRE(createIncludeOptionsFromVars(vars) == " -I "+std::string(getenv("HOME")));
 
+        vars.push_back("BOOST_ROOT");
+        REQUIRE(createIncludeOptionsFromVars(vars) == " -I "+std::string(getenv("HOME"))+" -I "+std::string(getenv("BOOST_ROOT")));
+
         vars.push_back("CANEXISTEPAS");
         REQUIRE_THROWS(createIncludeOptionsFromVars(vars));
     }
 
     SECTION("Generate g++ command")
     {
-        
+        REQUIRE(createCompileCommand("fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c fichier1.cpp -o intermediate/f1.o -I /home/user/something");
+
+        REQUIRE(createCompileCommand("quelquepart/fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c quelquepart/fichier1.cpp -o intermediate/f1.o -I /home/user/something");
     }
 
     SECTION("Main function")
@@ -171,6 +196,8 @@ TEST_CASE("Compile intermediate cpp files")
         configFile << configContent;
         configFile.flush();
         Config config(configFilePath.string());
+
+        
     }
 }
 

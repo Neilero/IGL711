@@ -58,6 +58,7 @@ std::string createCompileCommand(const std::string& path, const std::string& nam
                 .append(path)
                 .append(" -o ")
                 .append(Utils::temporaryFolder)
+                .append("/")
                 .append(name)
                 .append(".o")
                 .append(includes);

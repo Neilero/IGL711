@@ -10,11 +10,12 @@
 #include <cstring>
 //#include <boost/filesystem.hpp>
 #include <filesystem>
+#include <stdint.h>
 
 namespace Utils {
-    const static std::string temporaryFolder = "intermediate/";
+    const static std::string temporaryFolder = "intermediate";
 
-    double FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1);
+    bool FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1);
 
     bool DoesCPPNeedRebuild(const std::string& path /*, const std::vector<std::string>& includes */, const std::string& name);
 
