@@ -445,7 +445,7 @@ TEST_CASE("Linking files")
         auto configContent = "projet: " + appName + "\n"
                              "compile:\n"
                              " - helloWorld : helloWorld.cpp\n"
-                             "package: hw";
+                             "package: helloWorld";
 
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
@@ -484,7 +484,7 @@ TEST_CASE("Linking files")
                              " - yaml-cpp\n"
                              "compile:\n"
                              " - helloWorld : helloWorld.cpp\n"
-                             "package: hw";
+                             "package: helloWorld";
     
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
@@ -516,7 +516,7 @@ TEST_CASE("Linking files")
                              " - yaml-cpp\n"
                              "compile:\n"
                              " - helloWorld : helloWorld.cpp\n"
-                             "package: hw";
+                             "package: helloWorld";
 
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);

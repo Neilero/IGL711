@@ -39,7 +39,7 @@ std::string createIncludeOptionsFromVars(const std::vector<std::string>& environ
             throw std::runtime_error("The environment variable "+includeVar+" does not exist.");
         }
         
-        includeString.append(" -I "+std::string(pathVar));
+        includeString.append(" -I"+std::string(pathVar));
     }
 
     return includeString;
@@ -48,13 +48,13 @@ std::string createIncludeOptionsFromVars(const std::vector<std::string>& environ
 std::string createCompileCommand(const std::string& path, const std::string& name, const std::string& includes)
 {
     std::string compileCommand;
-    compileCommand.append("g++ -c ")
+    compileCommand.append("g++ -c \"")
                 .append(path)
-                .append(" -o ")
+                .append("\" -o \"")
                 .append(Utils::temporaryFolder)
                 .append("/")
                 .append(name)
-                .append(".o")
+                .append(".o\"")
                 .append(includes);
 
     return compileCommand;

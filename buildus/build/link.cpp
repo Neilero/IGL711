@@ -10,6 +10,7 @@ int linkFiles(const Config& configuration)
         throw std::string("Intermediate folder doesn't exist.");
     }
 
+
     string linkCmd = createLinkCommand(configuration);
     int returnCode = system(linkCmd.c_str());
     return returnCode;
@@ -39,17 +40,17 @@ string createLinkCommand(const Config& configuration) //g++ f1.o f2.o f3.o -o ap
 
     std::string path = (filesystem::current_path()/Utils::temporaryFolder).string() + "/";
     //Pour chaque fichier
-    for(const auto & file : configuration.getCompile()){
+    for(const auto & file : configuration.getPackage()){
         //ajouter nomFichier + extension .o à la commande
-        linkCmd.append(" " + path + file.name);
-        linkCmd.append(".o");
+        linkCmd.append(" \"" + path + file);
+        linkCmd.append(".o\"");
     }
 
     //Ajouter " -o " à la commande
     linkCmd.append(" -o");
 
     //Ajouter nomApplication à la commande    
-    linkCmd.append(" " + path + configuration.getProjet());
+    linkCmd.append(" \"" + path + configuration.getProjet()+"\"");
 
     linkCmd.append(libraryString);
 
