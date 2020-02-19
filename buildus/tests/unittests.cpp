@@ -433,7 +433,7 @@ TEST_CASE("Linking files")
     REQUIRE(fs::exists("helloWorld.cpp"));
     REQUIRE(fs::exists(Utils::temporaryFolder));
 
-    SECTION("Simple config") 
+    SECTION("Simple config")
     {
         auto helloWorld =    "#include <iostream>\n"
                              "using namespace std;\n"
@@ -467,7 +467,7 @@ TEST_CASE("Linking files")
 
     }
 
-    SECTION("Complex config") 
+    SECTION("Complex config")
     {
         auto helloWorld =    "#include <iostream>\n"
                              "#include <yaml-cpp/yaml.h>\n"
