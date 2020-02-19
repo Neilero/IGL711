@@ -214,7 +214,7 @@ TEST_CASE("Minimal compilation")
     SECTION("Intermediate files are more recent")
     {
         // To have enough time between modification dates
-        usleep(1000);
+        usleep(10000);
 
         ofs = std::ofstream ("intermediate/f1.o");
         ofs << "" << std::endl;
@@ -248,7 +248,7 @@ TEST_CASE("Minimal compilation")
         ofs.close();
 
         // To have enough time between modification dates
-        usleep(1000);
+        usleep(10000);
 
         ofs = std::ofstream ("fichier1.cpp");
         ofs << "" << std::endl;
@@ -288,9 +288,6 @@ TEST_CASE("Compile intermediate cpp files")
         std::vector<std::string> vars;
         vars.push_back("HOME");
         REQUIRE(createIncludeOptionsFromVars(vars) == " -I "+std::string(getenv("HOME")));
-
-        vars.push_back("BOOST_ROOT");
-        REQUIRE(createIncludeOptionsFromVars(vars) == " -I "+std::string(getenv("HOME"))+" -I "+std::string(getenv("BOOST_ROOT")));
 
         vars.push_back("CANEXISTEPAS");
         REQUIRE_THROWS(createIncludeOptionsFromVars(vars));
