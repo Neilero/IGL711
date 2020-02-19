@@ -2,41 +2,47 @@
 
 using namespace std;
 
-int linkFiles(const Config& configuration) //g++ f1.o f2.o f3.o -o app
+int linkFiles(const Config& configuration) 
+{
+    string linkCmd = createLinkCommand(configuration);
+    int returnCode = system(linkCmd.c_str());
+    std::cout<<"code: "<<returnCode;
+    return returnCode;
+}
+
+string createLinkCommand(const Config& configuration) //g++ f1.o f2.o f3.o -o app
 {
     string libraryString;
     //Parcourir le yaml pour récupérer les fichiers 
     for(auto & libraryVar : configuration.getDepsLibraryVar())
     {
-        char * pathVar = std::getenv(libraryVar.c_str());
+        char * pathVar = getenv(libraryVar.c_str());
         
-        if (pathVar == nullptr)
-            return -1;
+        if (pathVar == nullptr){
+            return "-1";
+        }            
 
-        libraryString.append(" -L "+std::string(pathVar));
+        libraryString.append(" -L" + string(pathVar));
     }
     for(const auto & libraryVar : configuration.getDepsLibraryLibs())
     {
-        libraryString.append(" -l " + libraryVar);
+        libraryString.append(" -l" + libraryVar);
     }
     //Créer commande "g++ "
-    string linkCmd = "g++ ";
+    string linkCmd = "g++";
     //Pour chaque fichier
     for(const auto & file : configuration.getPackage()){
         //ajouter nomFichier + extension .o à la commande
-        linkCmd.append(file);
-        linkCmd.append(".o ");
+        linkCmd.append(" " + file);
+        linkCmd.append(".o");
     }
     //Ajouter " -o " à la commande
-    linkCmd.append(" -o ");
+    linkCmd.append(" -o");
 
     //Ajouter nomApplication à la commande    
-    linkCmd.append(configuration.getProjet());
+    linkCmd.append(" " + configuration.getProjet());
 
     linkCmd.append(libraryString);
 
-    cout<<"linkCmd: "<<linkCmd<<endl;
-
-    // Si pb => Exception ou return erreur
-    return system(linkCmd.c_str());
+    return linkCmd;
 }

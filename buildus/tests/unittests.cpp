@@ -10,6 +10,7 @@
 #include "../build/build.h"
 #include "../build/utils.h"
 #include "../build/clean.h"
+#include "../build/link.h"
 
 namespace fs = std::filesystem;
 
@@ -208,4 +209,99 @@ TEST_CASE("Clean command")
     }
 
     fs::remove(tempPath);
+}
+
+TEST_CASE("Linking files")
+{
+    clean();
+
+    /*SECTION("Simple config") 
+    {
+        auto configContent = "projet: app\n"
+                             "compile:\n"
+                             " - f1 : fichier1.cpp\n"
+                             " - f2 : fichier2.cpp\n"
+                             "package: f1 f2";
+
+        fs::path configFilePath = fs::current_path() / "config.buildus";
+        std::ofstream configFile(configFilePath);
+
+        configFile << configContent << std::endl;
+        Config config(configFilePath.string());
+
+        
+
+        /*SECTION("Command created")
+        {
+            std::string expectedCommand = "g++ f1.o f2.o -o app";
+            REQUIRE(createLinkCommand(config) == expectedCommand);
+        }*/
+
+        /*SECTION("Executable created")
+        {
+            std::cout<<linkFiles(config);
+            compileFiles(config);
+            linkFiles(config);
+            fs::path folderPath = fs::current_path();
+            std::cout<<"folder: "<<folderPath;
+            REQUIRE(fs::exists(folderPath/config.getProjet()));
+            
+            //REQUIRE(fs::exists(folderPath));
+        }*/
+
+        /*SECTION("Returned code")
+        {
+            //REQUIRE(linkFiles(config) == 0);
+        }*/
+
+    //}
+
+    /*SECTION("Complex config") 
+    {
+        auto configContent = "projet: app\n"
+                             "deps_include:\n"
+                             " var: BOOST_INCLUDEDIR\n"
+                             "deps_library:\n"
+                             " var: BOOST_LIBRARYDIR\n"
+                             " libs:\n"
+                             " - lib1\n"
+                             " - lib2\n"
+                             "compile:\n"
+                             " - f1 : fichier1.cpp\n"
+                             " - f2 : fichier2.cpp\n"
+                             "package: f1 f2";
+    
+        fs::path configFilePath = fs::current_path() / "config.buildus";
+        std::ofstream configFile(configFilePath);
+
+        configFile << configContent << std::endl;
+        Config config(configFilePath.string());
+
+        build(config);
+        linkFiles(config);
+
+        /*SECTION("Command created")
+        {
+            std::string expectedCommand = "g++ f1.o f2.o -o app -L/boostinstall/boost_1_71_0/stage/lib -llib1 -llib2";
+            REQUIRE(createLinkCommand(config) == expectedCommand);
+        }*/
+
+        /*SECTION("Executable created")
+        {
+            std::cout<<linkFiles(config);
+            compileFiles(config);
+            linkFiles(config);
+            fs::path folderPath = fs::current_path();
+            std::cout<<"folder: "<<folderPath;
+            REQUIRE(fs::exists(folderPath/config.getProjet()));
+            
+            //REQUIRE(fs::exists(folderPath));
+        }*/
+
+    //}
+
+    //Cas d'erreur
+
+    clean();
+
 }
