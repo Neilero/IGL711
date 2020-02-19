@@ -75,6 +75,117 @@ TEST_CASE("Configuration - YAML parsing")
         REQUIRE(config.getPackage() == expectedPackage);
     }
 
+    SECTION("Exception tests") {
+
+        SECTION("Mandatory elements") {
+            SECTION("Missing projet") {
+                auto configContent = "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     " - f2 : fichier2.cpp\n"
+                                     "package: f1 f2";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("Missing compile") {
+                auto configContent = "projet: app1\n"
+                                     "package: f1 f2";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("Missing package") {
+                auto configContent = "projet: app1\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     " - f2 : fichier2.cpp\n";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+        }
+
+        SECTION("Wrong format - Unsupported operations") {
+            SECTION("Multiple projets") {
+                auto configContent = "projet:\n"
+                                     " - app1\n"
+                                     " - app2\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     " - f2 : fichier2.cpp\n"
+                                     "package: f1 f2";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("Compile is not a map") {
+                auto configContent = "projet: app1\n"
+                                     "compile:\n"
+                                     " - fichier1.cpp\n"
+                                     " - fichier2.cpp\n"
+                                     "package: f1 f2";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("package is not a scalar") {
+                auto configContent = "projet: app1\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     " - f2 : fichier2.cpp\n"
+                                     "package:\n"
+                                     " - f1\n"
+                                     " - f2\n";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("deps_include is not a map") {
+                auto configContent = "projet: app2\n"
+                                     "deps_include:\n"
+                                     " - BOOST_INCLUDEDIR\n"
+                                     "deps_library:\n"
+                                     " var: BOOST_LIBRARYDIR\n"
+                                     " libs:\n"
+                                     " - lib1\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     "package: f1";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("deps_library is not a map") {
+                auto configContent = "projet: app2\n"
+                                     "deps_include:\n"
+                                     " var: BOOST_INCLUDEDIR\n"
+                                     "deps_library:\n"
+                                     " - BOOST_LIBRARYDIR\n"
+                                     " - lib1\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     "package: f1";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+            SECTION("deps_include's lib is not a list") {
+                auto configContent = "projet: app2\n"
+                                     "deps_include:\n"
+                                     " var: BOOST_INCLUDEDIR\n"
+                                     "deps_library:\n"
+                                     " var: BOOST_LIBRARYDIR\n"
+                                     " libs: lib1 lib2\n"
+                                     "compile:\n"
+                                     " - f1 : fichier1.cpp\n"
+                                     "package: f1";
+
+                configFile << configContent << std::endl;
+                REQUIRE_THROWS_AS(Config(configFilePath.string()), Config::ConfigParsingException);
+            }
+        }
+    }
+
     configFile.close();
     std::remove(configFilePath.c_str());
 }
