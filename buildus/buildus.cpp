@@ -29,6 +29,8 @@ int main(int argc, char * argv[])
     // If it's a config file
     else
     {
+        std::cout << Utils::DoesCPPNeedRebuild("file1.cpp", "f1") << std::endl;
+
         // Check if it exists
         if (!std::filesystem::exists(option))
         {
@@ -36,9 +38,6 @@ int main(int argc, char * argv[])
             printHelp();
             return -1;
         }
-
-        Config configuration(option);
-        build(configuration);
     }
 
     return 0;

@@ -2,7 +2,7 @@
 
 namespace Utils 
 {
-    double FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1)
+    bool FilesDateDifference(const std::string& pathToFile, const std::string& pathToFile1)
     {
         struct stat fileInfo1;
         struct stat fileInfo2;
@@ -10,10 +10,11 @@ namespace Utils
         stat(pathToFile.c_str(), &fileInfo1);
         stat(pathToFile1.c_str(), &fileInfo2);
 
-        std::time_t timeFile1(fileInfo1.st_mtime);
-        std::time_t timeFile2(fileInfo2.st_mtime);
+        uint64_t modification_ms_1 = fileInfo1.st_mtime * 1000 + fileInfo1.st_mtim.tv_nsec / 1000000;
 
-        return difftime(timeFile1, timeFile2);
+        uint64_t modification_ms_2 = fileInfo2.st_mtime * 1000 + fileInfo2.st_mtim.tv_nsec / 1000000;
+
+        return (modification_ms_1 < modification_ms_2);
     }
 
     bool DoesCPPNeedRebuild(const std::string& path, const std::string& name)
@@ -21,22 +22,14 @@ namespace Utils
         std::filesystem::path currentPath = std::filesystem::current_path();
 
         if(!std::filesystem::exists(currentPath / Utils::temporaryFolder / (name+".o")))
+        {
             return true;
-
-        if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(), (currentPath / path).string()) <= 0)
+        }
+        
+        if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(), (currentPath / path).string()))
+        {
             return true;
-
-        // if(std::filesystem::exists(currentPath / (GetFileNameWithoutExtension(path)+".h")))
-        // {
-        //     if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(),  (GetFileNameWithoutExtension(path)+".h")) <= 0)
-        //         return true;
-        // }
-
-        // if(std::filesystem::exists(currentPath / (GetFileNameWithoutExtension(path)+".hpp")))
-        // {
-        //     if (FilesDateDifference((currentPath / Utils::temporaryFolder / (name+".o")).string(),  (GetFileNameWithoutExtension(path)+".hpp")) <= 0)
-        //         return true;
-        // }
+        }
 
         return false;
     }
