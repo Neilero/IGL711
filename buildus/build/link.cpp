@@ -4,15 +4,21 @@ using namespace std;
 
 int linkFiles(const Config& configuration) 
 {
+    
+    if(!(filesystem::exists(filesystem::current_path()/Utils::temporaryFolder)))
+    {
+        throw std::string("Intermediate folder doesn't exist.");
+    }
+
     string linkCmd = createLinkCommand(configuration);
     int returnCode = system(linkCmd.c_str());
-    std::cout<<"code: "<<returnCode;
     return returnCode;
 }
 
 string createLinkCommand(const Config& configuration) //g++ f1.o f2.o f3.o -o app
 {
     string libraryString;
+
     //Parcourir le yaml pour récupérer les fichiers 
     for(auto & libraryVar : configuration.getDepsLibraryVar())
     {
@@ -30,17 +36,20 @@ string createLinkCommand(const Config& configuration) //g++ f1.o f2.o f3.o -o ap
     }
     //Créer commande "g++ "
     string linkCmd = "g++";
+
+    std::string path = (filesystem::current_path()/Utils::temporaryFolder).string() + "/";
     //Pour chaque fichier
-    for(const auto & file : configuration.getPackage()){
+    for(const auto & file : configuration.getCompile()){
         //ajouter nomFichier + extension .o à la commande
-        linkCmd.append(" " + file);
+        linkCmd.append(" " + path + file.name);
         linkCmd.append(".o");
     }
+
     //Ajouter " -o " à la commande
     linkCmd.append(" -o");
 
     //Ajouter nomApplication à la commande    
-    linkCmd.append(" " + configuration.getProjet());
+    linkCmd.append(" " + path + configuration.getProjet());
 
     linkCmd.append(libraryString);
 
