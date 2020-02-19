@@ -7,7 +7,8 @@ add_library(build
         build.cpp
         clean.h
         clean.cpp
-        )
+        Config.h
+        Config.cpp)
 
 #if (UNIX)
 #    target_link_libraries(build
