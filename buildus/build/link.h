@@ -2,7 +2,7 @@
 #define BUILDUS_LINK_H
 
 #include <iostream>
-#include "build.h"
+#include "compile.h"
 
 int linkFiles(const Config& configuration);
 std::string createLinkCommand(const Config& configuration);

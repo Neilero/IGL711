@@ -4,16 +4,6 @@ project(BuildUS
     LANGUAGES C CXX
     DESCRIPTION "Compilateur UdeS")
 
-#set(Boost_USE_STATIC_LIBS on)
-#set(Boost_USE_MULTITHREADED ON)
-
-#if (UNIX)
-#find_package(ZLIB REQUIRED)
-#find_package(Boost 1.71.0 REQUIRED COMPONENTS iostreams filesystem)
-#else ()
-#find_package(Boost 1.71.0 REQUIRED COMPONENTS iostreams filesystem zlib)
-#endif ()
-
 find_library(yaml-cpp REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)

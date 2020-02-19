@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 #include "catch.hpp"
 #include "../build/Config.h"
-#include "../build/build.h"
+#include "../build/compile.h"
 #include "../build/utils.h"
 #include "../build/clean.h"
 #include "../build/link.h"

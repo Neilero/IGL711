@@ -1,9 +1,4 @@
-#include "build.h"
-
-int build(const Config& configuration)
-{
-    return compileFiles(configuration);
-}
+#include "compile.h"
 
 int compileFiles(const Config& configuration)
 {
