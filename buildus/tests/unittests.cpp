@@ -426,13 +426,26 @@ TEST_CASE("Linking files")
 {
     clean();
 
-    /*SECTION("Simple config") 
+    fs::create_directory(Utils::temporaryFolder);
+    std::ofstream helloWorldCPP(fs::current_path()/"helloWorld.cpp");
+    const std::string appName = "app";
+    std::string intermediatePath = (fs::current_path()/Utils::temporaryFolder).string() + "/";
+    REQUIRE(fs::exists("helloWorld.cpp"));
+    REQUIRE(fs::exists(Utils::temporaryFolder));
+
+    SECTION("Simple config") 
     {
-        auto configContent = "projet: app\n"
+        auto helloWorld =    "#include <iostream>\n"
+                             "using namespace std;\n"
+                             "int main(){\n"
+                             "cout << \"Hello, world, from Visual C++!\" << endl;}";
+        helloWorldCPP << helloWorld << std::endl;
+        system(("g++ -c helloWorld.cpp -o " + Utils::temporaryFolder + "/helloWorld.o").c_str());
+
+        auto configContent = "projet: " + appName + "\n"
                              "compile:\n"
-                             " - f1 : fichier1.cpp\n"
-                             " - f2 : fichier2.cpp\n"
-                             "package: f1 f2";
+                             " - helloWorld : helloWorld.cpp\n"
+                             "package: hw";
 
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
@@ -440,47 +453,38 @@ TEST_CASE("Linking files")
         configFile << configContent << std::endl;
         Config config(configFilePath.string());
 
-        
-
-        /*SECTION("Command created")
+        SECTION("Command created")
         {
-            std::string expectedCommand = "g++ f1.o f2.o -o app";
+            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName;
             REQUIRE(createLinkCommand(config) == expectedCommand);
-        }*/
+        }
 
-        /*SECTION("Executable created")
+        SECTION("Executable created")
         {
-            std::cout<<linkFiles(config);
-            compileFiles(config);
-            linkFiles(config);
-            fs::path folderPath = fs::current_path();
-            std::cout<<"folder: "<<folderPath;
-            REQUIRE(fs::exists(folderPath/config.getProjet()));
-            
-            //REQUIRE(fs::exists(folderPath));
-        }*/
+            REQUIRE(linkFiles(config) == 0);
+            REQUIRE(fs::exists(intermediatePath + appName));
+        }
 
-        /*SECTION("Returned code")
-        {
-            //REQUIRE(linkFiles(config) == 0);
-        }*/
+    }
 
-    //}
-
-    /*SECTION("Complex config") 
+    SECTION("Complex config") 
     {
-        auto configContent = "projet: app\n"
-                             "deps_include:\n"
-                             " var: BOOST_INCLUDEDIR\n"
+        auto helloWorld =    "#include <iostream>\n"
+                             "#include <yaml-cpp/yaml.h>\n"
+                             "using namespace std;\n"
+                             "int main(){\n"
+                             "YAML::Node node = YAML::Load(\"[1, 2, 3]\");"
+                             "cout << \"Hello, world, from Visual C++!\" << endl;}";
+        helloWorldCPP << helloWorld << std::endl;
+        REQUIRE(system(("g++ -c helloWorld.cpp -o " + Utils::temporaryFolder + "/helloWorld.o").c_str()) == 0);
+
+        auto configContent = "projet: " + appName + "\n"
                              "deps_library:\n"
-                             " var: BOOST_LIBRARYDIR\n"
                              " libs:\n"
-                             " - lib1\n"
-                             " - lib2\n"
+                             " - yaml-cpp\n"
                              "compile:\n"
-                             " - f1 : fichier1.cpp\n"
-                             " - f2 : fichier2.cpp\n"
-                             "package: f1 f2";
+                             " - helloWorld : helloWorld.cpp\n"
+                             "package: hw";
     
         fs::path configFilePath = fs::current_path() / "config.buildus";
         std::ofstream configFile(configFilePath);
@@ -488,31 +492,56 @@ TEST_CASE("Linking files")
         configFile << configContent << std::endl;
         Config config(configFilePath.string());
 
-        build(config);
         linkFiles(config);
 
-        /*SECTION("Command created")
+        SECTION("Command created")
         {
-            std::string expectedCommand = "g++ f1.o f2.o -o app -L/boostinstall/boost_1_71_0/stage/lib -llib1 -llib2";
+            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName + " -lyaml-cpp";
             REQUIRE(createLinkCommand(config) == expectedCommand);
-        }*/
+        }
 
-        /*SECTION("Executable created")
+        SECTION("Executable created")
         {
-            std::cout<<linkFiles(config);
-            compileFiles(config);
-            linkFiles(config);
-            fs::path folderPath = fs::current_path();
-            std::cout<<"folder: "<<folderPath;
-            REQUIRE(fs::exists(folderPath/config.getProjet()));
-            
-            //REQUIRE(fs::exists(folderPath));
-        }*/
+            REQUIRE(linkFiles(config) == 0);
+            REQUIRE(fs::exists(intermediatePath + appName));
+        }
 
-    //}
+    }
 
-    //Cas d'erreur
+    SECTION("Missing file")
+    {
+        auto configContent = "projet: " + appName + "\n"
+                             "deps_library:\n"
+                             " libs:\n"
+                             " - yaml-cpp\n"
+                             "compile:\n"
+                             " - helloWorld : helloWorld.cpp\n"
+                             "package: hw";
+
+        fs::path configFilePath = fs::current_path() / "config.buildus";
+        std::ofstream configFile(configFilePath);
+
+        configFile << configContent << std::endl;
+        Config config(configFilePath.string());
+
+        linkFiles(config);
+
+        SECTION("Command created")
+        {
+            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName + " -lyaml-cpp";
+            REQUIRE(createLinkCommand(config) == expectedCommand);
+        }
+
+        SECTION("Executable not created")
+        {
+            REQUIRE(linkFiles(config) != 0);
+            std::cout<<intermediatePath + appName<<std::endl;
+            REQUIRE_FALSE(fs::exists(intermediatePath + appName));
+        }
+    }
 
     clean();
+    helloWorldCPP.close();
+    fs::remove(fs::current_path()/"helloWorld.cpp");
 
 }
