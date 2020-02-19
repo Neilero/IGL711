@@ -67,8 +67,7 @@ TEST_CASE("Configuration - YAML parsing")
         std::vector<Config::CompileFile> expectedCompile{f1, f2};
         std::vector<std::string> expectedPackage{"f1", "f2"};
 
-        configFile << configContent;
-        configFile.flush();
+        configFile << configContent << std::endl;
         Config config(configFilePath.string());
 
         REQUIRE(config.getProjet() == "app2");
@@ -203,14 +202,37 @@ TEST_CASE("Compile intermediate cpp files")
 
 TEST_CASE("Clean command")
 {
-    clean();
+    fs::path tempPath = fs::current_path() / Utils::temporaryFolder;
 
-    int count = 0;
-
-    for (fs::directory_iterator endDirIt, it(fs::current_path()/Utils::temporaryFolder); it != endDirIt; ++it) {
-        count++;
+    SECTION("No temporary folder") {
+        //nothing should happened
+        REQUIRE_FALSE(fs::exists(tempPath));
+        REQUIRE_NOTHROW(clean());
     }
 
-    REQUIRE(count == 0);
+    SECTION("With temporary folder") {
+        REQUIRE_NOTHROW(fs::create_directory(tempPath));
+        REQUIRE(fs::exists(tempPath));
 
+        SECTION("No file in temporary folder") {
+            //nothing should happened
+            long fileCount = std::distance(fs::directory_iterator(tempPath), fs::directory_iterator());
+            REQUIRE(fileCount == 0);
+            REQUIRE_NOTHROW(clean());
+        }
+
+        SECTION("With files in temporary folder") {
+            // create empty files
+            std::ofstream(tempPath / "f1.txt");
+            std::ofstream(tempPath / "f2.txt");
+
+            long fileCount = std::distance(fs::directory_iterator(tempPath), fs::directory_iterator());
+            REQUIRE(fileCount != 0);
+
+            REQUIRE_NOTHROW(clean());
+            REQUIRE_FALSE(fs::exists(tempPath));
+        }
+    }
+
+    fs::remove(tempPath);
 }

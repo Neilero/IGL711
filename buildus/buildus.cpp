@@ -1,8 +1,8 @@
 #include <iostream>
 #include <filesystem>
 
-#include "build/utils.h"
 #include "build/build.h"
+#include "build/clean.h"
 
 void printHelp()
 {
@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
     // If the option is clean
     if (option == "clean")
     {
-        std::cout << "C'est un clean" << std::endl;
+        clean();
     }
     // If it's a config file
     else
