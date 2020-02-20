@@ -287,7 +287,7 @@ TEST_CASE("Compile intermediate cpp files")
     {
         std::vector<std::string> vars;
         vars.push_back("HOME");
-        REQUIRE(createIncludeOptionsFromVars(vars) == " -I "+std::string(getenv("HOME")));
+        REQUIRE(createIncludeOptionsFromVars(vars) == " -I"+std::string(getenv("HOME")));
 
         vars.push_back("CANEXISTEPAS");
         REQUIRE_THROWS(createIncludeOptionsFromVars(vars));
@@ -295,9 +295,9 @@ TEST_CASE("Compile intermediate cpp files")
 
     SECTION("Generate g++ command")
     {
-        REQUIRE(createCompileCommand("fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c fichier1.cpp -o intermediate/f1.o -I /home/user/something");
+        REQUIRE(createCompileCommand("fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c \"fichier1.cpp\" -o \"intermediate/f1.o\" -I /home/user/something");
 
-        REQUIRE(createCompileCommand("quelquepart/fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c quelquepart/fichier1.cpp -o intermediate/f1.o -I /home/user/something");
+        REQUIRE(createCompileCommand("quelquepart/fichier1.cpp", "f1", " -I /home/user/something") == "g++ -c \"quelquepart/fichier1.cpp\" -o \"intermediate/f1.o\" -I /home/user/something");
     }
 
     SECTION("Main function with configuration file")
@@ -455,7 +455,7 @@ TEST_CASE("Linking files")
 
         SECTION("Command created")
         {
-            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName;
+            std::string expectedCommand = "g++ \"" + intermediatePath + "helloWorld.o\" -o \"" + intermediatePath + appName+"\"";
             REQUIRE(createLinkCommand(config) == expectedCommand);
         }
 
@@ -496,7 +496,7 @@ TEST_CASE("Linking files")
 
         SECTION("Command created")
         {
-            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName + " -lyaml-cpp";
+            std::string expectedCommand = "g++ \"" + intermediatePath + "helloWorld.o\" -o \"" + intermediatePath + appName + "\" -lyaml-cpp";
             REQUIRE(createLinkCommand(config) == expectedCommand);
         }
 
@@ -528,7 +528,7 @@ TEST_CASE("Linking files")
 
         SECTION("Command created")
         {
-            std::string expectedCommand = "g++ " + intermediatePath + "helloWorld.o -o " + intermediatePath + appName + " -lyaml-cpp";
+            std::string expectedCommand = "g++ \"" + intermediatePath + "helloWorld.o\" -o \"" + intermediatePath + appName + "\" -lyaml-cpp";
             REQUIRE(createLinkCommand(config) == expectedCommand);
         }
 

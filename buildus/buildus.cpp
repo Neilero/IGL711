@@ -38,9 +38,15 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        Config config(option);
-        compileFiles(config);
-        linkFiles(config);
+        try {
+            Config config(option);
+            compileFiles(config);
+            linkFiles(config);
+        } catch(const std::exception & e)
+        {
+            std::cout << "BuilUS error: " << e.what() << std::endl;
+        }
+
     }
 
     return 0;
