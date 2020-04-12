@@ -1,4 +1,4 @@
-package orchestrus.controllers;
+package orchestrus.rest.controllers;
 
 class RESTRoute {
 	public static final String BASE_ROUTE = "/";

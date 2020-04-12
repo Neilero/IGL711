@@ -1,8 +1,8 @@
-package orchestrus.controllers;
+package orchestrus.rest.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DBInterfaceController {
+public class ClientController {
 	//Not sure if anything goes here...
 }

@@ -1,4 +1,4 @@
-package orchestrus.dto;
+package orchestrus.rest.dto;
 
 public class WorkerDTO {
 
