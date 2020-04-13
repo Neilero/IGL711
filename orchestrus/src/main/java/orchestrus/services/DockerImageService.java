@@ -1,9 +1,11 @@
 package orchestrus.services;
 
 import orchestrus.model.DockerImage;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class DockerImageService {
 
 	public List<DockerImage> getAllDockerImages() {

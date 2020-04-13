@@ -1,6 +1,7 @@
 package orchestrus.rest.controllers;
 
 import orchestrus.rest.dto.WorkerDTO;
+import orchestrus.services.WorkerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,14 @@ import java.util.List;
 
 @RestController
 public class WorkerController {
+
+	private final WorkerService workerService;
+
+
+	public WorkerController() {
+		workerService = new WorkerService();
+	}
+
 
 	@GetMapping( path = RESTRoute.WORKERS )
 	@ResponseBody

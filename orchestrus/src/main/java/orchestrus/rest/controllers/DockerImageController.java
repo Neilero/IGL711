@@ -3,6 +3,8 @@ package orchestrus.rest.controllers;
 import orchestrus.rest.dto.BasicResponse;
 import orchestrus.rest.dto.DockerImageDTO;
 import orchestrus.rest.dto.WorkerDTO;
+import orchestrus.services.DockerImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,14 @@ import java.util.List;
 
 @RestController
 public class DockerImageController {
+
+	private final DockerImageService dockerImageService;
+
+
+	public DockerImageController() {
+		this.dockerImageService = new DockerImageService();
+	}
+
 
 	@GetMapping( path = RESTRoute.IMAGES )
 	@ResponseBody
