@@ -1,17 +1,16 @@
 package orchestrus.rest.dto;
 
+import orchestrus.model.Status;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
 public class WorkerDTO {
 
-	public int id;
+	@Nullable
+	public int    id;
 	public String address;
-	public int port;
-	public Status status;
+	public int    port;
+	public Status status = Status.ACTIF;
 
-	public WorkerDTO() {
-	}
-
-	private enum Status {
-		ACTIF,
-		INACTIF
-	}
+	public WorkerDTO() {}
 }

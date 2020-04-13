@@ -13,15 +13,15 @@ import java.util.List;
 @RestController
 public class WorkerController {
 
-	@GetMapping(path = RESTRoute.WORKER)
+	@GetMapping( path = RESTRoute.WORKER )
 	@ResponseBody
 	public ResponseEntity<List<WorkerDTO>> getAllWorkers() {
 		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	@GetMapping(path = RESTRoute.WORKER)
+	@GetMapping( path = RESTRoute.WORKER )
 	@ResponseBody
-	public ResponseEntity<WorkerDTO> getWorkerInfo( @RequestParam(name = "id") int workerId ) {
+	public ResponseEntity<WorkerDTO> getWorkerInfo( @RequestParam( name = "id" ) int workerId ) {
 		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
