@@ -13,4 +13,6 @@ public class WorkerDTO {
 	public Status status = Status.ACTIF;
 
 	public WorkerDTO() {}
+
+	//TODO : add constructor from Worker
 }

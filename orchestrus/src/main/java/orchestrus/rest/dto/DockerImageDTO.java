@@ -20,4 +20,5 @@ public class DockerImageDTO {
 
 	public DockerImageDTO() {}
 
+	//TODO : add constructor from DockerImage
 }
