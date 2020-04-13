@@ -1,6 +1,7 @@
 package orchestrus.model;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class DockerImage {
 
 	private Worker worker;
 
+	@NotNull
 	private final List<Integer> openPorts;
 
 	public DockerImage( int id, String name, Worker worker ) {

@@ -12,7 +12,7 @@ public class Worker {
 	private int id;
 
 	@Size( min = 8, max = 15, message = "IP should be valid")
-	private String ip;
+	private String address;
 
 	@Positive( message = "Port should be positive" )
 	@Max( value = 65535, message = "Port should be valid")
@@ -23,17 +23,17 @@ public class Worker {
 	private final List<DockerImage> runningImages;
 
 
-	public Worker( int id, String ip, int port, Status status ) {
+	public Worker( int id, String address, int port, Status status ) {
 		this.id = id;
-		this.ip = ip;
+		this.address = address;
 		this.port = port;
 		this.status = status;
 
 		runningImages = new ArrayList<>();
 	}
 
-	public Worker( String ip, int port ) {
-		this( -1, ip, port, Status.ACTIF );
+	public Worker( String address, int port ) {
+		this( -1, address, port, Status.ACTIF );
 	}
 
 
@@ -45,12 +45,12 @@ public class Worker {
 		this.id = id;
 	}
 
-	public String getIp() {
-		return ip;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setIp( String ip ) {
-		this.ip = ip;
+	public void setAddress( String address ) {
+		this.address = address;
 	}
 
 	public int getPort() {

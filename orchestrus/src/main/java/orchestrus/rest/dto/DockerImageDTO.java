@@ -1,5 +1,6 @@
 package orchestrus.rest.dto;
 
+import orchestrus.model.DockerImage;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
@@ -20,5 +21,10 @@ public class DockerImageDTO {
 
 	public DockerImageDTO() {}
 
-	//TODO : add constructor from DockerImage
+	public DockerImageDTO( DockerImage image ) {
+		id = image.getId();
+		name = image.getName();
+		workerId = image.getWorker().getId();
+		openPorts = List.copyOf( image.getOpenPorts() );
+	}
 }

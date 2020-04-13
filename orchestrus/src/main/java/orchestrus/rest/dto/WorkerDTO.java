@@ -1,7 +1,7 @@
 package orchestrus.rest.dto;
 
 import orchestrus.model.Status;
-import org.springframework.lang.NonNull;
+import orchestrus.model.Worker;
 import org.springframework.lang.Nullable;
 
 public class WorkerDTO {
@@ -14,5 +14,10 @@ public class WorkerDTO {
 
 	public WorkerDTO() {}
 
-	//TODO : add constructor from Worker
+	public WorkerDTO( Worker worker ) {
+		id = worker.getId();
+		address = worker.getAddress();
+		port = worker.getPort();
+		status = worker.getStatus();
+	}
 }
