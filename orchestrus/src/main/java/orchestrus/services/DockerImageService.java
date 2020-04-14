@@ -16,11 +16,11 @@ public class DockerImageService {
 		throw new UnsupportedOperationException("Not yet implemented...");
 	}
 
-	public boolean startImage( DockerImage image ) {
+	public boolean startImage( String imageName, int workerId ) {
 		throw new UnsupportedOperationException("Not yet implemented...");
 	}
 
-	public boolean stopImage( DockerImage image ) {
+	public boolean stopImage( String imageName, int workerId ) {
 		throw new UnsupportedOperationException("Not yet implemented...");
 	}
 }
