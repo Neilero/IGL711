@@ -1,11 +1,13 @@
 package orchestrus.rest.controllers;
 
 class RESTRoute {
-	public static final String BASE_ROUTE = "/";
-	public static final String WORKER = BASE_ROUTE + "worker";
+	public static final String INDEX = "/";
 
-	private static final String DOCKER_IMAGE = BASE_ROUTE + "image/";
-	public static final String START_IMAGE = DOCKER_IMAGE + "start";
-	public static final String STOP_IMAGE = DOCKER_IMAGE + "stop";
-	public static final String UPLOAD_IMAGE = DOCKER_IMAGE + "upload";
+	public static final String WORKERS = INDEX + "workers";
+	public static final String WORKER  = INDEX + "worker";
+
+	public static final String IMAGES      = INDEX + "images";
+	public static final String IMAGE       = INDEX + "image";
+	public static final String START_IMAGE = IMAGE + "/start";
+	public static final String STOP_IMAGE  = IMAGE + "/stop";
 }
