@@ -8,7 +8,7 @@
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
-.mtj.tmp/
+**/.mtj.tmp/
 
 # Package Files #
 *.jar
@@ -23,5 +23,8 @@
 hs_err_pid*
 
 # IntelliJ files
-.idea/
+**/.idea/
 *.iml
+
+# Build files
+**/target/
