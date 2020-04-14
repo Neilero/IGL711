@@ -1,0 +1,13 @@
+version: '3'
+services:
+  interface:
+    build: .
+    ports:
+      - "12345:8080"
+    depends_on:
+      - db
+
+  db:
+    image: "mariadb"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password

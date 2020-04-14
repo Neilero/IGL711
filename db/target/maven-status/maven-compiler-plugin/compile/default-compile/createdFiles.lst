@@ -1,0 +1,10 @@
+ca\usherbrooke\dinf\dbinterface\controllers\WorkerController.class
+ca\usherbrooke\dinf\dbinterface\repository\ImageRepository.class
+ca\usherbrooke\dinf\dbinterface\controllers\ImageController.class
+ca\usherbrooke\dinf\dbinterface\model\Worker.class
+ca\usherbrooke\dinf\dbinterface\DBInterfaceApplication.class
+ca\usherbrooke\dinf\dbinterface\model\OpenPort.class
+ca\usherbrooke\dinf\dbinterface\model\DockerImage.class
+ca\usherbrooke\dinf\dbinterface\repository\PortRepository.class
+ca\usherbrooke\dinf\dbinterface\repository\WorkerRepository.class
+ca\usherbrooke\dinf\dbinterface\controllers\PortController.class
