@@ -1,21 +1,17 @@
 package orchestrus.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import orchestrus.model.DockerImage;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DockerImageDTO {
 
-	@Nullable
 	public int id;
-
 	public String name;
-
-	@Nullable
 	public int workerId;
-
-	@Nullable
 	public List<Integer> openPorts;
 
 

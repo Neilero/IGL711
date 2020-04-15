@@ -1,12 +1,13 @@
 package orchestrus.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import orchestrus.model.Status;
 import orchestrus.model.Worker;
 import org.springframework.lang.Nullable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkerDTO {
 
-	@Nullable
 	public int    id;
 	public String address;
 	public int    port;
