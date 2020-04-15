@@ -15,4 +15,16 @@ public class WorkerService {
 	public Worker getWorker( int workerId ) {
 		throw new UnsupportedOperationException("Not yet implemented...");
 	}
+
+	public boolean addWorker( String address, int port ) {
+		throw new UnsupportedOperationException("Not yet implemented...");
+	}
+
+	public boolean editWorker( String address, int port ) {
+		throw new UnsupportedOperationException("Not yet implemented...");
+	}
+
+	public boolean removeWorker( String address, int port ) {
+		throw new UnsupportedOperationException("Not yet implemented...");
+	}
 }
