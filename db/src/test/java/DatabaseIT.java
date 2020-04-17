@@ -20,7 +20,6 @@ public class DatabaseIT {
         UUID uuid = UUID.randomUUID();
         w.setId(uuid);
         w.setAddress(number + "." + number + "." + number + "." + number);
-        w.setPort(number*111);
         w.setStatus((short) (number%2));
         return w;
     }

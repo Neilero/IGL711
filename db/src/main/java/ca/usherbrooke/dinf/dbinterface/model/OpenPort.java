@@ -19,7 +19,7 @@ public class OpenPort implements Serializable {
     private UUID id;
 
     @Column(name="valuePort")
-    private Short port;
+    private Integer port;
 
     @ManyToOne
     private Worker worker;
@@ -32,11 +32,11 @@ public class OpenPort implements Serializable {
         this.id = id;
     }
 
-    public Short getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(Short port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
