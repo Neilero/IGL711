@@ -1,13 +1,13 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
-import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
 import ca.usherbrooke.dinf.dbinterface.model.OpenPort;
+import ca.usherbrooke.dinf.dbinterface.repository.PortRepository;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ca.usherbrooke.dinf.dbinterface.repository.PortRepository;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,32 +21,43 @@ public class PortController {
     WorkerRepository workerRepository;
 
     @GetMapping("/worker/{id}")
-    public List<OpenPort> getPortsByWorker(@PathVariable UUID id)
+    public ResponseEntity<List<OpenPort>> getPortsByWorker(@PathVariable UUID id)
     {
-        return portRepository.findByWorker(workerRepository.findById(id));
+        return new ResponseEntity<>(portRepository.findByWorker(workerRepository.findById(id)), HttpStatus.OK) ;
     }
 
     @GetMapping("/")
-    public List<OpenPort> getPorts()
+    public ResponseEntity<List<OpenPort>> getPorts()
     {
-        return portRepository.findAll();
+        return new ResponseEntity<>(portRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    OpenPort getPortById(@PathVariable UUID id)
+    ResponseEntity<OpenPort> getPortById(@PathVariable UUID id)
     {
-        return portRepository.findById(id);
+        OpenPort port = portRepository.findById(id);
+
+        if (port == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(port, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    OpenPort addPort(@RequestBody OpenPort newPort)
+    ResponseEntity<OpenPort> addPort(@RequestBody OpenPort newPort)
     {
-        return portRepository.save(newPort);
+        if (newPort == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(portRepository.save(newPort), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    OpenPort updatePort(@RequestBody OpenPort newPort, @PathVariable UUID id)
+    ResponseEntity<OpenPort> updatePort(@RequestBody OpenPort newPort, @PathVariable UUID id)
     {
+        if (newPort == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         OpenPort port = portRepository.findById(id);
 
         if (port != null)
@@ -60,12 +71,20 @@ public class PortController {
             port.setId(id);
         }
 
-        return portRepository.save(port);
+        return new ResponseEntity<>(portRepository.save(port), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    void deletePort(@PathVariable UUID id)
+    ResponseEntity<SimpleResponse> deletePort(@PathVariable UUID id)
     {
-        portRepository.deleteById(id);
+        OpenPort port = portRepository.findById(id);
+
+        if (port == null)
+            return new ResponseEntity<>(new SimpleResponse(false, "Port cannot be deleted"), HttpStatus.ACCEPTED);
+        else
+        {
+            portRepository.delete(port);
+            return new ResponseEntity<>(new SimpleResponse(true, "Port has been deleted"), HttpStatus.OK);
+        }
     }
 }
