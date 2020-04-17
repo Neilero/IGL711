@@ -1,7 +1,6 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
 import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
-import ca.usherbrooke.dinf.dbinterface.model.Worker;
 import ca.usherbrooke.dinf.dbinterface.repository.ImageRepository;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +46,18 @@ public class ImageController {
     @PostMapping("/")
     ResponseEntity<DockerImage> addImage(@RequestBody DockerImage newImage)
     {
+        if (newImage == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity<>(imageRepository.save(newImage), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<DockerImage> updateImage(@RequestBody DockerImage newImage, @PathVariable UUID id)
     {
+        if (newImage == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         DockerImage image = imageRepository.findById(id);
 
         if (image != null)

@@ -36,12 +36,18 @@ public class WorkerController {
     @PostMapping("/")
     ResponseEntity<Worker> addWorker(@RequestBody Worker newWorker)
     {
+        if (newWorker == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity<>(workerRepository.save(newWorker), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<Worker> editWorker(@RequestBody Worker newWorker, @PathVariable UUID id)
     {
+        if (newWorker == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         Worker worker = workerRepository.findById(id);
 
         if (worker != null)
