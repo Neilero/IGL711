@@ -1,4 +1,5 @@
 import ca.usherbrooke.dinf.dbinterface.DBInterfaceApplication;
+import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
 import ca.usherbrooke.dinf.dbinterface.model.OpenPort;
 import ca.usherbrooke.dinf.dbinterface.model.Worker;
 import org.aspectj.lang.annotation.Before;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,10 @@ public class DatabaseIT {
     private Worker w2 = new Worker();
     private Worker w3 = new Worker();
 
+    private DockerImage i1 = new DockerImage();
+    private DockerImage i2 = new DockerImage();
+    private DockerImage i3 = new DockerImage();
+
     private Worker generateWorker(int number) {
         Worker w = new Worker();
         UUID uuid = UUID.randomUUID();
@@ -50,6 +56,14 @@ public class DatabaseIT {
         return p;
     }
 
+    private DockerImage generateImage(int number) {
+        DockerImage i = new DockerImage();
+        UUID uuid = UUID.randomUUID();
+        i.setId(uuid);
+        i.setName("Image " + number);
+        return i;
+    }
+
     @BeforeAll
     public void setUp() {
 
@@ -60,6 +74,10 @@ public class DatabaseIT {
         w1 = generateWorker(1);
         w2 = generateWorker(2);
         w3 = generateWorker(3);
+
+        i1 = generateImage(1);
+        i2 = generateImage(2);
+        i3 = generateImage(3);
 
     }
 
@@ -124,8 +142,32 @@ public class DatabaseIT {
 
     @Test
     public void imageControllerIT() {
+        setUp();
 
-        assertEquals(0, 0);
+        ResponseEntity<DockerImage> re1 = trt.postForEntity(baseUri + "images/", i1, DockerImage.class);
+        assertEquals(HttpStatus.CREATED, re1.getStatusCode());
+
+        re1 = trt.postForEntity(baseUri + "images/", i2, DockerImage.class);
+        assertEquals(HttpStatus.CREATED, re1.getStatusCode());
+        re1 = trt.postForEntity(baseUri + "images/", i3, DockerImage.class);
+        assertEquals(HttpStatus.CREATED, re1.getStatusCode());
+
+        ResponseEntity<ArrayList> re2 = trt.getForEntity(baseUri + "images/", ArrayList.class);
+        ArrayList a = new ArrayList();
+        a.add(i1);
+        a.add(i2);
+        a.add(i3);
+        assertEquals(a, re2.getBody());
+
+        ResponseEntity<DockerImage> re3 = trt.getForEntity(baseUri + "images/" + i3.getId(), DockerImage.class);
+        assertEquals(i3, re3.getBody());
+
+        trt.delete(baseUri + "images/" + i3.getId());
+        re2 = trt.getForEntity(baseUri + "images/", ArrayList.class);
+        assertEquals(2, re2.getBody().size());
+
+        ResponseEntity<DockerImage[]> re4 = trt.getForEntity(baseUri + "images/worker/" + w2.getId(), DockerImage[].class);
+        assertEquals(w2.getImages(), re4.getBody());
     }
 
 }
