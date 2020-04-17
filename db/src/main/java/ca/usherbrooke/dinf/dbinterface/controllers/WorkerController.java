@@ -25,7 +25,12 @@ public class WorkerController {
     @GetMapping("/{id}")
     ResponseEntity<Worker> getWorkerById(@PathVariable UUID id)
     {
-        return new ResponseEntity<>(workerRepository.findById(id), HttpStatus.OK);
+        Worker worker = workerRepository.findById(id);
+
+        if (worker == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(worker, HttpStatus.OK);
     }
 
     @PostMapping("/")

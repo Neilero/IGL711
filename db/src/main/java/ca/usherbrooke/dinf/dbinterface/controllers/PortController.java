@@ -1,5 +1,6 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
+import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
 import ca.usherbrooke.dinf.dbinterface.model.OpenPort;
 import ca.usherbrooke.dinf.dbinterface.repository.PortRepository;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
@@ -35,7 +36,12 @@ public class PortController {
     @GetMapping("/{id}")
     ResponseEntity<OpenPort> getPortById(@PathVariable UUID id)
     {
-        return new ResponseEntity<>(portRepository.findById(id), HttpStatus.OK);
+        OpenPort port = portRepository.findById(id);
+
+        if (port == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(port, HttpStatus.OK);
     }
 
     @PostMapping("/")

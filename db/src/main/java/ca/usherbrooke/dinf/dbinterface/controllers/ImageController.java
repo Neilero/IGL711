@@ -1,6 +1,7 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
 import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
+import ca.usherbrooke.dinf.dbinterface.model.Worker;
 import ca.usherbrooke.dinf.dbinterface.repository.ImageRepository;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,12 @@ public class ImageController {
     @GetMapping("/{id}")
     ResponseEntity<DockerImage> getImageById(@PathVariable UUID id)
     {
-        return new ResponseEntity<>(imageRepository.findById(id), HttpStatus.OK);
+        DockerImage image = imageRepository.findById(id);
+
+        if (image == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     @PostMapping("/")
