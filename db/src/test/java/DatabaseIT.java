@@ -19,6 +19,7 @@ public class DatabaseIT {
         Worker w = new Worker();
         UUID uuid = UUID.randomUUID();
         w.setId(uuid);
+        w.setAccessPort(number);
         w.setAddress(number + "." + number + "." + number + "." + number);
         w.setStatus((short) (number%2));
         return w;
