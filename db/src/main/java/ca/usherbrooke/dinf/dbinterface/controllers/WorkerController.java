@@ -53,7 +53,6 @@ public class WorkerController {
         if (worker != null)
         {
             worker.setAddress(newWorker.getAddress());
-            worker.setPort(newWorker.getPort());
             worker.setStatus(newWorker.getStatus());
             worker.setPorts(newWorker.getPorts());
             worker.setImages(newWorker.getImages());
