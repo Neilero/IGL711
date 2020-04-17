@@ -54,7 +54,8 @@ public class WorkerController {
         {
             worker.setAddress(newWorker.getAddress());
             worker.setStatus(newWorker.getStatus());
-            worker.setPorts(newWorker.getPorts());
+            worker.setAccessPort(newWorker.getAccessPort());
+            worker.setOpenPorts(newWorker.getOpenPorts());
             worker.setImages(newWorker.getImages());
         }
         else

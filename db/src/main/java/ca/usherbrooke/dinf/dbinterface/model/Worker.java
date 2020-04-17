@@ -22,6 +22,9 @@ public class Worker implements Serializable {
     @Column(name = "addressWorker")
     private String address;
 
+    @Column(name = "accessPortWorker")
+    private Integer accessPort;
+
     @Column(name = "statusWorker")
     private Short status;
 
@@ -29,7 +32,7 @@ public class Worker implements Serializable {
     private List<DockerImage> images;
 
     @OneToMany
-    private List<OpenPort> ports;
+    private List<OpenPort> openPorts;
 
     public UUID getId() {
         return id;
@@ -45,6 +48,14 @@ public class Worker implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Integer getAccessPort() {
+        return accessPort;
+    }
+
+    public void setAccessPort(Integer port) {
+        this.accessPort = port;
     }
 
     public Short getStatus() {
@@ -63,11 +74,11 @@ public class Worker implements Serializable {
         this.images = images;
     }
 
-    public List<OpenPort> getPorts() {
-        return ports;
+    public List<OpenPort> getOpenPorts() {
+        return openPorts;
     }
 
-    public void setPorts(List<OpenPort> ports) {
-        this.ports = ports;
+    public void setOpenPorts(List<OpenPort> ports) {
+        this.openPorts = ports;
     }
 }
