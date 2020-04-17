@@ -1,13 +1,13 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
 import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
-import ca.usherbrooke.dinf.dbinterface.model.Worker;
+import ca.usherbrooke.dinf.dbinterface.repository.ImageRepository;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ca.usherbrooke.dinf.dbinterface.repository.ImageRepository;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,31 +21,31 @@ public class ImageController {
     WorkerRepository workerRepository;
 
     @GetMapping("/worker/{id}")
-    public List<DockerImage> getImagesByWorker(@PathVariable UUID id)
+    public ResponseEntity<List<DockerImage>> getImagesByWorker(@PathVariable UUID id)
     {
-        return imageRepository.findByWorker(workerRepository.findById(id));
+        return new ResponseEntity<>(imageRepository.findByWorker(workerRepository.findById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/")
-    public List<DockerImage> getImages()
+    public ResponseEntity<List<DockerImage>> getImages()
     {
-        return imageRepository.findAll();
+        return new ResponseEntity<>(imageRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    DockerImage getImageById(@PathVariable UUID id)
+    ResponseEntity<DockerImage> getImageById(@PathVariable UUID id)
     {
-        return imageRepository.findById(id);
+        return new ResponseEntity<>(imageRepository.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/")
-    DockerImage addImage(@RequestBody DockerImage newImage)
+    ResponseEntity<DockerImage> addImage(@RequestBody DockerImage newImage)
     {
-        return imageRepository.save(newImage);
+        return new ResponseEntity<>(imageRepository.save(newImage), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    DockerImage updateImage(@RequestBody DockerImage newImage, @PathVariable UUID id)
+    ResponseEntity<DockerImage> updateImage(@RequestBody DockerImage newImage, @PathVariable UUID id)
     {
         DockerImage image = imageRepository.findById(id);
 
@@ -60,12 +60,20 @@ public class ImageController {
             image.setId(id);
         }
 
-        return imageRepository.save(image);
+        return new ResponseEntity<>(imageRepository.save(image), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    void deleteImage(@PathVariable UUID id)
+    ResponseEntity<SimpleResponse> deleteImage(@PathVariable UUID id)
     {
-        imageRepository.deleteById(id);
+        DockerImage image = imageRepository.findById(id);
+
+        if (image == null)
+            return new ResponseEntity<>(new SimpleResponse(false, "Image cannot be deleted"), HttpStatus.ACCEPTED);
+        else
+        {
+            imageRepository.delete(image);
+            return new ResponseEntity<>(new SimpleResponse(true, "Image has been deleted"), HttpStatus.OK);
+        }
     }
 }

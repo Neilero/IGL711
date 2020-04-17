@@ -1,11 +1,12 @@
 package ca.usherbrooke.dinf.dbinterface.controllers;
 
 import ca.usherbrooke.dinf.dbinterface.model.Worker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import ca.usherbrooke.dinf.dbinterface.repository.WorkerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,25 +17,25 @@ public class WorkerController {
     WorkerRepository workerRepository;
 
     @GetMapping("/")
-    List<Worker> getAllWorkers()
+    ResponseEntity<List<Worker>> getAllWorkers()
     {
-        return workerRepository.findAll();
+        return new ResponseEntity<>(workerRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    Worker getWorkerById(@PathVariable UUID id)
+    ResponseEntity<Worker> getWorkerById(@PathVariable UUID id)
     {
-        return workerRepository.findById(id);
+        return new ResponseEntity<>(workerRepository.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/")
-    Worker addWorker(@RequestBody Worker newWorker)
+    ResponseEntity<Worker> addWorker(@RequestBody Worker newWorker)
     {
-        return workerRepository.save(newWorker);
+        return new ResponseEntity<>(workerRepository.save(newWorker), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    Worker editWorker(@RequestBody Worker newWorker, @PathVariable UUID id)
+    ResponseEntity<Worker> editWorker(@RequestBody Worker newWorker, @PathVariable UUID id)
     {
         Worker worker = workerRepository.findById(id);
 
@@ -52,12 +53,20 @@ public class WorkerController {
             worker.setId(id);
         }
 
-        return workerRepository.save(worker);
+        return new ResponseEntity<>(workerRepository.save(worker), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    void deleteWorker(@PathVariable UUID id)
+    ResponseEntity<SimpleResponse> deleteWorker(@PathVariable UUID id)
     {
-        workerRepository.deleteById(id);
+        Worker worker = workerRepository.findById(id);
+
+        if (worker == null)
+            return new ResponseEntity<>(new SimpleResponse(false, "Worker cannot be deleted"), HttpStatus.ACCEPTED);
+        else
+        {
+            workerRepository.delete(worker);
+            return new ResponseEntity<>(new SimpleResponse(true, "Worker has been deleted"), HttpStatus.OK);
+        }
     }
 }
