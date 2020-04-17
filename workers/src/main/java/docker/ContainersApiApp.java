@@ -23,6 +23,10 @@ public class ContainersApiApp {
 			.fromEnv()
 			.build();
 
+		List<Container> containers = client.listContainers();
+		containers.forEach(System.out::println);
+
+
 
 		System.out.println("\n=== client.createContainer");
 		// Pull the image first
@@ -95,15 +99,15 @@ public class ContainersApiApp {
 		//client.unpauseContainer(container.id());
 		System.out.println("\n=== client.updateContainer");
 		// Update container
-		final ContainerUpdate update = client.updateContainer(container.id(), 
+		/*final ContainerUpdate update = client.updateContainer(container.id(),
 			HostConfig
 				.builder()
-				.memory(268435456L /* 256Mb */)
+				.memory(268435456L  256Mb )
 				.build()
 			);
 		System.out.println("\n=== client.updateContainer");
 		System.out.println(update);
-		
+		*/
 		// Get processes in the container
 		final TopResults top = client.topContainer(container.id());
 		System.out.println("\n=== client.topContainer");
