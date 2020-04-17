@@ -1,7 +1,7 @@
 version: '3'
 services:
   interface:
-    image: "dbinterface"
+    build: .
     ports:
       - "12345:8080"
     depends_on:
