@@ -1,15 +1,17 @@
 package orchestrus.model;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Worker {
 
-	@Positive( message = "ID should be positive" )
-	private int id;
+	private final UUID id;
 
 	@Size( min = 8, max = 15, message = "IP should be valid")
 	private String address;
@@ -20,29 +22,38 @@ public class Worker {
 
 	private Status status;
 
+	@NotNull
 	private final List<DockerImage> runningImages;
 
+	@NotNull
+	private final List<OpenPort> openPorts;
 
-	public Worker( int id, String address, int port, Status status ) {
+	public Worker( UUID id, String address, int port, Status status, List<DockerImage> runningImages, List<OpenPort> openPorts ) {
+		this.id = id;
+		this.address = address;
+		this.port = port;
+		this.status = status;
+		this.runningImages = new ArrayList<>( runningImages );
+		this.openPorts = new ArrayList<>( openPorts );
+	}
+
+	public Worker( UUID id, String address, int port, Status status ) {
 		this.id = id;
 		this.address = address;
 		this.port = port;
 		this.status = status;
 
 		runningImages = new ArrayList<>();
+		openPorts = new ArrayList<>();
 	}
 
 	public Worker( String address, int port ) {
-		this( -1, address, port, Status.ACTIF );
+		this( null, address, port, Status.ACTIF );
 	}
 
 
-	public int getId() {
+	public UUID getId() {
 		return id;
-	}
-
-	public void setId( int id ) {
-		this.id = id;
 	}
 
 	public String getAddress() {
@@ -70,7 +81,7 @@ public class Worker {
 	}
 
 	public List<DockerImage> getRunningImages() {
-		return runningImages;
+		return new ArrayList<>( runningImages );
 	}
 
 	public void addRunningImage( DockerImage dockerImage ) {
@@ -81,4 +92,15 @@ public class Worker {
 		runningImages.remove( dockerImage );
 	}
 
+	public List<OpenPort> getOpenPorts() {
+		return new ArrayList<>( openPorts );
+	}
+
+	public void addOpenPort( OpenPort port ) {
+		openPorts.add( port );
+	}
+
+	public void removeOpenPort( OpenPort port ) {
+		openPorts.remove( port );
+	}
 }
