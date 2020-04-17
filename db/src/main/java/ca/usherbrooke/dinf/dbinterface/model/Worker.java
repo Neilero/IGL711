@@ -22,9 +22,6 @@ public class Worker implements Serializable {
     @Column(name = "addressWorker")
     private String address;
 
-    @Column(name = "portWorker")
-    private Integer port;
-
     @Column(name = "statusWorker")
     private Short status;
 
@@ -48,14 +45,6 @@ public class Worker implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
     public Short getStatus() {
