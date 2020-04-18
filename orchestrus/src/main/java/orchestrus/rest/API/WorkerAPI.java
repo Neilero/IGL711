@@ -1,7 +1,11 @@
 package orchestrus.rest.API;
 
+import orchestrus.exception.OrchestrusException;
 import orchestrus.model.DockerImage;
 import orchestrus.model.Worker;
+import orchestrus.rest.RESTRoute;
+import orchestrus.rest.dto.BasicResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class WorkerAPI {
@@ -9,15 +13,41 @@ public class WorkerAPI {
 	private static final RestTemplate restTemplate = new RestTemplate();
 
 
-	public static boolean startImage( DockerImage image ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean startImage( DockerImage image ) throws OrchestrusException {
+		String url = RESTRoute.getWorkerRouteStart( image.getWorker() );
+		ResponseEntity<BasicResponse> response = restTemplate.postForEntity( url, image, BasicResponse.class );
+
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
+		}
+
+		return true;
 	}
 
-	public static boolean stopImage( DockerImage image ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean stopImage( DockerImage image ) throws OrchestrusException {
+		String url = RESTRoute.getWorkerRouteStop( image.getWorker() );
+		ResponseEntity<BasicResponse> response = restTemplate.postForEntity( url, image, BasicResponse.class );
+
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
+		}
+
+		return true;
 	}
 
-	public static boolean poke( Worker worker ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean isUp( Worker worker ) {
+		try {
+			String url = RESTRoute.getWorkerDefaultRoute( worker );
+			ResponseEntity<Object> response = restTemplate.getForEntity( url, Object.class );
+
+			if ( response.getStatusCode().isError() ) {
+				return false;
+			}
+		}
+		catch ( Exception e ) {
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -22,47 +22,46 @@ public class DBInterfaceAPI {
 	 */
 
 	public static List<Worker> getAllWorkers() throws OrchestrusException {
-		ResponseEntity<Worker[]> workers = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, Worker[].class );
+		ResponseEntity<Worker[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, Worker[].class );
 
-		if ( workers.getStatusCode() != HttpStatus.OK ) {
-			throw new OrchestrusException();
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
 		}
-		else if ( workers.getBody() == null ) {
+		else if ( response.getBody() == null ) {
 			return null;
 		}
 
-		return Arrays.asList( workers.getBody() );
+		return Arrays.asList( response.getBody() );
 	}
 
 	public static Worker getWorker( UUID workerId ) throws OrchestrusException {
-		ResponseEntity<Worker> worker = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS + workerId, Worker.class );
+		ResponseEntity<Worker> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS + workerId, Worker.class );
 
-		if ( worker.getStatusCode() != HttpStatus.OK ) {
-			throw new OrchestrusException();
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
 		}
 
-		return worker.getBody();
+		return response.getBody();
 	}
 
 	public static boolean addWorker( Worker worker ) throws OrchestrusException {
 		ResponseEntity<Worker> response = restTemplate.postForEntity( RESTRoute.BD_INTERFACE_WORKERS, worker, Worker.class );
 
-		if ( response.getStatusCode() == HttpStatus.OK ) {
-			return true;
-		}
-		else if ( response.getStatusCode() == HttpStatus.BAD_REQUEST ) {
-			throw new OrchestrusException();
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
 		}
 
 		return true;
 	}
 
-	public static boolean editWorker( UUID workerId, Worker worker ) throws OrchestrusException {
-		throw new UnsupportedOperationException( "Not yet implemented..." );
+	public static boolean editWorker( UUID workerId, Worker worker ) {
+		restTemplate.put( RESTRoute.BD_INTERFACE_WORKERS + workerId, worker );    // Their's no putForEntity...
+		return true;
 	}
 
-	public static boolean removeWorker( UUID workerId ) throws OrchestrusException {
-		throw new UnsupportedOperationException( "Not yet implemented..." );
+	public static boolean removeWorker( UUID workerId ) {
+		restTemplate.delete( RESTRoute.BD_INTERFACE_WORKERS + workerId );    // Their's no deleteForEntity...
+		return true;
 	}
 
 	/*
@@ -70,10 +69,25 @@ public class DBInterfaceAPI {
 	 */
 
 	public static List<DockerImage> getAllDockerImages() throws OrchestrusException {
-		throw new UnsupportedOperationException( "Not yet implemented..." );
+		ResponseEntity<DockerImage[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES, DockerImage[].class );
+
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
+		}
+		else if ( response.getBody() == null ) {
+			return null;
+		}
+
+		return Arrays.asList( response.getBody() );
 	}
 
 	public static DockerImage getDockerImage( UUID imageId ) throws OrchestrusException {
-		throw new UnsupportedOperationException( "Not yet implemented..." );
+		ResponseEntity<DockerImage> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES + imageId, DockerImage.class );
+
+		if ( response.getStatusCode().isError() ) {
+			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
+		}
+
+		return response.getBody();
 	}
 }

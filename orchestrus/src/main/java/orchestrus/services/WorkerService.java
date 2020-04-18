@@ -12,6 +12,8 @@ import java.util.UUID;
 @Component
 public class WorkerService {
 
+
+
 	public List<Worker> getAllWorkers() throws OrchestrusException {
 		List<Worker> workers = DBInterfaceAPI.getAllWorkers();
 		if ( workers == null )
@@ -29,11 +31,11 @@ public class WorkerService {
 		return DBInterfaceAPI.addWorker( newWorker );
 	}
 
-	public boolean editWorker( UUID workerId, Worker worker ) throws OrchestrusException {
+	public boolean editWorker( UUID workerId, Worker worker ) {
 		return DBInterfaceAPI.editWorker( workerId, worker );
 	}
 
-	public boolean removeWorker( UUID workerId ) throws OrchestrusException {
+	public boolean removeWorker( UUID workerId ) {
 		return DBInterfaceAPI.removeWorker( workerId );
 	}
 }

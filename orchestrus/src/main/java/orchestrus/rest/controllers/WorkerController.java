@@ -118,11 +118,6 @@ public class WorkerController {
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
 		}
-		catch ( OrchestrusException e ) {
-			String message = "An error occurred: " + e.getMessage();
-			response = new BasicResponse( false, message );
-			responseStatus = HttpStatus.BAD_REQUEST;
-		}
 		catch ( Exception e ) {
 			String message = "An unexpected error occurred: " + e.getMessage();
 			response = new BasicResponse( false, message );
@@ -149,11 +144,6 @@ public class WorkerController {
 				response = new BasicResponse( false, message );
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
-		}
-		catch ( OrchestrusException e ) {
-			String message = "An error occurred: " + e.getMessage();
-			response = new BasicResponse( false, message );
-			responseStatus = HttpStatus.BAD_REQUEST;
 		}
 		catch ( Exception e ) {
 			String message = "An unexpected error occurred: " + e.getMessage();
