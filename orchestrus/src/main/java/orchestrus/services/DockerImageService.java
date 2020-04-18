@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component
 public class DockerImageService {
 
-	public List<DockerImage> getAllDockerImages() {
+	public List<DockerImage> getAllDockerImages() throws OrchestrusException {
 		List<DockerImage> images = DBInterfaceAPI.getAllDockerImages();
 		if ( images == null )
 			return Collections.emptyList();
@@ -22,7 +22,7 @@ public class DockerImageService {
 		return images;
 	}
 
-	public DockerImage getDockerImage( UUID imageId ) {
+	public DockerImage getDockerImage( UUID imageId ) throws OrchestrusException {
 		return DBInterfaceAPI.getDockerImage( imageId );
 	}
 

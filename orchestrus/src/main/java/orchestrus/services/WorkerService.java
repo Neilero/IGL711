@@ -1,23 +1,44 @@
 package orchestrus.services;
 
 import orchestrus.exception.OrchestrusException;
+import orchestrus.model.Status;
 import orchestrus.model.Worker;
 import orchestrus.rest.API.DBInterfaceAPI;
+import orchestrus.rest.API.WorkerAPI;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class WorkerService {
 
+	private List<Worker> knownWorkers;
 
+	public WorkerService() {
+		try {
+			knownWorkers = new ArrayList<>( getAllWorkers() );
+		}
+		catch ( Exception e ) {
+			knownWorkers = new ArrayList<>();
+		}
+
+
+		Timer workerStatusChecker = new Timer( "Orchestrus Deamon : Worker status checker", true );
+		workerStatusChecker.schedule( new TimerTask() {
+			@Override
+			public void run() {
+				knownWorkers.parallelStream()
+							.peek( worker -> worker.setStatus( WorkerAPI.isUp( worker ) ? Status.ACTIF : Status.INACTIF ) )
+							.forEach( worker -> editWorker( worker.getId(), worker ) );
+			}
+		}, 5_000 );
+	}
 
 	public List<Worker> getAllWorkers() throws OrchestrusException {
 		List<Worker> workers = DBInterfaceAPI.getAllWorkers();
-		if ( workers == null )
+		if ( workers == null ) {
 			return Collections.emptyList();
+		}
 
 		return workers;
 	}

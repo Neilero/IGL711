@@ -28,10 +28,20 @@ public class DockerImageController {
 	@GetMapping( path = RESTRoute.IMAGES )
 	@ResponseBody
 	public ResponseEntity<List<DockerImageDTO>> getAllDockerImages() {
-		List<DockerImageDTO> dockerImages = dockerImageService.getAllDockerImages()
-															  .stream()
-															  .map( DockerImageDTO::new )
-															  .collect( Collectors.toList() );
+		List<DockerImageDTO> dockerImages;
+
+		try {
+			dockerImages = dockerImageService.getAllDockerImages()
+																  .stream()
+																  .map( DockerImageDTO::new )
+																  .collect( Collectors.toList() );
+		}
+		catch ( OrchestrusException e ) {
+			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+		}
+		catch ( Exception e ) {
+			return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+		}
 
 		return new ResponseEntity<>( dockerImages, HttpStatus.OK );
 	}
@@ -39,7 +49,17 @@ public class DockerImageController {
 	@GetMapping( path = RESTRoute.IMAGE )
 	@ResponseBody
 	public ResponseEntity<DockerImageDTO> getDockerImage( @RequestParam( name = "id" ) UUID imageId ) {
-		DockerImageDTO dockerImage = new DockerImageDTO( dockerImageService.getDockerImage( imageId ) );
+		DockerImageDTO dockerImage;
+
+		try {
+			dockerImage = new DockerImageDTO( dockerImageService.getDockerImage( imageId ) );
+		}
+		catch ( OrchestrusException e ) {
+			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+		}
+		catch ( Exception e ) {
+			return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+		}
 
 		return new ResponseEntity<>( dockerImage, HttpStatus.OK );
 	}
