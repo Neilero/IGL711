@@ -69,7 +69,7 @@ public class DockerTools {
 
         final ContainerCreation container = client.createContainer(ContainerConfig
                 .builder()
-                .image("nomImage")
+                .image(nomImage)
                 .build()
         );
 
@@ -93,11 +93,12 @@ public class DockerTools {
             runContainers(checkExisteLocal(nomImage, client),client);
         }else if(checkExisteHub(nomImage, client)){
             System.out.println("\n=== client4");
-            pullImage(nomImage, client);
+            //client.pull(nomImage);
+            //pullImage(nomImage, client);
             String containerID = buildContainer(nomImage, client);
             runContainers(containerID, client);
         }
-        client.close();
+        //client.close();
     }
 
 }
