@@ -38,7 +38,9 @@ public class Action extends AOption implements IOption {
 			String value = scanner.next();
 			arg.setValue(value);
 		}
-		System.out.println();
+
+		if (args.size() > 0)
+			System.out.println();
 	}
 
 }

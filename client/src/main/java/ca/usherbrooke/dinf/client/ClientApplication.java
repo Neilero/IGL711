@@ -34,12 +34,21 @@ public class ClientApplication {
         List<Argument> stopImageArgs = new ArrayList<>();
         stopImageArgs.add(new Argument("Worker n°"));
 
+        List<Argument> addWorkerArgs = new ArrayList<>();
+        addWorkerArgs.add(new Argument("IP"));
+        addWorkerArgs.add(new Argument("Access port"));
+
         Action secondOption = new Action("Add an image to a non-running worker",new LaunchImageFunction(), addImageArgs, input, mainMenu);
         Action thirdOption = new Action("Stop an image from a running worker", new StopImageFunction(), stopImageArgs, input, mainMenu);
+
+        Action fourthOption = new Action("Add a new worker", new StopImageFunction(), addWorkerArgs, input, mainMenu);
+        Action fifthOption = new Action("Delete a worker", new StopImageFunction(), stopImageArgs, input, mainMenu);
 
         mainMenu.addOption(firstOption);
         mainMenu.addOption(secondOption);
         mainMenu.addOption(thirdOption);
+        mainMenu.addOption(fourthOption);
+        mainMenu.addOption(fifthOption);
 
         mainMenu.execute();
     }

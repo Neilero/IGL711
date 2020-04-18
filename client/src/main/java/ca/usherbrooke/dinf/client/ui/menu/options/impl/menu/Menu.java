@@ -32,9 +32,10 @@ public class Menu extends AOption implements IOption {
 	
 	private void chooseOption() {
 		System.out.println();
-		System.out.print("Choose an option : ");
+
 		int choice;
 		do {
+			System.out.print("Choose an option : ");
 			choice = scanner.nextInt();
 		} while(choice < -1 || choice >= options.size());
 

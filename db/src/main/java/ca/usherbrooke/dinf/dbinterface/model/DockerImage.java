@@ -21,7 +21,7 @@ public class DockerImage implements Serializable {
     @Column(name = "nameImage")
     private String name;
 
-    @ManyToOne
+    @OneToOne
     private Worker worker;
 
     public UUID getId() {
