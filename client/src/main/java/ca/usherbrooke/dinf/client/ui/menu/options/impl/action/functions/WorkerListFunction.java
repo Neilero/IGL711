@@ -13,10 +13,17 @@ public class WorkerListFunction implements ActionFunction {
     public void accept(List<Argument> arguments) {
         List<Worker> list = RestConsumer.getWorkersRequest();
 
-        int index = 0;
-        for(Worker w : list)
+        if (list.size() == 0)
+            System.out.println("There is no active worker.");
+        else
         {
-            System.out.println("Worker n°"+index++ +"\t"+w.getId()+"\t"+w.getImage()+"\t"+w.getParams());
+            System.out.println("List of active workers :");
+
+            int index = 0;
+            for(Worker w : list)
+            {
+                System.out.println("\tWorker n°"+index++ +"\t"+w.getId()+"\t"+w.getImage()+"\t"+w.getParams());
+            }
         }
     }
 

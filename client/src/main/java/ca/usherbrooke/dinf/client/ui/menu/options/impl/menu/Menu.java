@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 public class Menu extends AOption implements IOption {
 	
-	private static final String LINE_SEPARATOR = "===============";
-	
 	private final ArrayList<IOption> options;
 	
 	public Menu(String description, Scanner scanner, IOption parent) {
@@ -33,6 +31,8 @@ public class Menu extends AOption implements IOption {
 	}
 	
 	private void chooseOption() {
+		System.out.println();
+		System.out.print("Choose an option : ");
 		int choice;
 		do {
 			choice = scanner.nextInt();
@@ -46,9 +46,7 @@ public class Menu extends AOption implements IOption {
 
 	@Override
 	public void execute() {
-		System.out.println();
-		System.out.println(LINE_SEPARATOR+" "+description+" "+LINE_SEPARATOR);
-		System.out.println();
+		printDescription();
 		printOptions();
 		chooseOption();
 	}

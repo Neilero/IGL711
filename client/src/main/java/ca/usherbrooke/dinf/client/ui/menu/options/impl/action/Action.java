@@ -21,10 +21,12 @@ public class Action extends AOption implements IOption {
 
 	@Override
 	public void execute() {
+		printDescription();
+
 		if (args != null) {
 			askForArguments();
 		}
-		System.out.println();
+
 		function.accept(args);
 
 		parent.execute();
@@ -32,10 +34,11 @@ public class Action extends AOption implements IOption {
 	
 	private void askForArguments() {
 		for (Argument arg : args) {
-			System.out.println("Please, enter a value for " + arg.getName() + ":");
+			System.out.print("Please, enter a value for " + arg.getName() + " : ");
 			String value = scanner.next();
 			arg.setValue(value);
 		}
+		System.out.println();
 	}
 
 }
