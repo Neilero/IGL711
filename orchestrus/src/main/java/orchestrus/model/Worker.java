@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class Worker {
 
@@ -22,18 +21,17 @@ public class Worker {
 
 	private Status status;
 
-	@NotNull
-	private final List<DockerImage> runningImages;
+	private DockerImage runningImage;
 
 	@NotNull
 	private final List<OpenPort> openPorts;
 
-	public Worker( UUID id, String address, int port, Status status, List<DockerImage> runningImages, List<OpenPort> openPorts ) {
+	public Worker( UUID id, String address, int port, Status status, DockerImage runningImage, List<OpenPort> openPorts ) {
 		this.id = id;
 		this.address = address;
 		this.port = port;
 		this.status = status;
-		this.runningImages = new ArrayList<>( runningImages );
+		this.runningImage = runningImage;
 		this.openPorts = new ArrayList<>( openPorts );
 	}
 
@@ -43,7 +41,7 @@ public class Worker {
 		this.port = port;
 		this.status = status;
 
-		runningImages = new ArrayList<>();
+		runningImage = null;
 		openPorts = new ArrayList<>();
 	}
 
@@ -80,16 +78,12 @@ public class Worker {
 		this.status = status;
 	}
 
-	public List<DockerImage> getRunningImages() {
-		return new ArrayList<>( runningImages );
+	public DockerImage getRunningImage() {
+		return runningImage;
 	}
 
-	public void addRunningImage( DockerImage dockerImage ) {
-		runningImages.add( dockerImage );
-	}
-
-	public void removeRunningImage( DockerImage dockerImage ) {
-		runningImages.remove( dockerImage );
+	public void setRunningImage( DockerImage runningImage ) {
+		this.runningImage = runningImage;
 	}
 
 	public List<OpenPort> getOpenPorts() {

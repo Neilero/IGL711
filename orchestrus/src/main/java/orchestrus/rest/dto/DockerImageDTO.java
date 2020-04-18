@@ -7,11 +7,11 @@ import orchestrus.model.Worker;
 import java.util.List;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties( ignoreUnknown = true )
 public class DockerImageDTO {
 
-	public UUID   id;
-	public String name;
+	public UUID      id;
+	public String    name;
 	public WorkerDTO worker;
 
 
@@ -23,6 +23,11 @@ public class DockerImageDTO {
 		worker = new WorkerDTO( image.getWorker() );
 	}
 
+	public DockerImageDTO( DockerImage image, WorkerDTO parentWorker ) {
+		id = image.getId();
+		name = image.getName();
+		worker = parentWorker;
+	}
 
 	public DockerImage toModel() {
 		return new DockerImage( id, name, worker.toModel() );

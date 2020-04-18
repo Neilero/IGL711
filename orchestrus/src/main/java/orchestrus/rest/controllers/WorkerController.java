@@ -39,6 +39,9 @@ public class WorkerController {
 		catch ( OrchestrusException e ) {
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
 		}
+		catch ( Exception e ) {
+			return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+		}
 
 		return new ResponseEntity<>( workers, HttpStatus.OK );
 	}
@@ -46,10 +49,20 @@ public class WorkerController {
 	@GetMapping( path = RESTRoute.WORKER )
 	@ResponseBody
 	public ResponseEntity<WorkerDTO> getWorker( @RequestParam( name = "id" ) UUID workerId ) {
-		Worker foundWorker = workerService.getWorker( workerId );
+		Worker foundWorker;
+
+		try {
+			foundWorker = workerService.getWorker( workerId );
+		}
+		catch ( OrchestrusException e ) {
+			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+		}
+		catch ( Exception e ) {
+			return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+		}
 
 		if ( foundWorker == null )
-			return new ResponseEntity<>( null, HttpStatus.NOT_FOUND );
+			return new ResponseEntity<>( HttpStatus.NOT_FOUND );
 
 		WorkerDTO worker = new WorkerDTO( foundWorker );
 		return new ResponseEntity<>( worker, HttpStatus.OK );

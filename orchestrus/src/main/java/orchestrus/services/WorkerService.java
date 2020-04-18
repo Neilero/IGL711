@@ -20,12 +20,13 @@ public class WorkerService {
 		return workers;
 	}
 
-	public Worker getWorker( UUID workerId ) {
+	public Worker getWorker( UUID workerId ) throws OrchestrusException {
 		return DBInterfaceAPI.getWorker( workerId );
 	}
 
 	public boolean addWorker( String address, int port ) throws OrchestrusException {
-		return DBInterfaceAPI.addWorker( address, port );
+		Worker newWorker = new Worker( address, port );
+		return DBInterfaceAPI.addWorker( newWorker );
 	}
 
 	public boolean editWorker( UUID workerId, Worker worker ) throws OrchestrusException {

@@ -22,6 +22,12 @@ public class OpenPortDTO {
 		worker = new WorkerDTO(openPort.getWorker());
 	}
 
+	public OpenPortDTO( OpenPort openPort, WorkerDTO parentWorker ) {
+		id = openPort.getId();
+		port = openPort.getPort();
+		worker = parentWorker;
+	}
+
 
 	public OpenPort toModel() {
 		return new OpenPort( id, port, worker.toModel() );

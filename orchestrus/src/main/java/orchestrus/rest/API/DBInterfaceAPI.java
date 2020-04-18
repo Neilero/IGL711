@@ -31,34 +31,49 @@ public class DBInterfaceAPI {
 			return null;
 		}
 
-		return Arrays.asList(workers.getBody());
+		return Arrays.asList( workers.getBody() );
 	}
 
-	public static Worker getWorker( UUID workerId ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static Worker getWorker( UUID workerId ) throws OrchestrusException {
+		ResponseEntity<Worker> worker = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS + workerId, Worker.class );
+
+		if ( worker.getStatusCode() != HttpStatus.OK ) {
+			throw new OrchestrusException();
+		}
+
+		return worker.getBody();
 	}
 
-	public static boolean addWorker( String address, int port ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean addWorker( Worker worker ) throws OrchestrusException {
+		ResponseEntity<Worker> response = restTemplate.postForEntity( RESTRoute.BD_INTERFACE_WORKERS, worker, Worker.class );
+
+		if ( response.getStatusCode() == HttpStatus.OK ) {
+			return true;
+		}
+		else if ( response.getStatusCode() == HttpStatus.BAD_REQUEST ) {
+			throw new OrchestrusException();
+		}
+
+		return true;
 	}
 
-	public static boolean editWorker( UUID workerId, Worker worker ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean editWorker( UUID workerId, Worker worker ) throws OrchestrusException {
+		throw new UnsupportedOperationException( "Not yet implemented..." );
 	}
 
-	public static boolean removeWorker( UUID workerId ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static boolean removeWorker( UUID workerId ) throws OrchestrusException {
+		throw new UnsupportedOperationException( "Not yet implemented..." );
 	}
 
 	/*
 		Docker Image APIs
 	 */
 
-	public static List<DockerImage> getAllDockerImages() {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static List<DockerImage> getAllDockerImages() throws OrchestrusException {
+		throw new UnsupportedOperationException( "Not yet implemented..." );
 	}
 
-	public static DockerImage getDockerImage( UUID imageId ) {
-		throw new UnsupportedOperationException("Not yet implemented...");
+	public static DockerImage getDockerImage( UUID imageId ) throws OrchestrusException {
+		throw new UnsupportedOperationException( "Not yet implemented..." );
 	}
 }

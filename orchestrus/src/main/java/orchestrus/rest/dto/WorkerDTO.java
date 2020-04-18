@@ -1,11 +1,9 @@
 package orchestrus.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import orchestrus.model.DockerImage;
 import orchestrus.model.OpenPort;
 import orchestrus.model.Status;
 import orchestrus.model.Worker;
-import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +13,15 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties( ignoreUnknown = true )
 public class WorkerDTO {
 
-	public UUID                 id;
-	public String               address;
-	public int                  port;
-	public Status               status;
-	public List<DockerImageDTO> images;
-	public List<OpenPortDTO>    openPorts;
+	public UUID              id;
+	public String            address;
+	public int               port;
+	public Status            status;
+	public DockerImageDTO    image;
+	public List<OpenPortDTO> openPorts;
 
 
 	public WorkerDTO() {
-		images = new ArrayList<>();
 		openPorts = new ArrayList<>();
 	}
 
@@ -33,21 +30,17 @@ public class WorkerDTO {
 		address = worker.getAddress();
 		port = worker.getPort();
 		status = worker.getStatus();
-
-		images = new ArrayList<>();
-		openPorts = new ArrayList<>();
+		image = new DockerImageDTO( worker.getRunningImage(), this );
+		openPorts = worker.getOpenPorts()
+						  .stream()
+						  .map( openPort -> new OpenPortDTO( openPort, this ) )
+						  .collect( Collectors.toList() );
 	}
 
 
 	public Worker toModel() {
 		Worker worker = new Worker( id, address, port, status );
-
-		List<DockerImage> images = this.images.stream()
-											  .map( image -> image.toModel( worker ) )
-											  .collect( Collectors.toList() );
-		for ( DockerImage image : images ) {
-			worker.addRunningImage( image );
-		}
+		worker.setRunningImage( image.toModel( worker ) );
 
 		List<OpenPort> ports = this.openPorts.stream()
 											 .map( port -> port.toModel( worker ) )

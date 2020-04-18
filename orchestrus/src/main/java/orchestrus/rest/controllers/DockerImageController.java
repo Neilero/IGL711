@@ -48,6 +48,7 @@ public class DockerImageController {
 	@ResponseBody
 	public ResponseEntity<BasicResponse> uploadImage( @RequestParam( name = "file" ) MultipartFile dockerfile,
 													  @RequestBody DockerImageDTO imageInfo ) {
+		// Won't be implemented but could be used to add the possibility of starting image from dockerfile
 		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
