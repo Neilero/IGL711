@@ -1,27 +1,13 @@
-package ca.usherbrooke.dinf.dbinterface.model;
+package ca.usherbrooke.dinf.client.model;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Table(name="image")
 public class DockerImage implements Serializable {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "idImage")
     private UUID id;
 
-    @Column(name = "nameImage")
     private String name;
 
-    @OneToOne
     private Worker worker;
 
     public UUID getId() {

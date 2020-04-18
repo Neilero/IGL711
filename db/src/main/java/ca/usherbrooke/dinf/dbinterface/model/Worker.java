@@ -28,8 +28,8 @@ public class Worker implements Serializable {
     @Column(name = "statusWorker")
     private Short status;
 
-    @OneToMany
-    private List<DockerImage> images;
+    @OneToOne
+    private DockerImage image;
 
     @OneToMany
     private List<OpenPort> openPorts;
@@ -66,12 +66,12 @@ public class Worker implements Serializable {
         this.status = status;
     }
 
-    public List<DockerImage> getImages() {
-        return images;
+    public DockerImage getImages() {
+        return image;
     }
 
-    public void setImages(List<DockerImage> images) {
-        this.images = images;
+    public void setImages(DockerImage image) {
+        this.image = image;
     }
 
     public List<OpenPort> getOpenPorts() {

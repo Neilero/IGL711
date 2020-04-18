@@ -14,7 +14,6 @@ public class RESTRoute {
 	public static final String START_IMAGE = IMAGE + "/start";
 	public static final String STOP_IMAGE  = IMAGE + "/stop";
 
-
 	/*
 		Private interfaces (used by application's services)
 	 */

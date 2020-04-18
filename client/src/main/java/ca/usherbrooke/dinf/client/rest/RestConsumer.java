@@ -1,39 +1,110 @@
 package ca.usherbrooke.dinf.client.rest;
 
+import ca.usherbrooke.dinf.client.model.DockerImage;
 import ca.usherbrooke.dinf.client.model.ListWorkers;
 import ca.usherbrooke.dinf.client.model.Worker;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RestConsumer {
     private static final String ORCHESTRUS = "http://192.168.99.100:12345";
 
     private static final String WORKERS_ROUTE = ORCHESTRUS+"/workers/";
-    private static final String LAUNCH_ROUTE = ORCHESTRUS+"/launchImage/";
-    private static final String STOP_ROUTE = ORCHESTRUS+"/stopImage/";
+    private static final String IMAGE_ROUTE = ORCHESTRUS+"/image/";
+    private static final String WORKER_ROUTE = ORCHESTRUS+"/worker/";
 
-    public static void getWorkers()
+    public static List<Worker> getWorkersRequest()
     {
-        RestTemplate restTemplate = new RestTemplate();
-        ListWorkers result = restTemplate.getForObject(WORKERS_ROUTE, ListWorkers.class);
+        try
+        {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Worker[]> result = restTemplate.getForEntity(WORKERS_ROUTE, Worker[].class);
 
-        System.out.println(result);
+            if (result.getBody() != null)
+                return Arrays.asList(result.getBody());
+
+        } catch (Exception e)
+        {
+            System.out.println("Error while sending request to the server");
+            System.out.println(e.getMessage());
+            System.out.println();
+        }
+        return new ArrayList<>();
     }
 
-    public static void launchImage(Worker worker)
+    public static boolean launchWorkerRequest(Worker worker)
     {
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.postForObject(LAUNCH_ROUTE, worker, String.class);
+        try
+        {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> result = restTemplate.postForEntity(WORKER_ROUTE, worker, String.class);
+            return result.getStatusCode() == HttpStatus.OK;
 
-        System.out.println(result);
+        } catch (Exception e)
+        {
+            System.out.println("Error while sending request to the server");
+            System.out.println(e.getMessage());
+            System.out.println();
+
+            return false;
+        }
     }
 
-    public static void stopImage(UUID uuid)
+    public static boolean stopWorkerRequest(Worker worker)
     {
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.postForObject(STOP_ROUTE, uuid, String.class);
+        try
+        {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.delete(WORKER_ROUTE, worker, String.class);
 
-        System.out.println(result);
+            return true;
+        } catch (Exception e)
+        {
+            System.out.println("Error while sending request to the server");
+            System.out.println(e.getMessage());
+            System.out.println();
+
+            return false;
+        }
+    }
+
+    public static boolean launchImageRequest(DockerImage image)
+    {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> result = restTemplate.postForEntity(IMAGE_ROUTE+"start", image, String.class);
+
+            return result.getStatusCode() == HttpStatus.OK;
+        } catch (Exception e)
+        {
+            System.out.println("Error while sending request to the server");
+            System.out.println(e.getMessage());
+            System.out.println();
+
+            return false;
+        }
+    }
+
+    public static boolean stopImageRequest(DockerImage image)
+    {
+        try
+        {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.postForEntity(IMAGE_ROUTE+"stop", image, String.class);
+
+        return true;
+        } catch (Exception e)
+        {
+            System.out.println("Error while sending request to the server");
+            System.out.println(e.getMessage());
+            System.out.println();
+
+            return false;
+        }
     }
 }

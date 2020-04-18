@@ -4,13 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.DockerClient.AttachParameter;
-import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.messages.*;
 
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-
+//TEST de l api
 public class ContainersApiApp {
 
 	public static void main(String[] args) throws Exception {
@@ -22,6 +19,10 @@ public class ContainersApiApp {
 		final DockerClient client = DefaultDockerClient
 			.fromEnv()
 			.build();
+
+		List<Container> containers = client.listContainers();
+		containers.forEach(System.out::println);
+
 
 
 		System.out.println("\n=== client.createContainer");
@@ -53,12 +54,12 @@ public class ContainersApiApp {
 			)
 			.build()
 		);
-		System.out.println("\n=== client.createContainer");
+		System.out.println("\n=== client.start");
 		System.out.println(container);
 
 		// Start the container
 		client.startContainer(container.id());
-		
+		/*
 		// Inspect the container
 		final ContainerInfo info = client.inspectContainer(container.id());
 		System.out.println("\n=== client.inspectContainer");
@@ -95,15 +96,15 @@ public class ContainersApiApp {
 		//client.unpauseContainer(container.id());
 		System.out.println("\n=== client.updateContainer");
 		// Update container
-		final ContainerUpdate update = client.updateContainer(container.id(), 
+		/*final ContainerUpdate update = client.updateContainer(container.id(),
 			HostConfig
 				.builder()
-				.memory(268435456L /* 256Mb */)
+				.memory(268435456L  256Mb )
 				.build()
 			);
 		System.out.println("\n=== client.updateContainer");
 		System.out.println(update);
-		
+
 		// Get processes in the container
 		final TopResults top = client.topContainer(container.id());
 		System.out.println("\n=== client.topContainer");
@@ -120,12 +121,13 @@ public class ContainersApiApp {
 			.attach(System.out, System.err, false);
 		
 		// Start the container
-		client.stopContainer(container.id(), 5 /* wait 5 seconds before killing */);
+		//client.stopContainer(container.id(), 5  wait 5 seconds before killing );
 
 		// Remove container
-		client.removeContainer(container.id());
+		//client.removeContainer(container.id());
 		
-		client.close();
+		//client.close();
+		*/
 	}
 	
 }
