@@ -13,9 +13,10 @@ public class WorkerListFunction implements ActionFunction {
     public void accept(List<Argument> arguments) {
         List<Worker> list = RestConsumer.getWorkersRequest();
 
+        int index = 0;
         for(Worker w : list)
         {
-            System.out.println(w.getId()+"\t"+w.getImage()+"\t"+w.getParams());
+            System.out.println("Worker n°"+index++ +"\t"+w.getId()+"\t"+w.getImage()+"\t"+w.getParams());
         }
     }
 

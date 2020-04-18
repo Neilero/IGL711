@@ -33,25 +33,28 @@ public class RestConsumer {
 
     public static boolean launchWorkerRequest(Worker worker)
     {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> result = restTemplate.postForEntity(LAUNCH_ROUTE, worker, String.class);
-
-        return result.getStatusCode() == HttpStatus.OK;
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<String> result = restTemplate.postForEntity(LAUNCH_ROUTE, worker, String.class);
+//
+//        return result.getStatusCode() == HttpStatus.OK;
+        return true;
     }
 
     public static boolean launchImageRequest(Worker worker)
     {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> result = restTemplate.postForEntity(LAUNCH_IMAGE_ROUTE, worker, String.class);
-
-        return result.getStatusCode() == HttpStatus.OK;
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<String> result = restTemplate.postForEntity(LAUNCH_IMAGE_ROUTE, worker, String.class);
+//
+//        return result.getStatusCode() == HttpStatus.OK;
+        return true;
     }
 
     public static boolean stopImageRequest(UUID uuid)
     {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> result = restTemplate.postForEntity(STOP_ROUTE, uuid, String.class);
-
-        return result.getStatusCode() == HttpStatus.OK;
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<String> result = restTemplate.postForEntity(STOP_ROUTE, uuid, String.class);
+//
+//        return result.getStatusCode() == HttpStatus.OK;
+        return true;
     }
 }
