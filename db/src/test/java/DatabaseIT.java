@@ -2,19 +2,15 @@ import ca.usherbrooke.dinf.dbinterface.DBInterfaceApplication;
 import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
 import ca.usherbrooke.dinf.dbinterface.model.OpenPort;
 import ca.usherbrooke.dinf.dbinterface.model.Worker;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
