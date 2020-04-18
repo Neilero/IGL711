@@ -1,7 +1,7 @@
 package ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions;
 
-import ca.usherbrooke.dinf.client.model.DockerImage;
 import ca.usherbrooke.dinf.client.model.ListWorkers;
+import ca.usherbrooke.dinf.client.model.Worker;
 import ca.usherbrooke.dinf.client.rest.RestConsumer;
 import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.ActionFunction;
 import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.Argument;
@@ -9,7 +9,7 @@ import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.Argument;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class StopImageFunction implements ActionFunction {
+public class StopWorkerFunction implements ActionFunction {
     private final ListWorkers workers = ListWorkers.getInstance();
 
     @Override
@@ -18,14 +18,14 @@ public class StopImageFunction implements ActionFunction {
         {
             int workerNumber = Integer.parseInt((String) arguments.get(0).getValue());
 
-            DockerImage image = workers.getWorkers().get(workerNumber).getImages();
+            Worker worker = workers.getWorkers().get(workerNumber);
 
-            System.out.println("Stopping image "+image.getName()+" on the worker with ID "+workers.getWorkers().get(workerNumber).getId());
+            System.out.println("Stopping worker with ID "+worker.getId());
 
-            if (RestConsumer.stopImageRequest(image))
-                System.out.println("The image has been stopped from the worker");
+            if (RestConsumer.stopWorkerRequest(worker))
+                System.out.println("The worker has been stopped.");
             else
-                System.out.println("The image cannot be stopped on the worker");
+                System.out.println("The worker cannot be stopped.");
 
         } catch (NumberFormatException | IndexOutOfBoundsException e)
         {

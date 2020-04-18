@@ -2,10 +2,7 @@ package ca.usherbrooke.dinf.client;
 
 import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.Action;
 import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.Argument;
-import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions.LaunchImageFunction;
-import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions.QuitApplicationFunction;
-import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions.StopImageFunction;
-import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions.WorkerListFunction;
+import ca.usherbrooke.dinf.client.ui.menu.options.impl.action.functions.*;
 import ca.usherbrooke.dinf.client.ui.menu.options.impl.menu.Menu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,7 +26,7 @@ public class ClientApplication {
         List<Argument> addImageArgs = new ArrayList<>();
         addImageArgs.add(new Argument("Worker n°"));
         addImageArgs.add(new Argument("Docker image name"));
-        addImageArgs.add(new Argument("Docker image parameters"));
+        addImageArgs.add(new Argument("Docker image ports separated with spaces"));
 
         List<Argument> stopImageArgs = new ArrayList<>();
         stopImageArgs.add(new Argument("Worker n°"));
@@ -41,8 +38,8 @@ public class ClientApplication {
         Action secondOption = new Action("Add an image to a non-running worker",new LaunchImageFunction(), addImageArgs, input, mainMenu);
         Action thirdOption = new Action("Stop an image from a running worker", new StopImageFunction(), stopImageArgs, input, mainMenu);
 
-        Action fourthOption = new Action("Add a new worker", new StopImageFunction(), addWorkerArgs, input, mainMenu);
-        Action fifthOption = new Action("Delete a worker", new StopImageFunction(), stopImageArgs, input, mainMenu);
+        Action fourthOption = new Action("Add a new worker", new StartWorkerFunction(), addWorkerArgs, input, mainMenu);
+        Action fifthOption = new Action("Delete a worker", new StopWorkerFunction(), stopImageArgs, input, mainMenu);
 
         mainMenu.addOption(firstOption);
         mainMenu.addOption(secondOption);
