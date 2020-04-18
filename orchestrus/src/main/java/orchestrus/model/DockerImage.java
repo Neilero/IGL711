@@ -1,41 +1,33 @@
 package orchestrus.model;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class DockerImage {
 
 	@Positive( message = "ID should be positive" )
-	private int id;
+	private UUID id;
 
 	private String name;
 
 	private Worker worker;
 
-	@NotNull
-	private final List<Integer> openPorts;
-
-	public DockerImage( int id, String name, Worker worker ) {
+	public DockerImage( UUID id, String name, Worker worker ) {
 		this.id = id;
 		this.name = name;
 		this.worker = worker;
-
-		openPorts = new ArrayList<>();	// TODO : might be useful to take a list in param and copy it
 	}
 
 	public DockerImage( String name, Worker worker ) {
-		this( -1, name, worker );
+		this( null, name, worker );
 	}
 
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId( int id ) {
+	public void setId( UUID id ) {
 		this.id = id;
 	}
 
@@ -53,17 +45,5 @@ public class DockerImage {
 
 	public void setWorker( Worker worker ) {
 		this.worker = worker;
-	}
-
-	public List<Integer> getOpenPorts() {
-		return openPorts;
-	}
-
-	public void addOpenPort( @Positive @Max( value = 65535 ) int port ) {
-		openPorts.add( port );
-	}
-
-	public void removeOpenPort( int port ) {
-		openPorts.remove( port );
 	}
 }

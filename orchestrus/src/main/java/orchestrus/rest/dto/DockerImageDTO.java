@@ -1,22 +1,18 @@
 package orchestrus.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import orchestrus.model.DockerImage;
-import org.springframework.lang.Nullable;
+import orchestrus.model.Worker;
 
 import java.util.List;
+import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DockerImageDTO {
 
-	@Nullable
-	public int id;
-
+	public UUID   id;
 	public String name;
-
-	@Nullable
-	public int workerId;
-
-	@Nullable
-	public List<Integer> openPorts;
+	public WorkerDTO worker;
 
 
 	public DockerImageDTO() {}
@@ -24,7 +20,15 @@ public class DockerImageDTO {
 	public DockerImageDTO( DockerImage image ) {
 		id = image.getId();
 		name = image.getName();
-		workerId = image.getWorker().getId();
-		openPorts = List.copyOf( image.getOpenPorts() );
+		worker = new WorkerDTO( image.getWorker() );
+	}
+
+
+	public DockerImage toModel() {
+		return new DockerImage( id, name, worker.toModel() );
+	}
+
+	public DockerImage toModel( Worker parentWorker ) {
+		return new DockerImage( id, name, parentWorker );
 	}
 }

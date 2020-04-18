@@ -1,7 +1,8 @@
 package orchestrus.rest.controllers;
 
-import orchestrus.exceptions.WorkerServiceException;
+import orchestrus.exception.OrchestrusException;
 import orchestrus.model.Worker;
+import orchestrus.rest.RESTRoute;
 import orchestrus.rest.dto.BasicResponse;
 import orchestrus.rest.dto.WorkerDTO;
 import orchestrus.services.WorkerService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,19 +28,30 @@ public class WorkerController {
 	@GetMapping( path = RESTRoute.WORKERS )
 	@ResponseBody
 	public ResponseEntity<List<WorkerDTO>> getAllWorkers() {
-		List<WorkerDTO> workers = workerService.getAllWorkers()
-											   .stream()
-											   .map( WorkerDTO::new )
-											   .collect( Collectors.toList() );
+		List<WorkerDTO> workers;
+
+		try {
+			workers = workerService.getAllWorkers()
+												   .stream()
+												   .map( WorkerDTO::new )
+												   .collect( Collectors.toList() );
+		}
+		catch ( OrchestrusException e ) {
+			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
+		}
 
 		return new ResponseEntity<>( workers, HttpStatus.OK );
 	}
 
 	@GetMapping( path = RESTRoute.WORKER )
 	@ResponseBody
-	public ResponseEntity<WorkerDTO> getWorker( @RequestParam( name = "id" ) int workerId ) {
-		WorkerDTO worker = new WorkerDTO( workerService.getWorker( workerId ) );
+	public ResponseEntity<WorkerDTO> getWorker( @RequestParam( name = "id" ) UUID workerId ) {
+		Worker foundWorker = workerService.getWorker( workerId );
 
+		if ( foundWorker == null )
+			return new ResponseEntity<>( null, HttpStatus.NOT_FOUND );
+
+		WorkerDTO worker = new WorkerDTO( foundWorker );
 		return new ResponseEntity<>( worker, HttpStatus.OK );
 	}
 
@@ -60,11 +73,11 @@ public class WorkerController {
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
 		}
-//		catch ( WorkerServiceException e ) { TODO : uncomment when method has been implemented
-//			String message = "An error occurred: " + e.getMessage();
-//			response = new BasicResponse( false, message );
-//			responseStatus = HttpStatus.BAD_REQUEST;
-//		}
+		catch ( OrchestrusException e ) {
+			String message = "An error occurred: " + e.getMessage();
+			response = new BasicResponse( false, message );
+			responseStatus = HttpStatus.BAD_REQUEST;
+		}
 		catch ( Exception e ) {
 			String message = "An unexpected error occurred: " + e.getMessage();
 			response = new BasicResponse( false, message );
@@ -81,22 +94,22 @@ public class WorkerController {
 		HttpStatus responseStatus;
 
 		try {
-			if ( workerService.editWorker( worker.address, worker.port ) ) {
-				String message = String.format( "The worker n°%d has been successfully modified", worker.id );
+			if ( workerService.editWorker( worker.id, worker.toModel() ) ) {
+				String message = String.format( "The worker %s has been successfully modified", worker.id );
 				response = new BasicResponse( true, message );
 				responseStatus = HttpStatus.OK;
 			}
 			else {
-				String message = String.format( "The worker n°%d could not been modified", worker.id );
+				String message = String.format( "The worker %s could not been modified", worker.id );
 				response = new BasicResponse( false, message );
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
 		}
-//		catch ( WorkerServiceException e ) { TODO : uncomment when method has been implemented
-//			String message = "An error occurred: " + e.getMessage();
-//			response = new BasicResponse( false, message );
-//			responseStatus = HttpStatus.BAD_REQUEST;
-//		}
+		catch ( OrchestrusException e ) {
+			String message = "An error occurred: " + e.getMessage();
+			response = new BasicResponse( false, message );
+			responseStatus = HttpStatus.BAD_REQUEST;
+		}
 		catch ( Exception e ) {
 			String message = "An unexpected error occurred: " + e.getMessage();
 			response = new BasicResponse( false, message );
@@ -113,22 +126,22 @@ public class WorkerController {
 		HttpStatus responseStatus;
 
 		try {
-			if ( workerService.removeWorker( worker.address, worker.port ) ) {
-				String message = String.format( "The worker n°%d has been successfully removed", worker.id );
+			if ( workerService.removeWorker( worker.id ) ) {
+				String message = String.format( "The worker %s has been successfully removed", worker.id );
 				response = new BasicResponse( true, message );
 				responseStatus = HttpStatus.OK;
 			}
 			else {
-				String message = String.format( "The worker n°%d could not been removed", worker.id );
+				String message = String.format( "The worker %s could not been removed", worker.id );
 				response = new BasicResponse( false, message );
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
 		}
-//		catch ( WorkerServiceException e ) { TODO : uncomment when method has been implemented
-//			String message = "An error occurred: " + e.getMessage();
-//			response = new BasicResponse( false, message );
-//			responseStatus = HttpStatus.BAD_REQUEST;
-//		}
+		catch ( OrchestrusException e ) {
+			String message = "An error occurred: " + e.getMessage();
+			response = new BasicResponse( false, message );
+			responseStatus = HttpStatus.BAD_REQUEST;
+		}
 		catch ( Exception e ) {
 			String message = "An unexpected error occurred: " + e.getMessage();
 			response = new BasicResponse( false, message );
