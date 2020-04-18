@@ -4,10 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.DockerClient.AttachParameter;
+import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.messages.*;
 
 import java.util.List;
-//TEST de l api
+import java.util.concurrent.ForkJoinPool;
+
 public class ContainersApiApp {
 
 	public static void main(String[] args) throws Exception {
@@ -54,12 +57,12 @@ public class ContainersApiApp {
 			)
 			.build()
 		);
-		System.out.println("\n=== client.start");
+		System.out.println("\n=== client.createContainer");
 		System.out.println(container);
 
 		// Start the container
 		client.startContainer(container.id());
-		/*
+		
 		// Inspect the container
 		final ContainerInfo info = client.inspectContainer(container.id());
 		System.out.println("\n=== client.inspectContainer");
@@ -104,7 +107,7 @@ public class ContainersApiApp {
 			);
 		System.out.println("\n=== client.updateContainer");
 		System.out.println(update);
-
+		*/
 		// Get processes in the container
 		final TopResults top = client.topContainer(container.id());
 		System.out.println("\n=== client.topContainer");
@@ -121,13 +124,12 @@ public class ContainersApiApp {
 			.attach(System.out, System.err, false);
 		
 		// Start the container
-		//client.stopContainer(container.id(), 5  wait 5 seconds before killing );
+		client.stopContainer(container.id(), 5 /* wait 5 seconds before killing */);
 
 		// Remove container
-		//client.removeContainer(container.id());
+		client.removeContainer(container.id());
 		
-		//client.close();
-		*/
+		client.close();
 	}
 	
 }

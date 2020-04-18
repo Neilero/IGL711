@@ -7,7 +7,7 @@ import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.ImageSearchResult;
 
 import java.util.List;
-//TEST de l api
+
 public class ImagesApiApp {
 
 	public static void main(String[] args) throws Exception {
