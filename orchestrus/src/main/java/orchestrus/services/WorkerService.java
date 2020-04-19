@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
 public class WorkerService {
+
+	private static WorkerService instance;
 
 	private List<Worker> knownWorkers;
 
-
-	public WorkerService() {
+	private WorkerService() {
 		try {
 			knownWorkers = new ArrayList<>( getAllWorkers() );
 		}
@@ -34,6 +34,15 @@ public class WorkerService {
 			}
 		}, 5_000 );
 	}
+
+	public synchronized static WorkerService getInstance() {
+		if (instance == null) {
+			instance = new WorkerService();
+		}
+
+		return instance;
+	}
+
 
 	public List<Worker> getAllWorkers() throws OrchestrusException {
 		List<Worker> workers = DBInterfaceAPI.getAllWorkers();

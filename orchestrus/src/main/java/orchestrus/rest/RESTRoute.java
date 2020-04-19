@@ -24,18 +24,24 @@ public class RESTRoute {
 	// Service : DB interface
 	public static final String BD_INTERFACE_ADDRESS = "http://interface:8080";//System.getenv("ORCHESTRUS_DB_INTERFACE");
 	public static final String BD_INTERFACE_WORKERS = BD_INTERFACE_ADDRESS + "/workers/";
-	public static final String BD_INTERFACE_PORTS = BD_INTERFACE_ADDRESS + "/ports/";
-	public static final String BD_INTERFACE_IMAGES = BD_INTERFACE_ADDRESS + "/images/";
+	public static final String BD_INTERFACE_PORTS   = BD_INTERFACE_ADDRESS + "/ports/";
+	public static final String BD_INTERFACE_IMAGES  = BD_INTERFACE_ADDRESS + "/images/";
 
 	// Service : Worker
 	public static String getWorkerDefaultRoute( @NotNull Worker worker ) {
 		return String.format( "%s:%s/", worker.getAddress(), worker.getPort() );
 	}
+
 	public static String getWorkerRouteStart( @NotNull Worker worker ) {
 		return getWorkerDefaultRoute( worker ) + "start";
 	}
+
 	public static String getWorkerRouteStop( @NotNull Worker worker ) {
 		return getWorkerDefaultRoute( worker ) + "stop";
+	}
+
+	public static String getWorkerRouteRunning( @NotNull Worker worker ) {
+		return getWorkerDefaultRoute( worker ) + "running";
 	}
 
 }

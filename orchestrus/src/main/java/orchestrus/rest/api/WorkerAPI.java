@@ -50,4 +50,20 @@ public class WorkerAPI {
 
 		return true;
 	}
+
+	public static boolean isRunning( Worker worker ) {
+		try {
+			String url = RESTRoute.getWorkerRouteRunning( worker );
+			ResponseEntity<Boolean> response = restTemplate.getForEntity( url, Boolean.class );
+
+			if ( response.getBody() == null ) {
+				return true;	//if the worker is inactive we just consider nothing has changed
+			}
+
+			return response.getBody();
+		}
+		catch ( Exception e ) {
+			return true;	//if the worker is inactive we just consider nothing has changed
+		}
+	}
 }

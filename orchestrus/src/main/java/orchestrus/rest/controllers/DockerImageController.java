@@ -21,7 +21,7 @@ public class DockerImageController {
 
 
 	public DockerImageController() {
-		this.dockerImageService = new DockerImageService();
+		this.dockerImageService = DockerImageService.getInstance();
 	}
 
 

@@ -21,7 +21,7 @@ public class WorkerController {
 
 
 	public WorkerController() {
-		workerService = new WorkerService();
+		workerService = WorkerService.getInstance();
 	}
 
 
