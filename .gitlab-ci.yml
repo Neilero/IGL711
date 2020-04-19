@@ -47,15 +47,15 @@ test:
   - name: venzinjonas/worker
     alias: worker
  script:
-  - cd db/Test
+  - cd db/src/test
   - mvn test
   - cd ..
   - cd ..
-  - cd orchestrus/Test
+  - cd orchestrus/src/test
   - mvn test
   - cd ..
   - cd ..
-  - cd workers/Test
+  - cd workers/src/test
   - mvn test
 
   
