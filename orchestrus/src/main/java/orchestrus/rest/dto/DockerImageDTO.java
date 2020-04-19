@@ -23,7 +23,8 @@ public class DockerImageDTO {
 		worker = new WorkerDTO( image.getWorker() );
 	}
 
-	public DockerImageDTO( DockerImage image, WorkerDTO parentWorker ) {
+	// package constructor to break infinite loop between the recurrent call to the constructors
+	DockerImageDTO( DockerImage image, WorkerDTO parentWorker ) {
 		id = image.getId();
 		name = image.getName();
 		worker = parentWorker;
@@ -33,7 +34,8 @@ public class DockerImageDTO {
 		return new DockerImage( id, name, worker.toModel() );
 	}
 
-	public DockerImage toModel( Worker parentWorker ) {
+	// package method to break infinite loop between the recurrent call
+	DockerImage toModel( Worker parentWorker ) {
 		return new DockerImage( id, name, parentWorker );
 	}
 }

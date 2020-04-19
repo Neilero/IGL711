@@ -22,7 +22,8 @@ public class OpenPortDTO {
 		worker = new WorkerDTO(openPort.getWorker());
 	}
 
-	public OpenPortDTO( OpenPort openPort, WorkerDTO parentWorker ) {
+	// package constructor to break infinite loop between the recurrent call to the constructors
+	OpenPortDTO( OpenPort openPort, WorkerDTO parentWorker ) {
 		id = openPort.getId();
 		port = openPort.getPort();
 		worker = parentWorker;
@@ -33,7 +34,8 @@ public class OpenPortDTO {
 		return new OpenPort( id, port, worker.toModel() );
 	}
 
-	public OpenPort toModel( Worker parentWorker ) {
+	// package method to break infinite loop between the recurrent call
+	OpenPort toModel( Worker parentWorker ) {
 		return new OpenPort( id, port, parentWorker );
 	}
 }

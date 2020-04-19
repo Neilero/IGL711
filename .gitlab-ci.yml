@@ -1,4 +1,5 @@
 stages:
+ - quality
  - build
  - test
 
@@ -8,7 +9,24 @@ variables:
  IMAGE_NAME_BD: "venzinjonas/bdd"
  IMAGE_NAME_worker: "venzinjonas/worker"
  
-
+code_quality_job:
+  stage: quality
+  image: docker:stable
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - mkdir codequality-results
+    - docker run
+        --env CODECLIMATE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /tmp/cc:/tmp/cc
+        codeclimate/codeclimate analyze -f html > ./codequality-results/index.html
+  artifacts:
+    paths:
+      - codequality-results/
+   
 build:
  stage: build
  image: docker:19.03
@@ -47,15 +65,13 @@ test:
   - name: venzinjonas/worker
     alias: worker
  script:
-  - cd db/Test
+  - cd db/
   - mvn test
   - cd ..
-  - cd ..
-  - cd orchestrus/Test
+  - cd orchestrus/
   - mvn test
   - cd ..
-  - cd ..
-  - cd workers/Test
+  - cd workers/
   - mvn test
 
   
