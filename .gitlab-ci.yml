@@ -1,6 +1,6 @@
 stages:
  - build
- - test
+
 
 variables:
  IMAGE_NAME_serveur: "venzinjonas/serveur"
@@ -29,30 +29,5 @@ build:
   - docker build -t $IMAGE_NAME_worker .
   - docker push $IMAGE_NAME_worker
   
-test:
- stage: test
- image: docker:19.03
- services:
-  orchestrus:
-    build: orchestrus/
-    depends_on:
-      - interface
-    ports:
-      - "8080:8080"
-  interface:
-    build: db/
-    depends_on:
-      - db
-    ports:
-      - "12345:8080"
 
-  db:
-    image: "mariadb"
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-    ports:
-      - "3306:3306"
-
-	volumes:
-		db-data:
   
