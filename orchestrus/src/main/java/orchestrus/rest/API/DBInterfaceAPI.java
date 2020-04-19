@@ -4,6 +4,8 @@ import orchestrus.exception.OrchestrusException;
 import orchestrus.model.DockerImage;
 import orchestrus.model.Worker;
 import orchestrus.rest.RESTRoute;
+import orchestrus.rest.dto.DockerImageDTO;
+import orchestrus.rest.dto.WorkerDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DBInterfaceAPI {
 
@@ -22,7 +26,7 @@ public class DBInterfaceAPI {
 	 */
 
 	public static List<Worker> getAllWorkers() throws OrchestrusException {
-		ResponseEntity<Worker[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, Worker[].class );
+		ResponseEntity<WorkerDTO[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, WorkerDTO[].class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
@@ -31,21 +35,24 @@ public class DBInterfaceAPI {
 			return null;
 		}
 
-		return Arrays.asList( response.getBody() );
+		return Stream.of( response.getBody() ).map( WorkerDTO::toModel ).collect( Collectors.toList() );
 	}
 
 	public static Worker getWorker( UUID workerId ) throws OrchestrusException {
-		ResponseEntity<Worker> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS + workerId, Worker.class );
+		ResponseEntity<WorkerDTO> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS + workerId, WorkerDTO.class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
 		}
+		if ( response.getBody() == null ) {
+			return null;
+		}
 
-		return response.getBody();
+		return response.getBody().toModel();
 	}
 
 	public static boolean addWorker( Worker worker ) throws OrchestrusException {
-		ResponseEntity<Worker> response = restTemplate.postForEntity( RESTRoute.BD_INTERFACE_WORKERS, worker, Worker.class );
+		ResponseEntity<WorkerDTO> response = restTemplate.postForEntity( RESTRoute.BD_INTERFACE_WORKERS, worker, WorkerDTO.class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
@@ -69,7 +76,7 @@ public class DBInterfaceAPI {
 	 */
 
 	public static List<DockerImage> getAllDockerImages() throws OrchestrusException {
-		ResponseEntity<DockerImage[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES, DockerImage[].class );
+		ResponseEntity<DockerImageDTO[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES, DockerImageDTO[].class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
@@ -78,16 +85,19 @@ public class DBInterfaceAPI {
 			return null;
 		}
 
-		return Arrays.asList( response.getBody() );
+		return Stream.of( response.getBody() ).map( DockerImageDTO::toModel ).collect( Collectors.toList() );
 	}
 
 	public static DockerImage getDockerImage( UUID imageId ) throws OrchestrusException {
-		ResponseEntity<DockerImage> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES + imageId, DockerImage.class );
+		ResponseEntity<DockerImageDTO> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_IMAGES + imageId, DockerImageDTO.class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
 		}
+		if ( response.getBody() == null ) {
+			return null;
+		}
 
-		return response.getBody();
+		return response.getBody().toModel();
 	}
 }
