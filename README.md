@@ -8,7 +8,7 @@ références croisées entre la classe Worker et les classes DockerImage et Open
 worker possède ainsi un DockerImage et une liste d'OpenPort et les classe DockerImage /
 OpenPort possède un worker. 
 
-Ce faisant, nous rencontrons donc un problème lors de l'envoie des objects car ces
+Ce faisant, nous rencontrons donc un problème lors de l'envoi des objets car ces
 références croisées créer ainsi une boucle infinie lors de leur sérialisation.
 Pour remédier à ce problème nous avons pensé à une nouvelle implémentation du modèle
 que vous trouverez ci-dessous :
