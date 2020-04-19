@@ -1,15 +1,21 @@
 # eq05
 
+Membres :
+ - Léo Pécault
+ - Farah Rebiha
+ - Aurélien Vauthier
+ - Jonas Venzin
+
 ## Problème avec le modèle
 
-Après intégration des différentes parties du TP ensemble, nous nous sommes rendu compte
-d'une erreur d'implémentation. En effet, dans notre modèle actuel, il existe des
-références croisées entre la classe Worker et les classes DockerImage et OpenPort. Un
-worker possède ainsi un DockerImage et une liste d'OpenPort et les classe DockerImage /
-OpenPort possède un worker. 
+Bien que les différentes parties de notre TP fonctionnent, nous nous sommes rendu compte
+après intégration des différentes parties ensemble d'une erreur d'implémentation. En
+effet, dans notre modèle actuel, il existe des références croisées entre la classe
+Worker et les classes DockerImage et OpenPort. Un worker possède ainsi un DockerImage 
+et une liste d'OpenPort et les classe DockerImage / OpenPort possède un worker. 
 
 Ce faisant, nous rencontrons donc un problème lors de l'envoi des objets car ces
-références croisées créer ainsi une boucle infinie lors de leur sérialisation.
+références croisées créent ainsi une boucle infinie lors de leur sérialisation.
 Pour remédier à ce problème nous avons pensé à une nouvelle implémentation du modèle
 que vous trouverez ci-dessous :
 
