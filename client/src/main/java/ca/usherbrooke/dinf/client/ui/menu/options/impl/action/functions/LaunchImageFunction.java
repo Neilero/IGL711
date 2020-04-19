@@ -25,22 +25,20 @@ public class LaunchImageFunction implements ActionFunction {
             String imageName = (String) arguments.get(1).getValue();
             String imagePorts = (String) arguments.get(2).getValue();
 
-            Scanner scanner = new Scanner(imagePorts);
-            List<OpenPort> ports = new ArrayList<>();
-            while (scanner.hasNextInt()) {
-                OpenPort port = new OpenPort();
-                port.setPort(scanner.nextInt());
-                ports.add(port);
-            }
-
             Worker worker = workers.getWorkers().get(workerNumber);
 
-            DockerImage dockerImage = new DockerImage();
+            Scanner scanner = new Scanner(imagePorts);
+            while (scanner.hasNextInt()) {
+                int int_port = scanner.nextInt();
+                OpenPort port = new OpenPort(int_port, worker);
+                worker.addOpenPort(port);
+            }
+
+            DockerImage dockerImage = new DockerImage(imageName, worker);
             dockerImage.setName(imageName);
             dockerImage.setWorker(worker);
 
-            worker.setImages(dockerImage);
-            worker.setOpenPorts(ports);
+            worker.setRunningImage(dockerImage);
 
             System.out.println("Launching image "+imageName+" on the worker with ID "+worker.getId());
 

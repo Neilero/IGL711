@@ -18,7 +18,7 @@ public class StopImageFunction implements ActionFunction {
         {
             int workerNumber = Integer.parseInt((String) arguments.get(0).getValue());
 
-            DockerImage image = workers.getWorkers().get(workerNumber).getImages();
+            DockerImage image = workers.getWorkers().get(workerNumber).getRunningImage();
 
             if (image == null)
                 throw new IndexOutOfBoundsException();

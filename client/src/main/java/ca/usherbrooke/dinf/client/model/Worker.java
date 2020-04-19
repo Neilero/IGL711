@@ -1,68 +1,105 @@
 package ca.usherbrooke.dinf.client.model;
 
-import java.io.Serializable;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Worker implements Serializable {
-    private UUID id;
+public class Worker {
 
-    private String address;
+	private final UUID id;
 
-    private Integer accessPort;
+	@Size( min = 8, max = 15, message = "IP should be valid")
+	private String address;
 
-    private Status status = Status.ACTIF;
+	@Positive( message = "Port should be positive" )
+	@Max( value = 65535, message = "Port should be valid")
+	private int port;
 
-    private DockerImage image;
+	private Status status;
 
-    private List<OpenPort> openPorts;
+	private DockerImage runningImage;
+
+	@NotNull
+	private final List<OpenPort> openPorts;
+
+	public Worker() {
+		id = null;
+		openPorts = new ArrayList<>();
+	}
+
+	public Worker(UUID id, String address, int port, Status status, DockerImage runningImage, List<OpenPort> openPorts ) {
+		this.id = id;
+		this.address = address;
+		this.port = port;
+		this.status = status;
+		this.runningImage = runningImage;
+		this.openPorts = new ArrayList<>( openPorts );
+	}
+
+	public Worker( UUID id, String address, int port, Status status ) {
+		this.id = id;
+		this.address = address;
+		this.port = port;
+		this.status = status;
+
+		runningImage = null;
+		openPorts = new ArrayList<>();
+	}
+
+	public Worker( String address, int port ) {
+		this( null, address, port, Status.ACTIVE );
+	}
 
 
-    public UUID getId() {
-        return id;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setAddress( String address ) {
+		this.address = address;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public int getPort() {
+		return port;
+	}
 
-    public Integer getAccessPort() {
-        return accessPort;
-    }
+	public void setPort( int port ) {
+		this.port = port;
+	}
 
-    public void setAccessPort(Integer port) {
-        this.accessPort = port;
-    }
+	public Status getStatus() {
+		return status;
+	}
 
-    public Status getStatus() {
-        return status;
-    }
+	public void setStatus( Status status ) {
+		this.status = status;
+	}
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+	public DockerImage getRunningImage() {
+		return runningImage;
+	}
 
-    public DockerImage getImages() {
-        return image;
-    }
+	public void setRunningImage( DockerImage runningImage ) {
+		this.runningImage = runningImage;
+	}
 
-    public void setImages(DockerImage image) {
-        this.image = image;
-    }
+	public List<OpenPort> getOpenPorts() {
+		return new ArrayList<>( openPorts );
+	}
 
-    public List<OpenPort> getOpenPorts() {
-        return openPorts;
-    }
+	public void addOpenPort( OpenPort port ) {
+		openPorts.add( port );
+	}
 
-    public void setOpenPorts(List<OpenPort> ports) {
-        this.openPorts = ports;
-    }
+	public void removeOpenPort( OpenPort port ) {
+		openPorts.remove( port );
+	}
 }

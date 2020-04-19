@@ -1,7 +1,7 @@
 package ca.usherbrooke.dinf.client.rest;
 
+import ca.usherbrooke.dinf.client.dto.DockerImageDTO;
 import ca.usherbrooke.dinf.client.model.DockerImage;
-import ca.usherbrooke.dinf.client.model.ListWorkers;
 import ca.usherbrooke.dinf.client.model.Worker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ public class RestConsumer {
     {
         try {
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> result = restTemplate.postForEntity(IMAGE_ROUTE+"start", image, String.class);
+            ResponseEntity<String> result = restTemplate.postForEntity(IMAGE_ROUTE+"start", new DockerImageDTO(image), String.class);
 
             return result.getStatusCode() == HttpStatus.OK;
         } catch (Exception e)

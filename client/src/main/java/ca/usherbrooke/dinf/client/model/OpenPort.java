@@ -1,36 +1,49 @@
 package ca.usherbrooke.dinf.client.model;
 
-import java.io.Serializable;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.UUID;
 
-public class OpenPort implements Serializable {
-    private UUID id;
+public class OpenPort {
 
-    private Integer port;
+	private final UUID id;
 
-    Worker worker;
+	@Positive( message = "Port should be positive" )
+	@Max( value = 65535, message = "Port should be valid")
+	private int port;
 
-    public UUID getId() {
-        return id;
-    }
+	@NotNull
+	private Worker worker;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
-    public Integer getPort() {
-        return port;
-    }
+	public OpenPort( UUID id, int port, Worker worker ) {
+		this.id = id;
+		this.port = port;
+		this.worker = worker;
+	}
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+	public OpenPort(int port, Worker worker) {
+		this(null, port, worker);
+	}
 
-    public Worker getWorker() {
-        return worker;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
-    }
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort( int port ) {
+		this.port = port;
+	}
+
+	public Worker getWorker() {
+		return worker;
+	}
+
+	public void setWorker( Worker worker ) {
+		this.worker = worker;
+	}
 }
