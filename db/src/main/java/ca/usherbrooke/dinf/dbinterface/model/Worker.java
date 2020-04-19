@@ -26,7 +26,7 @@ public class Worker implements Serializable {
     private Integer accessPort;
 
     @Column(name = "statusWorker")
-    private Short status;
+    private Status status;
 
     @OneToOne
     private DockerImage image;
@@ -58,11 +58,11 @@ public class Worker implements Serializable {
         this.accessPort = port;
     }
 
-    public Short getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

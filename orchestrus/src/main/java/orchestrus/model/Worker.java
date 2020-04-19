@@ -26,7 +26,12 @@ public class Worker {
 	@NotNull
 	private final List<OpenPort> openPorts;
 
-	public Worker( UUID id, String address, int port, Status status, DockerImage runningImage, List<OpenPort> openPorts ) {
+	public Worker() {
+		id = null;
+		openPorts = new ArrayList<>();
+	}
+
+	public Worker(UUID id, String address, int port, Status status, DockerImage runningImage, List<OpenPort> openPorts ) {
 		this.id = id;
 		this.address = address;
 		this.port = port;

@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class RestConsumer {
     private static final String ORCHESTRUS = "http://192.168.99.100:12345";
@@ -43,7 +41,7 @@ public class RestConsumer {
         {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> result = restTemplate.postForEntity(WORKER_ROUTE, worker, String.class);
-            return result.getStatusCode() == HttpStatus.OK;
+            return result.getStatusCode() == HttpStatus.CREATED;
 
         } catch (Exception e)
         {
@@ -60,7 +58,8 @@ public class RestConsumer {
         try
         {
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.delete(WORKER_ROUTE, worker, String.class);
+
+            restTemplate.delete(WORKER_ROUTE+worker.getId());
 
             return true;
         } catch (Exception e)

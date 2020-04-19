@@ -20,7 +20,6 @@ public class WorkerDTO {
 	public DockerImageDTO    image;
 	public List<OpenPortDTO> openPorts;
 
-
 	public WorkerDTO() {
 		openPorts = new ArrayList<>();
 	}
@@ -30,7 +29,12 @@ public class WorkerDTO {
 		address = worker.getAddress();
 		port = worker.getPort();
 		status = worker.getStatus();
-		image = new DockerImageDTO( worker.getRunningImage(), this );
+
+		if (worker.getRunningImage() != null)
+			image = new DockerImageDTO( worker.getRunningImage(), this );
+		else
+			image = null;
+
 		openPorts = worker.getOpenPorts()
 						  .stream()
 						  .map( openPort -> new OpenPortDTO( openPort, this ) )

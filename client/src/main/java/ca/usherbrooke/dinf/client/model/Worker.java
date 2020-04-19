@@ -11,11 +11,12 @@ public class Worker implements Serializable {
 
     private Integer accessPort;
 
-    private Short status;
+    private Status status = Status.ACTIF;
 
     private DockerImage image;
 
     private List<OpenPort> openPorts;
+
 
     public UUID getId() {
         return id;
@@ -41,11 +42,11 @@ public class Worker implements Serializable {
         this.accessPort = port;
     }
 
-    public Short getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

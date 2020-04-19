@@ -1,9 +1,13 @@
 version: '3'
 services:
-  interface:
-    build: .
+  orchestrus:
+    build: orchestrus/
+    depends_on:
+      - interface
     ports:
       - "12345:8080"
+  interface:
+    build: db/
     depends_on:
       - db
 

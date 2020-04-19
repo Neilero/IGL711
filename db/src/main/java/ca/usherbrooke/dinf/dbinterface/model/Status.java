@@ -1,4 +1,4 @@
-package orchestrus.model;
+package ca.usherbrooke.dinf.dbinterface.model;
 
 import java.io.Serializable;
 

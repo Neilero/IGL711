@@ -83,7 +83,7 @@ public class PortController {
             return new ResponseEntity<>(new SimpleResponse(false, "Port cannot be deleted"), HttpStatus.ACCEPTED);
         else
         {
-            portRepository.delete(port);
+            portRepository.deleteOpenPortById(id);
             return new ResponseEntity<>(new SimpleResponse(true, "Port has been deleted"), HttpStatus.OK);
         }
     }

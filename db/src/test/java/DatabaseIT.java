@@ -1,6 +1,7 @@
 import ca.usherbrooke.dinf.dbinterface.DBInterfaceApplication;
 import ca.usherbrooke.dinf.dbinterface.model.DockerImage;
 import ca.usherbrooke.dinf.dbinterface.model.OpenPort;
+import ca.usherbrooke.dinf.dbinterface.model.Status;
 import ca.usherbrooke.dinf.dbinterface.model.Worker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class DatabaseIT {
         w.setAccessPort(number);
         w.setAddress(number + "." + number + "." + number + "." + number);
         w.setAccessPort(number*111);
-        w.setStatus((short) (number%2));
+        w.setStatus(Status.ACTIF);
         return w;
     }
 

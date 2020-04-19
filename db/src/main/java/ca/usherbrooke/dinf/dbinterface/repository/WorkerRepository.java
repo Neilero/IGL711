@@ -10,5 +10,5 @@ public interface WorkerRepository extends JpaRepository<Worker, Integer>
 {
     Worker findById(UUID id);
     List<Worker> findAll();
-    void delete(Worker worker);
+    void deleteWorkerById(UUID id);
 }

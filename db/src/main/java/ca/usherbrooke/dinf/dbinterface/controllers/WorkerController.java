@@ -76,7 +76,7 @@ public class WorkerController {
             return new ResponseEntity<>(new SimpleResponse(false, "Worker cannot be deleted"), HttpStatus.ACCEPTED);
         else
         {
-            workerRepository.delete(worker);
+            workerRepository.deleteWorkerById(id);
             return new ResponseEntity<>(new SimpleResponse(true, "Worker has been deleted"), HttpStatus.OK);
         }
     }

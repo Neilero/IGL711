@@ -11,5 +11,5 @@ public interface ImageRepository extends JpaRepository<DockerImage, Integer> {
     DockerImage findById(UUID id);
     List<DockerImage> findAll();
     List<DockerImage> findByWorker(Worker worker);
-    void delete(DockerImage image);
+    void deleteDockerImageById(UUID id);
 }

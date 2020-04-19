@@ -26,9 +26,9 @@ public class StartWorkerFunction implements ActionFunction {
             worker.setAccessPort(Integer.parseInt(workerPort));
 
             if (RestConsumer.launchWorkerRequest(worker))
-                System.out.println("The worker has been stopped.");
+                System.out.println("The worker has been started.");
             else
-                System.out.println("The worker cannot be stopped.");
+                System.out.println("The worker cannot be started.");
         } catch (NumberFormatException e)
         {
             System.out.println("The given parameters are not valid.");

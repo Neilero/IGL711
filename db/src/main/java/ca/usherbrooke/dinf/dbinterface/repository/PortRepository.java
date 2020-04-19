@@ -11,5 +11,5 @@ public interface PortRepository extends JpaRepository<OpenPort, Integer> {
     OpenPort findById(UUID id);
     List<OpenPort> findAll();
     List<OpenPort> findByWorker(Worker worker);
-    void delete(OpenPort port);
+    void deleteOpenPortById(UUID id);
 }

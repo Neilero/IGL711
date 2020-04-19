@@ -15,7 +15,12 @@ import java.util.UUID;
 public class DockerImageService {
 
 	public List<DockerImage> getAllDockerImages() {
-		List<DockerImage> images = DBInterfaceAPI.getAllDockerImages();
+		List<DockerImage> images = null;
+		try {
+			images = DBInterfaceAPI.getAllDockerImages();
+		} catch (OrchestrusException e) {
+			e.printStackTrace();
+		}
 		if ( images == null )
 			return Collections.emptyList();
 
@@ -23,7 +28,12 @@ public class DockerImageService {
 	}
 
 	public DockerImage getDockerImage( UUID imageId ) {
-		return DBInterfaceAPI.getDockerImage( imageId );
+		try {
+			return DBInterfaceAPI.getDockerImage( imageId );
+		} catch (OrchestrusException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public boolean startImage( DockerImage image ) throws OrchestrusException {

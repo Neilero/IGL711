@@ -83,7 +83,7 @@ public class ImageController {
             return new ResponseEntity<>(new SimpleResponse(false, "Image cannot be deleted"), HttpStatus.ACCEPTED);
         else
         {
-            imageRepository.delete(image);
+            imageRepository.deleteDockerImageById(id);
             return new ResponseEntity<>(new SimpleResponse(true, "Image has been deleted"), HttpStatus.OK);
         }
     }

@@ -37,9 +37,12 @@ public class WorkerController {
 												   .collect( Collectors.toList() );
 		}
 		catch ( OrchestrusException e ) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
 		}
 		catch ( Exception e ) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
 		}
 
@@ -127,20 +130,20 @@ public class WorkerController {
 		return new ResponseEntity<>( response, responseStatus );
 	}
 
-	@DeleteMapping( path = RESTRoute.WORKER )
+	@DeleteMapping( path = RESTRoute.WORKER +"/{id}")
 	@ResponseBody
-	public ResponseEntity<BasicResponse> removeWorker( @RequestBody WorkerDTO worker ) {
+	public ResponseEntity<BasicResponse> removeWorker(@PathVariable UUID id) {
 		BasicResponse response;
 		HttpStatus responseStatus;
 
 		try {
-			if ( workerService.removeWorker( worker.id ) ) {
-				String message = String.format( "The worker %s has been successfully removed", worker.id );
+			if ( workerService.removeWorker( id ) ) {
+				String message = String.format( "The worker %s has been successfully removed", id );
 				response = new BasicResponse( true, message );
 				responseStatus = HttpStatus.OK;
 			}
 			else {
-				String message = String.format( "The worker %s could not been removed", worker.id );
+				String message = String.format( "The worker %s could not been removed", id );
 				response = new BasicResponse( false, message );
 				responseStatus = HttpStatus.SERVICE_UNAVAILABLE;
 			}
