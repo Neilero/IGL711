@@ -5,13 +5,20 @@ services:
     depends_on:
       - interface
     ports:
-      - "12345:8080"
+      - "8080:8080"
   interface:
     build: db/
     depends_on:
       - db
+    ports:
+      - "12345:8080"
 
   db:
     image: "mariadb"
     environment:
       - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - "3306:3306"
+
+volumes:
+  db-data:

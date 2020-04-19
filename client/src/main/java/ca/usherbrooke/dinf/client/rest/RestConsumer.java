@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class RestConsumer {
-    private static final String ORCHESTRUS = "http://192.168.99.100:12345";
+    private static final String ORCHESTRUS = "http://192.168.99.100:8080";
 
     private static final String WORKERS_ROUTE = ORCHESTRUS+"/workers/";
     private static final String IMAGE_ROUTE = ORCHESTRUS+"/image/";

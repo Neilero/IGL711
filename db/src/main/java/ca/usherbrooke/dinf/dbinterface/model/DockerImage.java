@@ -1,6 +1,7 @@
 package ca.usherbrooke.dinf.dbinterface.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class DockerImage implements Serializable {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "idImage")
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @Column(name = "nameImage")
