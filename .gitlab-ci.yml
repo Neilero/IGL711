@@ -1,5 +1,6 @@
 stages:
  - build
+ - test
 
 
 variables:
@@ -29,5 +30,32 @@ build:
   - docker build -t $IMAGE_NAME_worker .
   - docker push $IMAGE_NAME_worker
   
+test:
+ stage: test
+ image: maven:3.6.1-jdk-11
+
+ variables:
+  SERVER_ADDR: "serveur"
+  bdd_ADDR: "bdd"
+  worker_ADDR: "worker"
+  
+ services:
+  - name: venzinjonas/serveur
+    alias: serveur
+  - name: venzinjonas/bdd
+    alias: bdd
+  - name: venzinjonas/worker
+    alias: worker
+ script:
+  - cd db/Test
+  - mvn test
+  - cd ..
+  - cd ..
+  - cd orchestrus/Test
+  - mvn test
+  - cd ..
+  - cd ..
+  - cd workers/Test
+  - mvn test
 
   
