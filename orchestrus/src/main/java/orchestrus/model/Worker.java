@@ -51,7 +51,7 @@ public class Worker {
 	}
 
 	public Worker( String address, int port ) {
-		this( null, address, port, Status.ACTIF );
+		this( null, address, port, Status.ACTIVE );
 	}
 
 

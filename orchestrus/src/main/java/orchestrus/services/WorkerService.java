@@ -13,6 +13,7 @@ import java.util.*;
 public class WorkerService {
 
 	private List<Worker> knownWorkers;
+	private List<Worker> runningWorkers;
 
 	public WorkerService() {
 		try {
@@ -28,7 +29,7 @@ public class WorkerService {
 			@Override
 			public void run() {
 				knownWorkers.parallelStream()
-							.peek( worker -> worker.setStatus( WorkerAPI.isUp( worker ) ? Status.ACTIF : Status.INACTIF ) )
+							.peek( worker -> worker.setStatus( WorkerAPI.isUp( worker ) ? Status.ACTIVE : Status.INACTIVE ) )
 							.forEach( worker -> editWorker( worker.getId(), worker ) );
 			}
 		}, 5_000 );
