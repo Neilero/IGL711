@@ -24,7 +24,7 @@ public class DBInterfaceAPI {
 	 */
 
 	public static List<Worker> getAllWorkers() throws OrchestrusException {
-		ResponseEntity<WorkerDTO[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, WorkerDTO[].class );
+		ResponseEntity<Worker[]> response = restTemplate.getForEntity( RESTRoute.BD_INTERFACE_WORKERS, Worker[].class );
 
 		if ( response.getStatusCode().isError() ) {
 			throw new OrchestrusException( String.valueOf( response.getStatusCodeValue() ) );
@@ -33,7 +33,7 @@ public class DBInterfaceAPI {
 			return null;
 		}
 
-		return Stream.of( response.getBody() ).map( WorkerDTO::toModel ).collect( Collectors.toList() );
+		return List.of( response.getBody() );
 	}
 
 	public static Worker getWorker( UUID workerId ) throws OrchestrusException {
