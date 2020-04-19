@@ -1,15 +1,11 @@
 package orchestrus.model;
 
-import javax.validation.constraints.Positive;
 import java.util.UUID;
 
 public class DockerImage {
 
-	@Positive( message = "ID should be positive" )
 	private UUID id;
-
 	private String name;
-
 	private Worker worker;
 
 	public DockerImage( UUID id, String name, Worker worker ) {
