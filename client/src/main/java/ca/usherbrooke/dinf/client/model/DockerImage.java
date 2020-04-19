@@ -1,36 +1,49 @@
 package ca.usherbrooke.dinf.client.model;
 
-import java.io.Serializable;
+import javax.validation.constraints.Positive;
 import java.util.UUID;
 
-public class DockerImage implements Serializable {
-    private UUID id;
+public class DockerImage {
 
-    private String name;
+	@Positive( message = "ID should be positive" )
+	private UUID id;
 
-    private Worker worker;
+	private String name;
 
-    public UUID getId() {
-        return id;
-    }
+	private Worker worker;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	public DockerImage( UUID id, String name, Worker worker ) {
+		this.id = id;
+		this.name = name;
+		this.worker = worker;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public DockerImage( String name, Worker worker ) {
+		this( null, name, worker );
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public Worker getWorker() {
-        return worker;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
-    }
+	public void setId( UUID id ) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName( String name ) {
+		this.name = name;
+	}
+
+	public Worker getWorker() {
+		return worker;
+	}
+
+	public void setWorker( Worker worker ) {
+		this.worker = worker;
+	}
 }

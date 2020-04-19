@@ -1,6 +1,8 @@
 package ca.usherbrooke.dinf.client.model;
 
-public enum Status {
-	ACTIF,
-	INACTIF
+import java.io.Serializable;
+
+public enum Status implements Serializable {
+	ACTIVE,
+	INACTIVE
 }

@@ -27,7 +27,7 @@ public class WorkerListFunction implements ActionFunction {
             int index = 0;
             for(Worker w : list)
             {
-                System.out.println("\tWorker n°"+index++ +"\t"+w.getId()+"\t"+w.getAddress()+"\t"+w.getAccessPort());
+                System.out.println("\tWorker n°"+index++ +"\t"+w.getId()+"\t"+w.getAddress()+"\t"+w.getPort());
             }
         }
     }

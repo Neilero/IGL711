@@ -23,7 +23,7 @@ public class StartWorkerFunction implements ActionFunction {
 
             Worker worker = new Worker();
             worker.setAddress(workerIP);
-            worker.setAccessPort(Integer.parseInt(workerPort));
+            worker.setPort(Integer.parseInt(workerPort));
 
             if (RestConsumer.launchWorkerRequest(worker))
                 System.out.println("The worker has been started.");

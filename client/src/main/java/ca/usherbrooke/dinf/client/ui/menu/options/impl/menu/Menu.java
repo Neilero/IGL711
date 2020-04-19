@@ -36,7 +36,15 @@ public class Menu extends AOption implements IOption {
 		int choice;
 		do {
 			System.out.print("Choose an option : ");
-			choice = scanner.nextInt();
+
+			String input = scanner.next();
+			try {
+				choice = Integer.parseInt(input);
+			} catch (Exception e) {
+				System.out.println("The value you have input is not a valid integer");
+				choice = -2;
+			}
+
 		} while(choice < -1 || choice >= options.size());
 
 		if (choice == -1)

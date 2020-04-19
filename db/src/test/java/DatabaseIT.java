@@ -41,7 +41,7 @@ public class DatabaseIT {
         w.setAccessPort(number);
         w.setAddress(number + "." + number + "." + number + "." + number);
         w.setAccessPort(number*111);
-        w.setStatus(Status.ACTIF);
+        w.setStatus(Status.ACTIVE);
         return w;
     }
 
