@@ -1,4 +1,4 @@
-package orchestrus.rest.API;
+package orchestrus.rest.api;
 
 import orchestrus.exception.OrchestrusException;
 import orchestrus.model.DockerImage;

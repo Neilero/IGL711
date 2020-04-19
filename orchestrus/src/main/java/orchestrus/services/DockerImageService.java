@@ -2,9 +2,8 @@ package orchestrus.services;
 
 import orchestrus.exception.OrchestrusException;
 import orchestrus.model.DockerImage;
-import orchestrus.model.Worker;
-import orchestrus.rest.API.DBInterfaceAPI;
-import orchestrus.rest.API.WorkerAPI;
+import orchestrus.rest.api.DBInterfaceAPI;
+import orchestrus.rest.api.WorkerAPI;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

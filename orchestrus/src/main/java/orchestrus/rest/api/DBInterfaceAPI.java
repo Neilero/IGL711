@@ -1,4 +1,4 @@
-package orchestrus.rest.API;
+package orchestrus.rest.api;
 
 import orchestrus.exception.OrchestrusException;
 import orchestrus.model.DockerImage;
@@ -6,11 +6,9 @@ import orchestrus.model.Worker;
 import orchestrus.rest.RESTRoute;
 import orchestrus.rest.dto.DockerImageDTO;
 import orchestrus.rest.dto.WorkerDTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
