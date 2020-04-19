@@ -1,0 +1,58 @@
+stages:
+ - build
+ - test
+
+variables:
+ IMAGE_NAME_serveur: "venzinjonas/serveur"
+ IMAGE_NAME_BD: "venzinjonas/bdd"
+ IMAGE_NAME_worker: "venzinjonas/worker"
+ 
+
+build:
+ stage: build
+ image: docker:19.03
+ 
+ services:
+  - name: docker:19.03-dind
+  
+ script:
+  - docker login -u venzinjonas -p $HubMDP
+  - cd db
+  - docker build -t $IMAGE_NAME_serveur .
+  - docker push $IMAGE_NAME_serveur
+  - cd ..
+  - cd orchestrus
+  - docker build -t $IMAGE_NAME_BD .
+  - docker push $IMAGE_NAME_BD
+  - cd ..
+  - cd workers
+  - docker build -t $IMAGE_NAME_worker .
+  - docker push $IMAGE_NAME_worker
+  
+test:
+ stage: test
+ image: docker:19.03
+ services:
+  orchestrus:
+    build: orchestrus/
+    depends_on:
+      - interface
+    ports:
+      - "8080:8080"
+  interface:
+    build: db/
+    depends_on:
+      - db
+    ports:
+      - "12345:8080"
+
+  db:
+    image: "mariadb"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - "3306:3306"
+
+	volumes:
+		db-data:
+  
