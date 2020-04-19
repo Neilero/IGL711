@@ -4,36 +4,91 @@ import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Container;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.ImageSearchResult;
+import com.spotify.docker.client.messages.*;
+import model.DockerImage;
+import model.OpenPort;
 
-import java.util.List;
+import java.util.*;
 
 public class DockerTools {
 
-    public static String checkIsRunnig(String nomImage, DockerClient client) throws DockerException, InterruptedException, DockerCertificateException {
+    public String nomImageRunning ="";
+    public String idImageRunning = ""; // id Sha 256
 
 
-        String isRunning = "";
 
+//fonction inutile actuellement mais on pourrait récupérer les l image qui tounrent pour les ports ou voir si on demande à lancer la même
+ public boolean IsAnImageRuning (String nomImage) throws DockerCertificateException, DockerException, InterruptedException {
+     final DockerClient client = DefaultDockerClient
+             .fromEnv()
+             .build();
+
+     List<Container> containers = client.listContainers();
+     containers.forEach(System.out::println);
+
+     List<Container> result = new ArrayList<>();
+     for (Container line : containers) {
+         System.out.println(line.state());
+         System.out.println(line.image());
+         System.out.println(line.id());
+         if ("running".equals(line.state() ) && nomImage.equals(line.image())) {
+             result.add(line);
+             this.nomImageRunning = line.image();
+             this.idImageRunning = line.id();
+
+         }
+     }
+
+     client.close();
+
+     if(result.isEmpty()){
+         return false ;
+     }else{
+         return true ;
+     }
+ }
+    //fonction inutile actuellement mais on pourrait récupérer les l image qui tounrent pour les ports ou voir si on demande à lancer la même
+    public boolean IsAnImageRuning () throws DockerCertificateException, DockerException, InterruptedException {
+        final DockerClient client = DefaultDockerClient
+                .fromEnv()
+                .build();
 
         List<Container> containers = client.listContainers();
-        if (!containers.isEmpty()) {
-            isRunning =  containers.stream().filter(o -> o.image().equals(nomImage) && o.status().equals("running")).findFirst().get().id(); // TODO : à vérifier
+        containers.forEach(System.out::println);
+
+        List<Container> result = new ArrayList<>();
+        for (Container line : containers) {
+            if ("running".equals(line.state() ) && this.nomImageRunning.equals(line.image())) {
+                result.add(line);
+                this.nomImageRunning = line.image();
+                this.idImageRunning = line.id();
+
+            }
         }
 
-        return  isRunning;
+        client.close();
 
+        if(result.isEmpty()){
+            return false ;
+        }else{
+            return true ;
+        }
     }
 
-    //Existe sur docker Hub
-    public static boolean checkExisteHub(String nomImage, DockerClient client) throws DockerCertificateException, DockerException, InterruptedException {
+
+     //Existe sur docker Hub
+    public static boolean checkExisteHub(String nomImage) throws DockerCertificateException, DockerException, InterruptedException {
+
+        final DockerClient client = DefaultDockerClient
+                .fromEnv()
+                .build();
+
         boolean IsExiste = true;
 
 
         final List<ImageSearchResult> Images = client.searchImages(nomImage);
+
+        client.close();
 
         if (Images.isEmpty()) {
             IsExiste = false;
@@ -41,64 +96,131 @@ public class DockerTools {
 
         return IsExiste;
     }
-    public static String checkExisteLocal(String nomImage, DockerClient client) throws DockerException, InterruptedException, DockerCertificateException {
-        String isRunning = "";
 
 
-        List<Container> containers = client.listContainers();
-        if (!containers.isEmpty()) {
-            isRunning = containers.stream().filter(o -> o.image().equals(nomImage)).findFirst().get().id(); // TODO : à vérifier
+    public boolean startImage(DockerImage imageRecu) {
+        try {
+            //Tester les ports
+
+            if(checkExisteHub(imageRecu.getName())) {
+
+                final DockerClient client = DefaultDockerClient
+                        .fromEnv()
+                        .build();
+
+                client.pull(imageRecu.getName());
+
+                final ContainerConfig containerConfig;
+
+                if (!(imageRecu.getWorker().getOpenPorts().isEmpty())) {
+
+                    // Bind container ports to host ports
+                    List<OpenPort> oldList = imageRecu.getWorker().getOpenPorts();
+
+                    List<String> newList = new ArrayList<>(oldList.size());
+                    for (OpenPort myOpenPort : oldList) {
+                        newList.add(String.valueOf(myOpenPort.getPort()));
+                    }
+
+                    final String[] ports = newList.toArray(new String[0]);
+
+                    final Map<String, List<PortBinding>> portBindings = new HashMap<>();
+                    for (String port : ports) {
+                        List<PortBinding> hostPorts = new ArrayList<>();
+                        hostPorts.add(PortBinding.of("0.0.0.0", port));
+                        portBindings.put(port, hostPorts);
+                    }
+
+                    /*
+                    // Bind container port 443 to an automatically allocated available host port.
+                    List<PortBinding> randomPort = new ArrayList<>();
+                    randomPort.add(PortBinding.randomPort("0.0.0.0"));
+                    portBindings.put("443", randomPort);
+                    */
+
+                    final HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
+
+                    // Create container with exposed ports
+                    containerConfig = ContainerConfig.builder()
+                            .hostConfig(hostConfig)
+                            .image(imageRecu.getName()).exposedPorts(ports)
+                            .cmd("sh", "-c", "while :; do sleep 1; done")
+                            .build();
+
+                } else {
+                    // Create container with exposed ports
+                    containerConfig = ContainerConfig.builder()
+                            .image(imageRecu.getName())
+                            .cmd("sh", "-c", "while :; do sleep 1; done")
+                            .build();
+                }
+
+
+                final ContainerCreation creation = client.createContainer(containerConfig);
+                final String id = creation.id();
+
+                client.startContainer(id);
+
+                //Change l image en cour d'execution
+                this.idImageRunning = id;
+                this.nomImageRunning = imageRecu.getName();
+
+                client.close();
+
+                return true;
+
+            }else{
+                throw new Exception("Image pas sur DockerHub");
+
+            }
+
+        } catch (DockerCertificateException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (DockerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return  isRunning;
 
+        return false;
     }
-    public static void pullImage(String nomImage, DockerClient client) throws DockerCertificateException, DockerException, InterruptedException {
 
-        client.pull(nomImage);
-
-    }
-    public static void runContainers(String idContainers, DockerClient client) throws DockerCertificateException, DockerException, InterruptedException {
-
-        // Start the container
-        client.startContainer(idContainers);
-
-    }
-    public static String buildContainer(String nomImage, DockerClient client) throws DockerCertificateException, DockerException, InterruptedException {
+    public boolean stop(DockerImage imageRecu) {
+        try {
 
 
+            if(this.IsAnImageRuning(imageRecu.getName())) {
 
-        final ContainerCreation container = client.createContainer(ContainerConfig
-                .builder()
-                .image(nomImage)
-                .build()
-        );
+                final DockerClient client = DefaultDockerClient
+                        .fromEnv()
+                        .build();
 
+                client.stopContainer(idImageRunning, 5);
 
+                return true;
+            }else{
+                throw new Exception("Image pas lancé ici ! ");
+            }
 
-        return container.id();
-
-    }
-    public static void createContainer(String nomImage) throws InterruptedException, DockerException, DockerCertificateException {
-
-        final DockerClient client = DefaultDockerClient
-                .fromEnv()
-                .build();
-
-
-        if(!checkIsRunnig(nomImage, client).equals("")){
-            System.out.println("\n=== client2");
-            //already running
-        }else if(!checkExisteLocal(nomImage, client).equals("")){
-            System.out.println("\n=== client3");
-            runContainers(checkExisteLocal(nomImage, client),client);
-        }else if(checkExisteHub(nomImage, client)){
-            System.out.println("\n=== client4");
-            //client.pull(nomImage);
-            //pullImage(nomImage, client);
-            String containerID = buildContainer(nomImage, client);
-            runContainers(containerID, client);
+        } catch (DockerCertificateException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (DockerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        //client.close();
+        return false;
     }
 
+    public void setIdImageRunning(String idImageRunning) {
+        this.idImageRunning = idImageRunning;
+    }
+
+    public String getIdImageRunning() {
+        return idImageRunning;
+    }
 }

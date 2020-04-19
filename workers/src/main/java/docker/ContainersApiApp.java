@@ -27,13 +27,14 @@ public class ContainersApiApp {
 
 		System.out.println("\n=== client.createContainer");
 		// Pull the image first
-		//client.pull("mysql");
+		client.pull("mysql:latest");
 
 		System.out.println("\n=== client.createContainer");
 		// Create container
+
 		final ContainerCreation container = client.createContainer(ContainerConfig
 			.builder()
-			.image("mysql")
+			.image("mysql:latest")
 			.env(
 				"MYSQL_ROOT_PASSWORD=p$ssw0rd", 
 				"MYSQL_DATABASE=my_app_db"

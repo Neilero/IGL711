@@ -3,10 +3,13 @@ package docker;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.Image;
 import com.spotify.docker.client.messages.ImageSearchResult;
 
+import java.util.ArrayList;
 import java.util.List;
+
 //TEST de l api
 public class ImagesApiApp {
 
@@ -25,7 +28,26 @@ public class ImagesApiApp {
 		final List<Image> allImages = client.listImages();
 		System.out.println("\n=== client.listImages");
 		allImages.forEach(System.out::println);
-		
+
+
+		System.out.println("\n=== client.listImages2");
+		List<Container> containers = client.listContainers();
+		containers.forEach(System.out::println);
+
+		List<Container> result = new ArrayList<>();
+		for (Container line : containers) {
+			System.out.println(line.state());
+			System.out.println(line.image());
+			System.out.println(line.id());
+			if ("running".equals(line.state()) && "python:3".equals(line.image()) && "2225f0c42d1a92ad51cbf4ba17aecf967e5b2fdf665bed31eacc3725f7b8e3f6".equals(line.id())) {
+				result.add(line);
+			}
+		}
+		if(result.isEmpty()){
+			System.out.println("\n=== CASSé");
+		}else{
+			System.out.println("\n=== OK TROUVe ");
+		}
 		/*
 		
 		// Check image history

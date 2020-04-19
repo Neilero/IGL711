@@ -1,8 +1,8 @@
-package orchestrus.rest.dto;
+package rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import orchestrus.model.OpenPort;
-import orchestrus.model.Worker;
+import model.OpenPort;
+import model.Worker;
 
 import java.util.UUID;
 
@@ -22,20 +22,12 @@ public class OpenPortDTO {
 		worker = new WorkerDTO(openPort.getWorker());
 	}
 
-	// package constructor to break infinite loop between the recurrent call to the constructors
-	OpenPortDTO( OpenPort openPort, WorkerDTO parentWorker ) {
-		id = openPort.getId();
-		port = openPort.getPort();
-		worker = parentWorker;
-	}
-
 
 	public OpenPort toModel() {
 		return new OpenPort( id, port, worker.toModel() );
 	}
 
-	// package method to break infinite loop between the recurrent call
-	OpenPort toModel( Worker parentWorker ) {
+	public OpenPort toModel( Worker parentWorker ) {
 		return new OpenPort( id, port, parentWorker );
 	}
 }

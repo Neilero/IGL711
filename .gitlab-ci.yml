@@ -1,0 +1,77 @@
+stages:
+ - quality
+ - build
+ - test
+
+
+variables:
+ IMAGE_NAME_serveur: "venzinjonas/serveur"
+ IMAGE_NAME_BD: "venzinjonas/bdd"
+ IMAGE_NAME_worker: "venzinjonas/worker"
+ 
+code_quality_job:
+  stage: quality
+  image: docker:stable
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - mkdir codequality-results
+    - docker run
+        --env CODECLIMATE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /tmp/cc:/tmp/cc
+        codeclimate/codeclimate analyze -f html > ./codequality-results/index.html
+  artifacts:
+    paths:
+      - codequality-results/
+   
+build:
+ stage: build
+ image: docker:19.03
+ 
+ services:
+  - name: docker:19.03-dind
+  
+ script:
+  - docker login -u venzinjonas -p $HubMDP
+  - cd db
+  - docker build -t $IMAGE_NAME_serveur .
+  - docker push $IMAGE_NAME_serveur
+  - cd ..
+  - cd orchestrus
+  - docker build -t $IMAGE_NAME_BD .
+  - docker push $IMAGE_NAME_BD
+  - cd ..
+  - cd workers
+  - docker build -t $IMAGE_NAME_worker .
+  - docker push $IMAGE_NAME_worker
+  
+test:
+ stage: test
+ image: maven:3.6.1-jdk-11
+
+ variables:
+  SERVER_ADDR: "serveur"
+  bdd_ADDR: "bdd"
+  worker_ADDR: "worker"
+  
+ services:
+  - name: venzinjonas/serveur
+    alias: serveur
+  - name: venzinjonas/bdd
+    alias: bdd
+  - name: venzinjonas/worker
+    alias: worker
+ script:
+  - cd db/
+  - mvn test
+  - cd ..
+  - cd orchestrus/
+  - mvn test
+  - cd ..
+  - cd workers/
+  - mvn test
+
+  
