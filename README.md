@@ -60,3 +60,6 @@ public class OpenPort {
 	private int port;
 }
 ```
+
+
+N.B. : Les classes de test se trouvent dans chaque module ("client", "db", "orchestrus" et "workers"), dans le dossier "src/test/java".
