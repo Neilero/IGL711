@@ -1,3 +1,14 @@
+/*  AB
+
+    QLTx2
+
+    Bonus : +10
+    Exécutable dans intermediaire -5
+
+    Note:   103/100 --> 100/100
+*/
+
+
 #include <iostream>
 #include <filesystem>
 

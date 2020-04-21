@@ -28,7 +28,7 @@ int compileFiles(const Config& configuration)
 std::string createIncludeOptionsFromVars(const std::vector<std::string>& environmentVars)
 {
     std::string includeString;
-    std::vector<std::string> includesPaths;
+    std::vector<std::string> includesPaths; // AB - innutile - QLT
 
     for(auto & includeVar : environmentVars)
     {

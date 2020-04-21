@@ -2,7 +2,7 @@
 
 echo Create temp folder yamlCpp_install
 mkdir yamlCpp_install
-(
+
   cd yamlCpp_install || exit
 
   echo Download yaml-cpp v0.6.3
@@ -20,7 +20,7 @@ mkdir yamlCpp_install
 
   echo Run sudo make install
   sudo make install || make install # if root user, sudo won't exist
-)
+
 
 echo Remove temp folder yamlCpp_install
 rm -rf yamlCpp_install
