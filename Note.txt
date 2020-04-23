@@ -1,0 +1,8 @@
+J'ai besoin de plus d'instruction dans le readme pour lancer votre application
+
+Pas de sauvegarde d'information:	-5
+Client graphique:		+10
+Le README manque beaucoup d'information pour l'application	-5
+Test relativement en surface:	-5
+
+Note:	95/100
